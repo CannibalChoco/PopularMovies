@@ -1,5 +1,8 @@
 package com.example.android.popularmovies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +28,12 @@ public class MainActivity extends AppCompatActivity{
 
         sampleText = findViewById(R.id.sampleText);
 
-        new MovieQueryTask().execute();
+        if(isConnected()){
+            new MovieQueryTask().execute();
+        } else {
+            sampleText.setText("No network connection");
+        }
+
     }
 
     public class MovieQueryTask extends AsyncTask<Void, Void, String>{
@@ -49,5 +57,15 @@ public class MainActivity extends AppCompatActivity{
                 sampleText.setText(s);
             }
         }
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
     }
 }
