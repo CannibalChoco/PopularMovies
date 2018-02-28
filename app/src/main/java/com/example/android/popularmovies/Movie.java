@@ -16,19 +16,19 @@ public class Movie {
     private double rating;
     private int runtime;
     private String language;
-    private List<String> genre;
+    private List<String> genres;
 
-    public Movie(String title, String overview, String tagline, String posterPath, String releaseYear,
-                 double rating, int runtime, String language, List<String> genre) {
+    public Movie(String title, String overview, String tagline, String posterPath, String releaseDate,
+                 double rating, int runtime, String language, List<String> genres) {
         this.title = title;
         this.overview = overview;
         this.tagline = tagline;
         this.posterPath = posterPath;
-        this.releaseYear = releaseYear;
+        this.releaseYear = getYearFromDate(releaseDate);
         this.rating = rating;
         this.runtime = runtime;
         this.language = language;
-        this.genre = genre;
+        this.genres = genres;
     }
 
     public String getMovieTitle() {
@@ -64,11 +64,10 @@ public class Movie {
     }
 
     public List<String> getGenre() {
-        return genre;
+        return genres;
     }
 
-    public int getYearFromDate(String date){
-        String year = date.substring(0, 3);
-        return Integer.valueOf(year);
+    public String getYearFromDate(String date){
+        return date.substring(0, 3);
     }
 }

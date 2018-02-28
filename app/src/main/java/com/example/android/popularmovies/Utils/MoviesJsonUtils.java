@@ -46,10 +46,12 @@ public class MoviesJsonUtils {
             List<String> genresList = new ArrayList<>();
 
             for (int i = 0, j = genresArray.length(); i < j; i ++){
-                // TODO get each genre and store it in to the list
+                JSONObject genreObject = genresArray.optJSONObject(i);
+                genresList.add(genreObject.optString(GENRES_NAME));
             }
 
-            return new Movie();
+            return new Movie(title, overview, tagline, posterPath, releaseDate, rating, runtime,
+                            language, genresList);
 
         } catch (JSONException e) {
             e.printStackTrace();
