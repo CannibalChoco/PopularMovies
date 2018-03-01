@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.android.popularmovies.Utils.MoviesJsonUtils;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -36,25 +38,31 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    public class MovieQueryTask extends AsyncTask<Void, Void, String>{
+    public class MovieQueryTask extends AsyncTask<Void, Void, List<Movie>>{
         @Override
-        protected String doInBackground(Void... voids) {
+        protected List<Movie> doInBackground(Void... voids) {
             URL url = NetworkUtils.buildUrl(NetworkUtils.PATH_TOP_RATED, apiKey);
-            String jsonResponse = "";
+
+            List<Movie> movieList = null;
             try {
-                jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
+                String jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
+                movieList = MoviesJsonUtils.parseMovieJson(jsonResponse);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return jsonResponse;
+            return movieList;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(List<Movie> movieList) {
+            super.onPostExecute(movieList);
 
-            if (s != null && !s.equals("")) {
-                sampleText.setText(s);
+            if (movieList.size() > 0) {
+                String moviesInfo = "";
+                for (int i = 0, j = movieList.size(); i < j; i++){
+                    moviesInfo += movieList.get(i).toString() + "\n";
+                }
+                sampleText.setText(moviesInfo);
             }
         }
     }
