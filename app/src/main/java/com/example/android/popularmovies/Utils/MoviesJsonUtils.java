@@ -1,5 +1,7 @@
 package com.example.android.popularmovies.Utils;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.example.android.popularmovies.Movie;
@@ -44,6 +46,7 @@ public class MoviesJsonUtils {
      * @param json json the JSON response from query
      * @return a List of Movie objects
      */
+    @Nullable
     public static List<Movie> parseMovieJson (String json){
         if (TextUtils.isEmpty(json)){
             return null;
@@ -75,6 +78,7 @@ public class MoviesJsonUtils {
      * @param movieJsonObject JSONObject from the root object of JSON response
      * @return Movie
      */
+    @NonNull
     private static Movie getMovieFromJsonObject (JSONObject movieJsonObject){
         String title = movieJsonObject.optString(TITLE);
         String overview = movieJsonObject.optString(OVERVIEW);
@@ -92,6 +96,7 @@ public class MoviesJsonUtils {
      * @param json the JSON response from query
      * @return a single Movie object
      */
+    @Nullable
     public static Movie parseSingleMovieJson(String json){
 
         // JSON keys
