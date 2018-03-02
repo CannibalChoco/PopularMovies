@@ -6,7 +6,11 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.Utils.MoviesJsonUtils;
 import com.example.android.popularmovies.Utils.NetworkUtils;
@@ -18,8 +22,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity{
 
     private String apiKey;
+    private List<Movie> movies;
+    private GridView gridView;
 
-    private TextView sampleText;
+    private String jsonResponse;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +35,11 @@ public class MainActivity extends AppCompatActivity{
 
         apiKey = getString(R.string.API_KEY);
 
-        sampleText = findViewById(R.id.sampleText);
-
         if(isConnected()){
             new MovieQueryTask().execute();
-        } else {
-            sampleText.setText("No network connection");
         }
 
+        gridView = findViewById(R.id.gridview);
     }
 
     public class MovieQueryTask extends AsyncTask<Void, Void, List<Movie>>{
@@ -43,27 +47,21 @@ public class MainActivity extends AppCompatActivity{
         protected List<Movie> doInBackground(Void... voids) {
             URL url = NetworkUtils.buildUrl(NetworkUtils.PATH_TOP_RATED, apiKey);
 
-            List<Movie> movieList = null;
             try {
-                String jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
-                movieList = MoviesJsonUtils.parseMovieJson(jsonResponse);
+                jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
+                return MoviesJsonUtils.parseMovieJson(jsonResponse);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return movieList;
+            return null;
         }
 
         @Override
         protected void onPostExecute(List<Movie> movieList) {
             super.onPostExecute(movieList);
 
-            if (movieList.size() > 0) {
-                String moviesInfo = "";
-                for (int i = 0, j = movieList.size(); i < j; i++){
-                    moviesInfo += movieList.get(i).toString() + "\n";
-                }
-                sampleText.setText(moviesInfo);
-            }
+            movies = movieList;
+            gridView.setAdapter(new MovieAdapter(MainActivity.this, movieList));
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.android.popularmovies.Utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.android.popularmovies.Movie;
 
@@ -63,13 +64,11 @@ public class MoviesJsonUtils {
                 movieList.add(movie);
             }
 
-            return movieList;
-
         } catch (JSONException e){
             e.printStackTrace();
         }
 
-        return null;
+        return movieList;
     }
 
     /**
