@@ -2,16 +2,15 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     Context context;
     List<Movie> movies;
 
-        public MovieAdapter (Context context, List<Movie> movies){
+    public MovieAdapter (Context context, List<Movie> movies){
         this.context = context;
         this.movies = movies;
     }
@@ -53,7 +52,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie movie = movies.get(position);
         String posterPath = movie.getPosterPath();
-
+        Log.i("POSTER: ", posterPath);
         if (posterPath != null){
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
             Picasso.with(context).load(posterUrl).into(holder.posterImageView);
@@ -62,6 +61,35 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
+        if (movies == null) return 0;
         return movies.size();
+    }
+
+    /**
+     * Clear the adapter
+     */
+    public void clear() {
+        if (movies != null){
+            int size = this.movies.size();
+            this.movies.clear();
+            notifyItemRangeRemoved(0, size);
+        }
+    }
+
+    /**
+     * adds all movies to the adapter
+     */
+    public void addAll(List<Movie> movies) {
+        if (this.movies == null){
+            this.movies = movies;
+        } else {
+            this.movies.addAll(movies);
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public Movie getItem(int position) {
+        return movies.get(position);
     }
 }

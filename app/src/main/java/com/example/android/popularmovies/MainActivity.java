@@ -3,28 +3,35 @@ package com.example.android.popularmovies;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.GridView;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.example.android.popularmovies.Utils.MoviesJsonUtils;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements
+        android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>{
+
+    private int MOVIE_LOADER_ID = 1;
 
     private String apiKey;
-    private List<Movie> movies;
-    private RecyclerView gridView;
-    private GridLayoutManager layoutManager;
+//    private List<Movie> movies;
 
-    private String jsonResponse;
+    private RecyclerView recyclerView;
+    private TextView emptyStateTextView;
+    private ProgressBar progressBar;
+    private GridLayoutManager layoutManager;
+    private MovieAdapter adapter;
+
+//    private String jsonResponse;
 
 
     @Override
@@ -34,36 +41,43 @@ public class MainActivity extends AppCompatActivity{
 
         apiKey = getString(R.string.API_KEY);
 
-        if(isConnected()){
-            new MovieQueryTask().execute();
-        }
+        recyclerView = findViewById(R.id.gridview);
+        emptyStateTextView = findViewById(R.id.emptyStateTextView);
+        progressBar = findViewById(R.id.progressBar);
 
-        gridView = findViewById(R.id.gridview);
         layoutManager = new GridLayoutManager(this, 2);
-        gridView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new MovieAdapter(this, null);
+        recyclerView.setAdapter(adapter);
+
+        //showLoading();
+        searchMovies();
     }
 
-    public class MovieQueryTask extends AsyncTask<Void, Void, List<Movie>>{
-        @Override
-        protected List<Movie> doInBackground(Void... voids) {
-            URL url = NetworkUtils.buildUrl(NetworkUtils.PATH_TOP_RATED, apiKey);
+    @Override
+    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+        return new MovieLoader(this, NetworkUtils.PATH_TOP_RATED, apiKey);
+    }
 
-            try {
-                jsonResponse = NetworkUtils.getResponseFromHttpUrl(url);
-                return MoviesJsonUtils.parseMovieJson(jsonResponse);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
+
+    @Override
+    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movieData) {
+        adapter.clear();
+
+        if (movieData != null && !movieData.isEmpty()) {
+            // TODO: BUG- on launch doesn't add data to adapter?
+            adapter.addAll(movieData);
+            showMovies();
+        } else {
+            showEmptyState();
+            emptyStateTextView.setText(R.string.empty_state_default);
         }
+    }
 
-        @Override
-        protected void onPostExecute(List<Movie> movieList) {
-            super.onPostExecute(movieList);
-
-            movies = movieList;
-            gridView.setAdapter(new MovieAdapter(MainActivity.this, movieList));
-        }
+    @Override
+    public void onLoaderReset(Loader<List<Movie>> loader) {
+        adapter.clear();
     }
 
     public boolean isConnected() {
@@ -74,5 +88,37 @@ public class MainActivity extends AppCompatActivity{
                 activeNetwork.isConnectedOrConnecting();
 
         return isConnected;
+    }
+
+    private void searchMovies() {
+        if (isConnected()) {
+            LoaderManager loaderManager = getSupportLoaderManager();
+            if (loaderManager != null) {
+                loaderManager.restartLoader(MOVIE_LOADER_ID, null, this);
+            } else {
+                loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
+            }
+        } else {
+            showEmptyState();
+            emptyStateTextView.setText(R.string.empty_state_no_connection);
+        }
+    }
+
+    private void showMovies(){
+        progressBar.setVisibility(View.GONE);
+        emptyStateTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoading(){
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        emptyStateTextView.setVisibility(View.GONE);
+    }
+
+    private void showEmptyState(){
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        emptyStateTextView.setVisibility(View.VISIBLE);
     }
 }
