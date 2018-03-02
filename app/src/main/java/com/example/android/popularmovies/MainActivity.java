@@ -6,11 +6,9 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.Utils.MoviesJsonUtils;
 import com.example.android.popularmovies.Utils.NetworkUtils;
@@ -23,7 +21,8 @@ public class MainActivity extends AppCompatActivity{
 
     private String apiKey;
     private List<Movie> movies;
-    private GridView gridView;
+    private RecyclerView gridView;
+    private GridLayoutManager layoutManager;
 
     private String jsonResponse;
 
@@ -40,6 +39,8 @@ public class MainActivity extends AppCompatActivity{
         }
 
         gridView = findViewById(R.id.gridview);
+        layoutManager = new GridLayoutManager(this, 2);
+        gridView.setLayoutManager(layoutManager);
     }
 
     public class MovieQueryTask extends AsyncTask<Void, Void, List<Movie>>{
