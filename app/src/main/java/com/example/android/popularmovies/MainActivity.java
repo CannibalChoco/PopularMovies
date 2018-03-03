@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
@@ -48,10 +49,9 @@ public class MainActivity extends AppCompatActivity implements
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new MovieAdapter(this, null);
+        adapter = new MovieAdapter(this, new ArrayList<Movie>());
         recyclerView.setAdapter(adapter);
 
-        //showLoading();
         searchMovies();
     }
 
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements
         adapter.clear();
 
         if (movieData != null && !movieData.isEmpty()) {
-            // TODO: BUG- on launch doesn't add data to adapter?
             adapter.addAll(movieData);
             showMovies();
         } else {

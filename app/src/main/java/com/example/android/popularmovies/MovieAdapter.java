@@ -2,7 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,16 +52,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie movie = movies.get(position);
         String posterPath = movie.getPosterPath();
-        Log.i("POSTER: ", posterPath);
-        if (posterPath != null){
+        if (posterPath != null && !TextUtils.isEmpty(posterPath)){
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
             Picasso.with(context).load(posterUrl).into(holder.posterImageView);
+            ViewGroup.LayoutParams lp = new RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            holder.posterImageView.setLayoutParams(lp);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (movies == null) return 0;
         return movies.size();
     }
 
@@ -69,23 +70,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
      * Clear the adapter
      */
     public void clear() {
-        if (movies != null){
-            int size = this.movies.size();
-            this.movies.clear();
-            notifyItemRangeRemoved(0, size);
-        }
+        int size = this.movies.size();
+        this.movies.clear();
+        notifyItemRangeRemoved(0, size);
     }
 
     /**
      * adds all movies to the adapter
      */
     public void addAll(List<Movie> movies) {
-        if (this.movies == null){
-            this.movies = movies;
-        } else {
-            this.movies.addAll(movies);
-        }
-
+        this.movies.addAll(movies);
         notifyDataSetChanged();
     }
 
