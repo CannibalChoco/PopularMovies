@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements
         emptyStateTextView = findViewById(R.id.emptyStateTextView);
         progressBar = findViewById(R.id.progressBar);
 
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new MovieAdapter(this, new ArrayList<Movie>());
