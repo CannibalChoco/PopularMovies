@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
  * Created by Emils on 26.02.2018.
  */
 
+// TODO: fix costraintLayouts margins issue for tvOverview
 public class DetailActivity extends AppCompatActivity {
 
     private TextView titleTv;
