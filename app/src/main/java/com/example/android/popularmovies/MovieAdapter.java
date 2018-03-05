@@ -22,9 +22,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     Context context;
     List<Movie> movies;
 
-    public MovieAdapter (Context context, List<Movie> movies){
+    private static GridItemListener onClickListener;
+
+    public interface GridItemListener{
+        void onGridItemClick(int position);
+    }
+
+    public MovieAdapter (Context context, List<Movie> movies, GridItemListener listener){
         this.context = context;
         this.movies = movies;
+        onClickListener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements
@@ -34,10 +41,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         public ViewHolder(View itemView) {
             super(itemView);
             posterImageView = itemView.findViewById(R.id.poster_item_view);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
+            onClickListener.onGridItemClick(position);
         }
     }
 

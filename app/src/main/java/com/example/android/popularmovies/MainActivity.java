@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
 
@@ -19,12 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
-        android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>{
+        android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
+        MovieAdapter.GridItemListener{
 
     private int MOVIE_LOADER_ID = 1;
 
     private String apiKey;
-//    private List<Movie> movies;
+    private List<Movie> movies;
 
     private RecyclerView recyclerView;
     private TextView emptyStateTextView;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         apiKey = getString(R.string.API_KEY);
+        movies = new ArrayList<>();
 
         recyclerView = findViewById(R.id.gridview);
         emptyStateTextView = findViewById(R.id.emptyStateTextView);
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements
         layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new MovieAdapter(this, new ArrayList<Movie>());
+        adapter = new MovieAdapter(this, new ArrayList<Movie>(), this);
         recyclerView.setAdapter(adapter);
 
         searchMovies();
@@ -66,6 +70,13 @@ public class MainActivity extends AppCompatActivity implements
         adapter.clear();
 
         if (movieData != null && !movieData.isEmpty()) {
+            if (movies != null){
+                movies.clear();
+                movies.addAll(movieData);
+            } else {
+                movies = movieData;
+            }
+
             adapter.addAll(movieData);
             showMovies();
         } else {
@@ -90,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void searchMovies() {
+        showLoading();
         if (isConnected()) {
             LoaderManager loaderManager = getSupportLoaderManager();
             if (loaderManager != null) {
@@ -119,5 +131,18 @@ public class MainActivity extends AppCompatActivity implements
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onGridItemClick(int position) {
+        Toast.makeText(this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+        launchDetailActivity(position);
+    }
+
+    private void launchDetailActivity(int position) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        Movie movie = movies.get(position);
+        intent.putExtra("movie", movie);
+        startActivity(intent);
     }
 }
