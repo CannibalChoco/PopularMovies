@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("Discover");
+
         apiKey = getString(R.string.API_KEY);
         movies = new ArrayList<>();
 
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void launchDetailActivity(int position) {
-        Intent intent = new Intent(this, DetailActivity.class);
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         Movie movie = movies.get(position);
         intent.putExtra("movie", movie);
         startActivity(intent);

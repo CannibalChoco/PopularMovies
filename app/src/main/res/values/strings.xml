@@ -3,4 +3,7 @@
 
     <string name="empty_state_default">Ooops! Nothing to show...</string>
     <string name="empty_state_no_connection">Looks like there\'s no network connection...</string>
+
+    <!-- DetailActivity label -->
+    <string name="label_details">Details</string>
 </resources>

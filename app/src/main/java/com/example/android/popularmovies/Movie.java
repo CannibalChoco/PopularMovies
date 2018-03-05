@@ -8,8 +8,7 @@ import android.os.Parcelable;
  * Created by Emils on 26.02.2018.
  */
 
-public class Movie implements Parcelable
-{
+public class Movie implements Parcelable {
 
     private String title;
     private String overview;
