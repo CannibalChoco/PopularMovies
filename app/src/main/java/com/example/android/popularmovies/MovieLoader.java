@@ -21,7 +21,7 @@ public class MovieLoader extends AsyncTaskLoader<List<Movie>> {
         super(context);
         this.apiKey = apiKey;
 
-        if(args != null && args.containsKey(NetworkUtils.PATH_KEY)){
+        if (args != null && args.containsKey(NetworkUtils.PATH_KEY)) {
             path = args.getString(NetworkUtils.PATH_KEY);
         } else {
             path = NetworkUtils.PATH_POPULAR;

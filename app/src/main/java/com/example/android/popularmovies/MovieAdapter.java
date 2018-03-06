@@ -17,25 +17,25 @@ import java.util.List;
  * Created by Emils on 01.03.2018.
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     Context context;
     List<Movie> movies;
 
     private static GridItemListener onClickListener;
 
-    public interface GridItemListener{
+    public interface GridItemListener {
         void onGridItemClick(int position);
     }
 
-    public MovieAdapter (Context context, List<Movie> movies, GridItemListener listener){
+    public MovieAdapter(Context context, List<Movie> movies, GridItemListener listener) {
         this.context = context;
         this.movies = movies;
         onClickListener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements
-                        View.OnClickListener{
+            View.OnClickListener {
         ImageView posterImageView;
 
         public ViewHolder(View itemView) {
@@ -62,7 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     public void onBindViewHolder(ViewHolder holder, int position) {
         Movie movie = movies.get(position);
         String posterPath = movie.getPosterPath();
-        if (posterPath != null && !TextUtils.isEmpty(posterPath)){
+        if (posterPath != null && !TextUtils.isEmpty(posterPath)) {
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
             Picasso.with(context).load(posterUrl).into(holder.posterImageView);
             ViewGroup.LayoutParams lp = new RecyclerView.LayoutParams(

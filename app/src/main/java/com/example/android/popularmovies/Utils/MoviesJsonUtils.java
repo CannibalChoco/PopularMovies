@@ -89,7 +89,7 @@ public class MoviesJsonUtils {
     }
 
     /**
-     * Parse JSON returned for single movie
+     * Parse JSON returned for single movie to get additional details about the movie
      *
      * @param json the JSON response from query
      * @return a single Movie object

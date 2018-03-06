@@ -26,13 +26,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.GridItemListener,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int MOVIE_LOADER_ID = 1;
-    private static final String INSTANCE_KEY_MOVIES = "movies";
-    private static final String INSTANCE_KEY_TITLE = "title";
-
-
 
     private String apiKey;
     private List<Movie> movies;
@@ -66,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements
 
         preferences = getSharedPreferences(PopularMoviesPreferences.PREFS_POPULAR_MOVIES, 0);
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
-                        PopularMoviesPreferences.PREFS_SORT_DEFAULT);
+                PopularMoviesPreferences.PREFS_SORT_DEFAULT);
 
         searchMovies();
     }
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements
         adapter.clear();
 
         if (movieData != null && !movieData.isEmpty()) {
-            if (movies != null){
+            if (movies != null) {
                 movies.clear();
                 movies.addAll(movieData);
             } else {
@@ -128,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements
         if (isConnected()) {
             Bundle args = new Bundle();
 
-            switch (prefSortOrder){
+            switch (prefSortOrder) {
                 case PopularMoviesPreferences.PREFS_SORT_POPULAR:
                     args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_POPULAR);
                     break;
@@ -153,19 +149,19 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void showMovies(){
+    private void showMovies() {
         progressBar.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showLoading(){
+    private void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.GONE);
     }
 
-    private void showEmptyState(){
+    private void showEmptyState() {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.VISIBLE);
@@ -193,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_sort_highest_rated:
                 prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
                 break;
@@ -212,14 +208,14 @@ public class MainActivity extends AppCompatActivity implements
         searchMovies();
     }
 
-    private void updatePreferences(){
+    private void updatePreferences() {
         preferenceEditor = preferences.edit();
         preferenceEditor.putString(PopularMoviesPreferences.PREFS_SORT_ORDER, prefSortOrder);
         preferenceEditor.commit();
     }
 
-    private void setTitleToSortOrder(){
-        switch (prefSortOrder){
+    private void setTitleToSortOrder() {
+        switch (prefSortOrder) {
             case PopularMoviesPreferences.PREFS_SORT_POPULAR:
                 setTitle(getString(R.string.pref_sort_label_popular));
                 break;
