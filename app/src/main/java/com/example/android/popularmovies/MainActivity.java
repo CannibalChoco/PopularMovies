@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,7 +25,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
-        MovieAdapter.GridItemListener{
+        MovieAdapter.GridItemListener,
+        SharedPreferences.OnSharedPreferenceChangeListener{
 
     private int MOVIE_LOADER_ID = 1;
 
@@ -35,15 +39,14 @@ public class MainActivity extends AppCompatActivity implements
     private GridLayoutManager layoutManager;
     private MovieAdapter adapter;
 
-//    private String jsonResponse;
-
+    private String sortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setTitle("Discover");
+        setTitle(getResources().getString(R.string.label_discover));
 
         apiKey = getString(R.string.API_KEY);
         movies = new ArrayList<>();
@@ -146,5 +149,27 @@ public class MainActivity extends AppCompatActivity implements
         Movie movie = movies.get(position);
         intent.putExtra("movie", movie);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if(id == R.id.action_settings){
+            startActivity(new Intent(this, SettingsActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 }
