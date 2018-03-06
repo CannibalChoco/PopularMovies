@@ -3,7 +3,6 @@ package com.example.android.popularmovies;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -33,8 +32,6 @@ public class DetailActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
         Movie movie = data.getParcelable("movie");
-
-        Log.i("INFO", movie.toString());
 
         titleTv = findViewById(R.id.tvTitle);
         overviewTv = findViewById(R.id.tvOverview);

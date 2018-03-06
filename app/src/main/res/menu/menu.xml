@@ -3,8 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_sort_highest_rated"
         app:showAsAction="never"
-        android:title="@string/label_settings"/>
+        android:title="@string/pref_sort_label_highest_rated"/>
 
+    <item
+        android:id="@+id/action_sort_most_popular"
+        app:showAsAction="never"
+        android:title="@string/pref_sort_label_popular"/>
 </menu>

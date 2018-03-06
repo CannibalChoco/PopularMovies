@@ -16,9 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
+import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,11 @@ public class MainActivity extends AppCompatActivity implements
         MovieAdapter.GridItemListener,
         SharedPreferences.OnSharedPreferenceChangeListener{
 
-    private int MOVIE_LOADER_ID = 1;
+    private static final int MOVIE_LOADER_ID = 1;
+    private static final String INSTANCE_KEY_MOVIES = "movies";
+    private static final String INSTANCE_KEY_TITLE = "title";
+
+
 
     private String apiKey;
     private List<Movie> movies;
@@ -39,17 +43,16 @@ public class MainActivity extends AppCompatActivity implements
     private GridLayoutManager layoutManager;
     private MovieAdapter adapter;
 
-    private String sortOrder;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor preferenceEditor;
+    private static String prefSortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setTitle(getResources().getString(R.string.label_discover));
-
         apiKey = getString(R.string.API_KEY);
-        movies = new ArrayList<>();
 
         recyclerView = findViewById(R.id.gridview);
         emptyStateTextView = findViewById(R.id.emptyStateTextView);
@@ -61,14 +64,29 @@ public class MainActivity extends AppCompatActivity implements
         adapter = new MovieAdapter(this, new ArrayList<Movie>(), this);
         recyclerView.setAdapter(adapter);
 
+        preferences = getSharedPreferences(PopularMoviesPreferences.PREFS_POPULAR_MOVIES, 0);
+        prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
+                        PopularMoviesPreferences.PREFS_SORT_DEFAULT);
+
         searchMovies();
     }
 
     @Override
-    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new MovieLoader(this, NetworkUtils.PATH_TOP_RATED, apiKey);
+    public void onStart() {
+        super.onStart();
+        preferences.registerOnSharedPreferenceChangeListener(this);
     }
 
+    @Override
+    public void onStop() {
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+
+    @Override
+    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+        return new MovieLoader(this, args, apiKey);
+    }
 
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movieData) {
@@ -108,15 +126,30 @@ public class MainActivity extends AppCompatActivity implements
     private void searchMovies() {
         showLoading();
         if (isConnected()) {
+            Bundle args = new Bundle();
+
+            switch (prefSortOrder){
+                case PopularMoviesPreferences.PREFS_SORT_POPULAR:
+                    args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_POPULAR);
+                    break;
+                case PopularMoviesPreferences.PREFS_SORT_RATINGS:
+                    args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_TOP_RATED);
+                    break;
+            }
             LoaderManager loaderManager = getSupportLoaderManager();
             if (loaderManager != null) {
-                loaderManager.restartLoader(MOVIE_LOADER_ID, null, this);
+                loaderManager.restartLoader(MOVIE_LOADER_ID, args, this);
             } else {
-                loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
+                loaderManager.initLoader(MOVIE_LOADER_ID, args, this);
             }
+
+            setTitleToSortOrder();
+
         } else {
             showEmptyState();
             emptyStateTextView.setText(R.string.empty_state_no_connection);
+
+            setTitle(getString(R.string.app_name));
         }
     }
 
@@ -140,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onGridItemClick(int position) {
-        Toast.makeText(this, String.valueOf(position), Toast.LENGTH_SHORT).show();
         launchDetailActivity(position);
     }
 
@@ -161,15 +193,38 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if(id == R.id.action_settings){
-            startActivity(new Intent(this, SettingsActivity.class));
+        switch (id){
+            case R.id.action_sort_highest_rated:
+                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
+                break;
+            case R.id.action_sort_most_popular:
+                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
+                break;
         }
+
+        updatePreferences();
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        searchMovies();
+    }
 
+    private void updatePreferences(){
+        preferenceEditor = preferences.edit();
+        preferenceEditor.putString(PopularMoviesPreferences.PREFS_SORT_ORDER, prefSortOrder);
+        preferenceEditor.commit();
+    }
+
+    private void setTitleToSortOrder(){
+        switch (prefSortOrder){
+            case PopularMoviesPreferences.PREFS_SORT_POPULAR:
+                setTitle(getString(R.string.pref_sort_label_popular));
+                break;
+            case PopularMoviesPreferences.PREFS_SORT_RATINGS:
+                setTitle(getString(R.string.pref_sort_label_highest_rated));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
@@ -16,10 +17,15 @@ public class MovieLoader extends AsyncTaskLoader<List<Movie>> {
     private String path;
     private String apiKey;
 
-    public MovieLoader(Context context, String path, String apiKey) {
+    public MovieLoader(Context context, Bundle args, String apiKey) {
         super(context);
-        this.path = path;
         this.apiKey = apiKey;
+
+        if(args != null && args.containsKey(NetworkUtils.PATH_KEY)){
+            path = args.getString(NetworkUtils.PATH_KEY);
+        } else {
+            path = NetworkUtils.PATH_POPULAR;
+        }
     }
 
     @Override
