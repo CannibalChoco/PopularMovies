@@ -2,11 +2,6 @@ package com.example.android.popularmovies.Utils;
 
 
 /**
- * Created by Emils on 06.03.2018.
- */
-
-
-/**
  * Class for defining shared preference constants
  */
 public class PopularMoviesPreferences {

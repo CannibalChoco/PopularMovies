@@ -13,11 +13,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Emils on 16.02.2018.
- */
 
-public class MoviesJsonUtils {
+class MoviesJsonUtils {
 
     /* key  for all movie result array in JSON */
     private static final String RESULTS_ARRAY = "results";

@@ -8,11 +8,8 @@ import com.example.android.popularmovies.Utils.NetworkUtils;
 
 import java.util.List;
 
-/**
- * Created by Emils on 02.03.2018.
- */
 
-public class MovieLoader extends AsyncTaskLoader<List<Movie>> {
+class MovieLoader extends AsyncTaskLoader<List<Movie>> {
 
     private String path;
     private String apiKey;

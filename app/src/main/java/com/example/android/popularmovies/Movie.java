@@ -7,18 +7,14 @@ import android.os.Parcelable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-/**
- * Created by Emils on 26.02.2018.
- */
-
 public class Movie implements Parcelable {
 
-    private String title;
-    private String overview;
-    private String posterPath;
-    private String releaseDate;
-    private double rating;
-    private String language;
+    private final String title;
+    private final String overview;
+    private final String posterPath;
+    private final String releaseDate;
+    private final double rating;
+    private final String language;
 
     public Movie(String title, String overview, String posterPath, String releaseDate,
                  double rating, String language) {
@@ -30,7 +26,7 @@ public class Movie implements Parcelable {
         this.language = language;
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         title = in.readString();
         overview = in.readString();
         posterPath = in.readString();
@@ -52,7 +48,7 @@ public class Movie implements Parcelable {
     };
 
     public String getMovieTitle() {
-        return title;
+        return title != null ? title : "";
     }
 
     public String getOverview() {
@@ -72,7 +68,7 @@ public class Movie implements Parcelable {
         return releaseDate.substring(0, 4);
     }
 
-    public double getRating() {
+    private double getRating() {
         return rating;
     }
 
@@ -86,8 +82,7 @@ public class Movie implements Parcelable {
     public float getRatingForFiveStars(){
         double starRating = (rating / 10) * 5;
 
-        float convertedRating = (float) starRating;
-        return convertedRating;
+        return (float) starRating;
     }
 
     public String getLanguage() {

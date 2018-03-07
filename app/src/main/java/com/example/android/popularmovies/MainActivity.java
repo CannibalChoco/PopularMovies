@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,26 +38,28 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private TextView emptyStateTextView;
     private ProgressBar progressBar;
-    private GridLayoutManager layoutManager;
     private MovieAdapter adapter;
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor preferenceEditor;
     private static String prefSortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().setElevation(10f);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setElevation(10f);
+        }
 
         apiKey = getString(R.string.API_KEY);
 
-        recyclerView = findViewById(R.id.gridview);
+        recyclerView = findViewById(R.id.gridView);
         emptyStateTextView = findViewById(R.id.emptyStateTextView);
         progressBar = findViewById(R.id.progressBar);
 
-        layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
+        GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new MovieAdapter(this, new ArrayList<Movie>(), this);
@@ -80,13 +84,14 @@ public class MainActivity extends AppCompatActivity implements
         super.onStop();
     }
 
+    @NonNull
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
         return new MovieLoader(this, args, apiKey);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movieData) {
+    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> movieData) {
         adapter.clear();
 
         if (movieData != null && !movieData.isEmpty()) {
@@ -106,18 +111,17 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Movie>> loader) {
+    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
         adapter.clear();
     }
 
-    public boolean isConnected() {
+    private boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
 
-        return isConnected;
+        NetworkInfo activeNetwork = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     private void searchMovies() {
@@ -210,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void updatePreferences() {
-        preferenceEditor = preferences.edit();
+        SharedPreferences.Editor preferenceEditor = preferences.edit();
         preferenceEditor.putString(PopularMoviesPreferences.PREFS_SORT_ORDER, prefSortOrder);
         preferenceEditor.commit();
     }
