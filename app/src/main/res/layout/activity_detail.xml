@@ -9,13 +9,15 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Some movie title" />
+        tools:text="Some movie title. And it is long"
+        android:background="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/tvRating"
@@ -88,6 +90,6 @@
         android:layout_marginTop="32dp"
         android:numStars="5"
         app:layout_constraintStart_toEndOf="@+id/ivPoster"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -83,6 +83,13 @@ public class Movie implements Parcelable {
         return df.format(getRating());
     }
 
+    public float getRatingForFiveStars(){
+        double starRating = (rating / 10) * 5;
+
+        float convertedRating = (float) starRating;
+        return convertedRating;
+    }
+
     public String getLanguage() {
         return language;
     }

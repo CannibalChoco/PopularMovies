@@ -28,6 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        getSupportActionBar().setElevation(10f);
         setTitle(getString(R.string.label_details));
 
         Bundle data = getIntent().getExtras();
@@ -48,15 +49,16 @@ public class DetailActivity extends AppCompatActivity {
         String rating = movie.getRatingString();
         String releaseDate = movie.getReleaseYear();
         String language = movie.getLanguage();
+        float ratingForFiveStars = movie.getRatingForFiveStars();
 
-        float ratingFloat = Float.valueOf(rating);
 
         titleTv.setText(title);
         overviewTv.setText(overview);
         ratingTv.setText(rating);
         releaseDateTv.setText(releaseDate);
-        ratingBar.setRating(ratingFloat);
+        ratingBar.setRating(ratingForFiveStars);
         languageTv.setText(language);
+
 
         Picasso.with(this).load(posterUrl).into(posterIv);
 

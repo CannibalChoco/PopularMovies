@@ -1,12 +1,14 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -37,10 +39,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
         ImageView posterImageView;
+        RatingBar ratingBar;
+        ConstraintLayout gridItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             posterImageView = itemView.findViewById(R.id.poster_item_view);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+            gridItem = itemView.findViewById(R.id.gridItemView);
+
             itemView.setOnClickListener(this);
         }
 
@@ -65,9 +73,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         if (posterPath != null && !TextUtils.isEmpty(posterPath)) {
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
             Picasso.with(context).load(posterUrl).into(holder.posterImageView);
-            ViewGroup.LayoutParams lp = new RecyclerView.LayoutParams(
+
+            ViewGroup.LayoutParams lp = new ConstraintLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            holder.posterImageView.setLayoutParams(lp);
+            holder.gridItem.setLayoutParams(lp);
+
+            holder.ratingBar.setRating(movie.getRatingForFiveStars());
         }
     }
 
