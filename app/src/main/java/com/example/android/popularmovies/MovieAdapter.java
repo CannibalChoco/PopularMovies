@@ -66,12 +66,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Movie movie = movies.get(position);
+
+        holder.ratingBar.setVisibility(View.GONE);
+
         String posterPath = movie.getPosterPath();
         if (posterPath != null && !TextUtils.isEmpty(posterPath)) {
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-            Picasso.with(context).load(posterUrl).into(holder.posterImageView);
+            Picasso.with(context).load(posterUrl).into(holder.posterImageView, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    holder.ratingBar.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
 
             ViewGroup.LayoutParams lp = new ConstraintLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
