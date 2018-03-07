@@ -28,8 +28,8 @@ public class DetailActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
 
-        if (data != null && data.containsKey("movie")){
-            Movie movie = data.getParcelable("movie");
+        if (data != null && data.containsKey(MainActivity.KEY_MOVIE)){
+            Movie movie = data.getParcelable(MainActivity.KEY_MOVIE);
 
             TextView titleTv = findViewById(R.id.tvTitle);
             TextView overviewTv = findViewById(R.id.tvOverview);
@@ -44,7 +44,7 @@ public class DetailActivity extends AppCompatActivity {
             String posterPath = movie.getPosterPath();
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
             String rating = movie.getRatingString();
-            String releaseDate = movie.getReleaseYear();
+            String releaseDate = movie.getReleaseDate();
             String language = movie.getLanguage();
             float ratingForFiveStars = movie.getRatingForFiveStars();
 

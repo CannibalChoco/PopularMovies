@@ -83,14 +83,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return movies != null ? movies.size() : 0;
     }
 
     /**
      * Clear the adapter
      */
     public void clear() {
-        int size = this.movies.size();
+        int size = getItemCount();
         this.movies.clear();
         notifyItemRangeRemoved(0, size);
     }

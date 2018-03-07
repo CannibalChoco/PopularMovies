@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements
         MovieAdapter.GridItemListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    public static final String KEY_MOVIE = "movie";
+
     private static final int MOVIE_LOADER_ID = 1;
 
     private String apiKey;
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements
     private void launchDetailActivity(int position) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
         Movie movie = movies.get(position);
-        intent.putExtra("movie", movie);
+        intent.putExtra(KEY_MOVIE, movie);
         startActivity(intent);
     }
 
