@@ -25,10 +25,17 @@ import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.GridItemListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
+
+    @BindView(R.id.gridView) RecyclerView recyclerView;
+    @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
 
     public static final String KEY_MOVIE = "movie";
 
@@ -37,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements
     private String apiKey;
     private List<Movie> movies;
 
-    private RecyclerView recyclerView;
-    private TextView emptyStateTextView;
-    private ProgressBar progressBar;
     private MovieAdapter adapter;
 
     private SharedPreferences preferences;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
@@ -56,10 +61,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         apiKey = BuildConfig.MOVIE_DB_API_KEY;
-
-        recyclerView = findViewById(R.id.gridView);
-        emptyStateTextView = findViewById(R.id.emptyStateTextView);
-        progressBar = findViewById(R.id.progressBar);
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
         recyclerView.setLayoutManager(layoutManager);

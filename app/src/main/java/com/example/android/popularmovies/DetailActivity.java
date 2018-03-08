@@ -11,13 +11,26 @@ import android.widget.TextView;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class DetailActivity extends AppCompatActivity {
+
+    @BindView(R.id.tvTitle) TextView titleTv;
+    @BindView(R.id.tvOverview) TextView overviewTv;
+    @BindView(R.id.ivPoster) ImageView posterIv;
+    @BindView(R.id.tvRating) TextView ratingTv;
+    @BindView(R.id.tvReleaseDate) TextView releaseDateTv;
+    @BindView(R.id.ratingBar) RatingBar ratingBar;
+    @BindView(R.id.tvLanguage) TextView languageTv;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
@@ -32,14 +45,6 @@ public class DetailActivity extends AppCompatActivity {
             Movie movie = data.getParcelable(MainActivity.KEY_MOVIE);
 
             if(movie != null){
-                TextView titleTv = findViewById(R.id.tvTitle);
-                TextView overviewTv = findViewById(R.id.tvOverview);
-                ImageView posterIv = findViewById(R.id.ivPoster);
-                TextView ratingTv = findViewById(R.id.tvRating);
-                TextView releaseDateTv = findViewById(R.id.tvReleaseDate);
-                RatingBar ratingBar = findViewById(R.id.ratingBar);
-                TextView languageTv = findViewById(R.id.tvLanguage);
-
                 String title = movie.getMovieTitle();
                 String overview = movie.getOverview();
                 String posterPath = movie.getPosterPath();
