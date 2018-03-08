@@ -18,7 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.android.popularmovies.Utils.ConnectivityReceiver;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 
@@ -28,10 +30,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
+/**
+ * To implemet ConnectivityReceiver as per reviewer suggested tutorial on
+ * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
+ * some code is taken from the tutorial, which is disclosed above that code.
+ */
 public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.GridItemListener,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        ConnectivityReceiver.ConnectivityReceiverListener{
 
     @BindView(R.id.gridView) RecyclerView recyclerView;
     @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
@@ -79,6 +88,17 @@ public class MainActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
         preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /**
+         * register connection status listener
+         * as shown in the androidhive tutorial
+         */
+        MyApplication.getInstance().setConnectivityListener(this);
     }
 
     @Override
@@ -230,5 +250,16 @@ public class MainActivity extends AppCompatActivity implements
             case PopularMoviesPreferences.PREFS_SORT_RATINGS:
                 setTitle(getString(R.string.pref_sort_label_highest_rated));
         }
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+
+        if (isConnected){
+            Toast.makeText(this, "Connected to the internet", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Not connected to the internet", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
