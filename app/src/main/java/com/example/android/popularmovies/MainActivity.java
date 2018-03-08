@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements
             actionBar.setElevation(10f);
         }
 
-        apiKey = getString(R.string.API_KEY);
+        apiKey = BuildConfig.MOVIE_DB_API_KEY;
 
         recyclerView = findViewById(R.id.gridView);
         emptyStateTextView = findViewById(R.id.emptyStateTextView);
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements
     private void updatePreferences() {
         SharedPreferences.Editor preferenceEditor = preferences.edit();
         preferenceEditor.putString(PopularMoviesPreferences.PREFS_SORT_ORDER, prefSortOrder);
-        preferenceEditor.commit();
+        preferenceEditor.apply();
     }
 
     private void setTitleToSortOrder() {

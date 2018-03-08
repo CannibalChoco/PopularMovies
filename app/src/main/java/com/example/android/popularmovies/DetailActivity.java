@@ -31,31 +31,33 @@ public class DetailActivity extends AppCompatActivity {
         if (data != null && data.containsKey(MainActivity.KEY_MOVIE)){
             Movie movie = data.getParcelable(MainActivity.KEY_MOVIE);
 
-            TextView titleTv = findViewById(R.id.tvTitle);
-            TextView overviewTv = findViewById(R.id.tvOverview);
-            ImageView posterIv = findViewById(R.id.ivPoster);
-            TextView ratingTv = findViewById(R.id.tvRating);
-            TextView releaseDateTv = findViewById(R.id.tvReleaseDate);
-            RatingBar ratingBar = findViewById(R.id.ratingBar);
-            TextView languageTv = findViewById(R.id.tvLanguage);
+            if(movie != null){
+                TextView titleTv = findViewById(R.id.tvTitle);
+                TextView overviewTv = findViewById(R.id.tvOverview);
+                ImageView posterIv = findViewById(R.id.ivPoster);
+                TextView ratingTv = findViewById(R.id.tvRating);
+                TextView releaseDateTv = findViewById(R.id.tvReleaseDate);
+                RatingBar ratingBar = findViewById(R.id.ratingBar);
+                TextView languageTv = findViewById(R.id.tvLanguage);
 
-            String title = movie.getMovieTitle();
-            String overview = movie.getOverview();
-            String posterPath = movie.getPosterPath();
-            String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-            String rating = movie.getRatingString();
-            String releaseDate = movie.getReleaseDate();
-            String language = movie.getLanguage();
-            float ratingForFiveStars = movie.getRatingForFiveStars();
+                String title = movie.getMovieTitle();
+                String overview = movie.getOverview();
+                String posterPath = movie.getPosterPath();
+                String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
+                String rating = movie.getRatingString();
+                String releaseDate = movie.getReleaseDate();
+                String language = movie.getLanguage();
+                float ratingForFiveStars = movie.getRatingForFiveStars();
 
-            titleTv.setText(title);
-            overviewTv.setText(overview);
-            ratingTv.setText(rating);
-            releaseDateTv.setText(releaseDate);
-            ratingBar.setRating(ratingForFiveStars);
-            languageTv.setText(language);
+                titleTv.setText(title);
+                overviewTv.setText(overview);
+                ratingTv.setText(rating);
+                releaseDateTv.setText(releaseDate);
+                ratingBar.setRating(ratingForFiveStars);
+                languageTv.setText(language);
 
-            Picasso.with(this).load(posterUrl).into(posterIv);
+                Picasso.with(this).load(posterUrl).into(posterIv);
+            }
         }
     }
 }

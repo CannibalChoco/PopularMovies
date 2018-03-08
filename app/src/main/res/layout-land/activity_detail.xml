@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -42,62 +43,76 @@
             android:id="@+id/tvReleaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="1255-656-65"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tvRating"
-            app:layout_constraintStart_toEndOf="@+id/tvRating"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar"
             tools:text="2010"
-            android:layout_marginLeft="32dp" />
+            android:layout_marginLeft="8dp" />
 
         <TextView
             android:id="@+id/tvLanguage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tvReleaseDate"
-            app:layout_constraintStart_toEndOf="@+id/tvReleaseDate"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate"
             tools:text="EN"
-            android:layout_marginLeft="32dp" />
+            android:layout_marginLeft="8dp" />
 
         <ImageView
             android:id="@+id/ivPoster"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTitle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@tools:sample/avatars" />
+            tools:src="@drawable/sample_w500"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp" />
 
         <TextView
             android:id="@+id/tvOverview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ivPoster"
-            app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/tvLanguage"
             tools:text="@string/empty_state_default"
             android:layout_marginRight="16dp"
-            android:layout_marginLeft="32dp" />
+            android:layout_marginLeft="8dp" />
 
         <RatingBar
             android:id="@+id/ratingBar"
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:numStars="5"
-            app:layout_constraintStart_toEndOf="@+id/ivPoster"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+            android:layout_marginLeft="8dp" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.4" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
