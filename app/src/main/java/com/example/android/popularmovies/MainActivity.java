@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private boolean isWaitingForInternetConnection = false;
 
+    private Menu menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        this.menu = menu;
+
         return true;
     }
 
@@ -184,16 +189,23 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-
         if (isConnected){
             if (isWaitingForInternetConnection){
                 searchMovies();
                 isWaitingForInternetConnection = false;
             }
+
+            if (menu != null){
+                menu.setGroupEnabled(R.id.sort_order_menu, true);
+            }
+
         } else {
             if (!isWaitingForInternetConnection){
                 Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
                 isWaitingForInternetConnection = true;
+            }
+            if (menu != null){
+                menu.setGroupEnabled(R.id.sort_order_menu, false);
             }
         }
     }
