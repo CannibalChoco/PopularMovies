@@ -28,6 +28,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+        <!-- For android M and lower -->
         <receiver
             android:name=".ConnectivityReceiver"
             android:enabled="true">

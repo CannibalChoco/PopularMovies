@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.progressBar) ProgressBar progressBar;
 
     public static final String KEY_MOVIE = "movie";
+    private static final String KEY_MOVIE_LIST = "movies";
+    private static final String KEY_IS_WAITING_CONNECTION = "isWaitingConnection";
 
     private static final int MOVIE_LOADER_ID = 1;
 
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private ConnectivityReceiver connectivityReceiver;
 
-    private boolean isWaitingForInternetConnection = false;
+    private boolean isWaitingForInternetConnection;
 
     private Menu menu;
 
@@ -74,6 +76,15 @@ public class MainActivity extends AppCompatActivity implements
             actionBar.setElevation(10f);
         }
 
+        if(savedInstanceState != null){
+            movies = savedInstanceState.getParcelableArrayList(KEY_MOVIE_LIST);
+            isWaitingForInternetConnection =
+                    savedInstanceState.getBoolean(KEY_IS_WAITING_CONNECTION);
+        } else {
+            movies = new ArrayList<Movie>();
+            isWaitingForInternetConnection = false;
+        }
+
         apiKey = BuildConfig.MOVIE_DB_API_KEY;
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
@@ -86,7 +97,13 @@ public class MainActivity extends AppCompatActivity implements
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
                 PopularMoviesPreferences.PREFS_SORT_DEFAULT);
 
-        searchMoviesIfConnected();
+        if (movies.isEmpty()){
+            searchMoviesIfConnected();
+        } else {
+            adapter.clear();
+            adapter.addAll(movies);
+            showMovies();
+        }
     }
 
     @Override
@@ -117,6 +134,16 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         preferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (movies != null){
+            outState.putParcelableArrayList(KEY_MOVIE_LIST, (ArrayList<Movie>) movies);
+            outState.putBoolean(KEY_IS_WAITING_CONNECTION, isWaitingForInternetConnection);
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     @NonNull
@@ -194,7 +221,6 @@ public class MainActivity extends AppCompatActivity implements
                 searchMovies();
                 isWaitingForInternetConnection = false;
             }
-
             if (menu != null){
                 menu.setGroupEnabled(R.id.sort_order_menu, true);
             }
@@ -235,13 +261,16 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Preform Movie search with LoaderManager initLoader() or restartLoader()
      *
-     * Used by searchMoviesIfConnected()
+     * Used by searchMoviesIfConnected() and onNetworkConnectionChanged() when connection is regained
+     * when emptyStateTextView is displayed
      */
     private void searchMovies() {
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
+            Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
             loaderManager.restartLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         } else {
+            Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
             //noinspection ConstantConditions
             loaderManager.initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         }
