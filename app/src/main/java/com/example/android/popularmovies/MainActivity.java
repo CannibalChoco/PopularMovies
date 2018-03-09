@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.Utils.ConnectivityReceiver;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 

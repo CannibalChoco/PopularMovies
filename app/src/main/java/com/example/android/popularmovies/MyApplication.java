@@ -2,8 +2,6 @@ package com.example.android.popularmovies;
 
 import android.app.Application;
 
-import com.example.android.popularmovies.Utils.ConnectivityReceiver;
-
 
 /**
  * ConnectivityReceiver, MyApplication classes written based on androidhive tutorial
@@ -11,22 +9,23 @@ import com.example.android.popularmovies.Utils.ConnectivityReceiver;
  *
  * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
  */
+
 public class MyApplication extends Application {
 
-    private static MyApplication instance;
+    private static MyApplication mInstance;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        instance = this;
+        mInstance = this;
     }
 
-    public static synchronized MyApplication getInstance (){
-        return instance;
+    public static synchronized MyApplication getInstance() {
+        return mInstance;
     }
 
-    public void setConnectivityListener (ConnectivityReceiver.ConnectivityReceiverListener listener){
+    public void setConnectivityListener(ConnectivityReceiver.ConnectivityReceiverListener listener) {
         ConnectivityReceiver.connectivityReceiverListener = listener;
     }
 }

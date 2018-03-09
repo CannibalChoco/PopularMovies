@@ -28,11 +28,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        <receiver android:name=".Utils.ConnectivityReceiver"
+        <receiver
+            android:name=".ConnectivityReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
     </application>
