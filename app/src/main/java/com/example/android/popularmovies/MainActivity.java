@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
                 PopularMoviesPreferences.PREFS_SORT_DEFAULT);
 
-        searchMovies();
+        searchMoviesIfConnected();
     }
 
     @Override
@@ -148,60 +148,9 @@ public class MainActivity extends AppCompatActivity implements
         adapter.clear();
     }
 
-
-
-
-
-    private void searchMovies() {
-        showLoading();
-        if (ConnectivityReceiver.isConnected()) {
-
-            LoaderManager loaderManager = getSupportLoaderManager();
-            if (loaderManager != null) {
-                loaderManager.restartLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
-            } else {
-                loaderManager.initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
-            }
-
-            setTitleToSortOrder();
-
-        } else {
-            showEmptyState();
-            emptyStateTextView.setText(R.string.empty_state_no_connection);
-
-            setTitle(getString(R.string.app_name));
-        }
-    }
-
-    private void showMovies() {
-        progressBar.setVisibility(View.GONE);
-        emptyStateTextView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
-    }
-
-    private void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
-        emptyStateTextView.setVisibility(View.GONE);
-    }
-
-    private void showEmptyState() {
-        isWaitingForInternetConnection = true;
-        progressBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
-        emptyStateTextView.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public void onGridItemClick(int position) {
         launchDetailActivity(position);
-    }
-
-    private void launchDetailActivity(int position) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-        Movie movie = movies.get(position);
-        intent.putExtra(KEY_MOVIE, movie);
-        startActivity(intent);
     }
 
     @Override
@@ -230,23 +179,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        searchMovies();
-    }
-
-    private void updatePreferences() {
-        SharedPreferences.Editor preferenceEditor = preferences.edit();
-        preferenceEditor.putString(PopularMoviesPreferences.PREFS_SORT_ORDER, prefSortOrder);
-        preferenceEditor.apply();
-    }
-
-    private void setTitleToSortOrder() {
-        switch (prefSortOrder) {
-            case PopularMoviesPreferences.PREFS_SORT_POPULAR:
-                setTitle(getString(R.string.pref_sort_label_popular));
-                break;
-            case PopularMoviesPreferences.PREFS_SORT_RATINGS:
-                setTitle(getString(R.string.pref_sort_label_highest_rated));
-        }
+        searchMoviesIfConnected();
     }
 
     @Override
@@ -254,16 +187,24 @@ public class MainActivity extends AppCompatActivity implements
 
         if (isConnected){
             if (isWaitingForInternetConnection){
-                getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
+                searchMovies();
                 isWaitingForInternetConnection = false;
             }
         } else {
             if (!isWaitingForInternetConnection){
                 Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
+                isWaitingForInternetConnection = true;
             }
         }
     }
 
+    /**
+     * Get users preferred sort order from SharedPreferences and put it in a Bundle
+     *
+     * Used in MovieLoader as argument
+     *
+     * @return Bundle with preferred sort order ready to be used by MovieLoader
+     */
     private Bundle getSortOrderArgsBundle (){
         Bundle args = new Bundle();
 
@@ -277,5 +218,101 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return args;
+    }
+
+    /**
+     * Preform Movie search with LoaderManager initLoader() or restartLoader()
+     *
+     * Used by searchMoviesIfConnected()
+     */
+    private void searchMovies() {
+        LoaderManager loaderManager = getSupportLoaderManager();
+        if (loaderManager != null) {
+            loaderManager.restartLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
+        } else {
+            loaderManager.initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
+        }
+    }
+
+    /**
+     * Preform all necessary search related actions if connected, or all emptyState actions when
+     * there is no internet connection
+     */
+    private void searchMoviesIfConnected() {
+        if (ConnectivityReceiver.isConnected()) {
+            showLoading();
+            searchMovies();
+            setTitleToSortOrder();
+        } else {
+            isWaitingForInternetConnection = true;
+            showEmptyState();
+            emptyStateTextView.setText(R.string.empty_state_no_connection);
+            setTitle(getString(R.string.app_name));
+        }
+    }
+
+    /**
+     * Set gridView visible and hide all other views
+     */
+    private void showMovies() {
+        progressBar.setVisibility(View.GONE);
+        emptyStateTextView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Set progressBar visible and hide all other views
+     */
+    private void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        emptyStateTextView.setVisibility(View.GONE);
+    }
+
+    /**
+     * Set emptyState text visible and hide all other views
+     */
+    private void showEmptyState() {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        emptyStateTextView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Updates SharedPreferences when user selects sort order from optionsMenu
+     */
+    private void updatePreferences() {
+        SharedPreferences.Editor preferenceEditor = preferences.edit();
+        preferenceEditor.putString(PopularMoviesPreferences.PREFS_SORT_ORDER, prefSortOrder);
+        preferenceEditor.apply();
+    }
+
+    /**
+     * Sets the ActionBar title according to sort order in which movies are displayed
+     */
+    private void setTitleToSortOrder() {
+        switch (prefSortOrder) {
+            case PopularMoviesPreferences.PREFS_SORT_POPULAR:
+                setTitle(getString(R.string.pref_sort_label_popular));
+                break;
+            case PopularMoviesPreferences.PREFS_SORT_RATINGS:
+                setTitle(getString(R.string.pref_sort_label_highest_rated));
+                break;
+            default:
+                setTitle(getString(R.string.app_name));
+        }
+    }
+
+    /**
+     * Start DetailActivity when Movie poster is clicked, passing the movie data
+     *
+     * @param position Movie position in RecyclerView, corresponding to the
+     * Movie in List<Movie>
+     */
+    private void launchDetailActivity(int position) {
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        Movie movie = movies.get(position);
+        intent.putExtra(KEY_MOVIE, movie);
+        startActivity(intent);
     }
 }
