@@ -41,12 +41,9 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         ConnectivityReceiver.ConnectivityReceiverListener{
 
-    @BindView(R.id.gridView)
-    private RecyclerView recyclerView;
-    @BindView(R.id.emptyStateTextView)
-    private TextView emptyStateTextView;
-    @BindView(R.id.progressBar)
-    private ProgressBar progressBar;
+    @BindView(R.id.gridView) RecyclerView recyclerView;
+    @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
 
     public static final String KEY_MOVIE = "movie";
 

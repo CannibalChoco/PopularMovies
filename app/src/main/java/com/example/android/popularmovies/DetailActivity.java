@@ -17,20 +17,13 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
-    @BindView(R.id.tvTitle)
-    private TextView titleTv;
-    @BindView(R.id.tvOverview)
-    private TextView overviewTv;
-    @BindView(R.id.ivPoster)
-    private ImageView posterIv;
-    @BindView(R.id.tvRating)
-    private TextView ratingTv;
-    @BindView(R.id.tvReleaseDate)
-    private TextView releaseDateTv;
-    @BindView(R.id.ratingBar)
-    private RatingBar ratingBar;
-    @BindView(R.id.tvLanguage)
-    private TextView languageTv;
+    @BindView(R.id.tvTitle) TextView titleTv;
+    @BindView(R.id.tvOverview) TextView overviewTv;
+    @BindView(R.id.ivPoster) ImageView posterIv;
+    @BindView(R.id.tvRating) TextView ratingTv;
+    @BindView(R.id.tvReleaseDate) TextView releaseDateTv;
+    @BindView(R.id.ratingBar) RatingBar ratingBar;
+    @BindView(R.id.tvLanguage) TextView languageTv;
 
 
     @Override
