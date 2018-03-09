@@ -1,10 +1,10 @@
 package com.example.android.popularmovies;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements
     private SharedPreferences preferences;
     private static String prefSortOrder;
 
+    private ConnectivityReceiver connectivityReceiver;
+
+    private boolean isWaitingForInternetConnection = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,14 +88,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        preferences.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
+
+        preferences.registerOnSharedPreferenceChangeListener(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            connectivityReceiver = new ConnectivityReceiver();
+            this.registerReceiver(connectivityReceiver,
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
 
         /**
          * register connection status listener
@@ -101,9 +107,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onStop() {
+    protected void onPause() {
+        super.onPause();
+
+        if (connectivityReceiver != null){
+            this.unregisterReceiver(connectivityReceiver);
+        }
+
         preferences.unregisterOnSharedPreferenceChangeListener(this);
-        super.onStop();
     }
 
     @NonNull
@@ -137,33 +148,19 @@ public class MainActivity extends AppCompatActivity implements
         adapter.clear();
     }
 
-    private boolean isConnected() {
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
 
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
+
 
     private void searchMovies() {
         showLoading();
-        if (isConnected()) {
-            Bundle args = new Bundle();
+        if (ConnectivityReceiver.isConnected()) {
 
-            switch (prefSortOrder) {
-                case PopularMoviesPreferences.PREFS_SORT_POPULAR:
-                    args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_POPULAR);
-                    break;
-                case PopularMoviesPreferences.PREFS_SORT_RATINGS:
-                    args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_TOP_RATED);
-                    break;
-            }
             LoaderManager loaderManager = getSupportLoaderManager();
             if (loaderManager != null) {
-                loaderManager.restartLoader(MOVIE_LOADER_ID, args, this);
+                loaderManager.restartLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
             } else {
-                loaderManager.initLoader(MOVIE_LOADER_ID, args, this);
+                loaderManager.initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
             }
 
             setTitleToSortOrder();
@@ -189,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showEmptyState() {
+        isWaitingForInternetConnection = true;
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.VISIBLE);
@@ -255,10 +253,29 @@ public class MainActivity extends AppCompatActivity implements
     public void onNetworkConnectionChanged(boolean isConnected) {
 
         if (isConnected){
-            Toast.makeText(this, "Connected to the internet", Toast.LENGTH_SHORT).show();
+            if (isWaitingForInternetConnection){
+                getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
+                isWaitingForInternetConnection = false;
+            }
         } else {
-            Toast.makeText(this, "Not connected to the internet", Toast.LENGTH_SHORT).show();
+            if (!isWaitingForInternetConnection){
+                Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private Bundle getSortOrderArgsBundle (){
+        Bundle args = new Bundle();
+
+        switch (prefSortOrder) {
+            case PopularMoviesPreferences.PREFS_SORT_POPULAR:
+                args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_POPULAR);
+                break;
+            case PopularMoviesPreferences.PREFS_SORT_RATINGS:
+                args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_TOP_RATED);
+                break;
         }
 
+        return args;
     }
 }
