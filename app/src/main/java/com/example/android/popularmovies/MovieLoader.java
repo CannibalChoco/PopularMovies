@@ -11,8 +11,8 @@ import java.util.List;
 
 class MovieLoader extends AsyncTaskLoader<List<Movie>> {
 
-    private String path;
-    private String apiKey;
+    private final String path;
+    private final String apiKey;
 
     public MovieLoader(Context context, Bundle args, String apiKey) {
         super(context);

@@ -95,14 +95,12 @@ public class Movie implements Parcelable {
      * @return all fields as a string
      */
     public String toString (){
-        String movieString = title + "; " + "\n" +
+        return title + "; " + "\n" +
                             overview + "; " +  "\n" +
                             posterPath + "; " +  "\n" +
                             releaseDate + "; " +  "\n" +
                             String.valueOf(rating) + "; " + "\n" +
                             language;
-
-        return movieString;
     }
 
     @Override

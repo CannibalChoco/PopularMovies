@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 
 /**
  * ConnectivityReceiver, MyApplication classes written based on androidhive tutorial
- * that was suggested by a project reviewer
  *
  * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
  */
@@ -24,15 +23,19 @@ public class ConnectivityReceiver
     }
 
     @Override
-    public void onReceive(Context context, Intent arg1) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null
-                && activeNetwork.isConnectedOrConnecting();
+    public void onReceive(Context context, Intent intent) {
 
-        if (connectivityReceiverListener != null) {
-            connectivityReceiverListener.onNetworkConnectionChanged(isConnected);
+        if (intent.getAction() != null &&
+                intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+            ConnectivityManager cm = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
+            boolean isConnected = activeNetwork != null
+                    && activeNetwork.isConnectedOrConnecting();
+
+            if (connectivityReceiverListener != null) {
+                connectivityReceiverListener.onNetworkConnectionChanged(isConnected);
+            }
         }
     }
 
@@ -40,7 +43,7 @@ public class ConnectivityReceiver
         ConnectivityManager
                 cm = (ConnectivityManager) MyApplication.getInstance().getApplicationContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = cm != null ? cm.getActiveNetworkInfo() : null;
         return activeNetwork != null
                 && activeNetwork.isConnectedOrConnecting();
     }

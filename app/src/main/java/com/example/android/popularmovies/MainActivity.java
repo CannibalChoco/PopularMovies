@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * To implemet ConnectivityReceiver as per reviewer suggested tutorial on
+ * To implement ConnectivityReceiver as per reviewer suggested tutorial on
  * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
  * some code is taken from the tutorial, which is disclosed above that code.
  */
@@ -41,9 +41,12 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         ConnectivityReceiver.ConnectivityReceiverListener{
 
-    @BindView(R.id.gridView) RecyclerView recyclerView;
-    @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.gridView)
+    private RecyclerView recyclerView;
+    @BindView(R.id.emptyStateTextView)
+    private TextView emptyStateTextView;
+    @BindView(R.id.progressBar)
+    private ProgressBar progressBar;
 
     public static final String KEY_MOVIE = "movie";
 
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements
                     new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
 
-        /**
+        /*
          * register connection status listener
          * as shown in the androidhive tutorial
          */
@@ -230,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements
         if (loaderManager != null) {
             loaderManager.restartLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         } else {
+            //noinspection ConstantConditions
             loaderManager.initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         }
     }
