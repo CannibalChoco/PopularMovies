@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int MOVIE_LOADER_ID = 1;
 
+    private static final int POSTER_WIDTH = 200;
+
     private String apiKey;
     private List<Movie> movies;
 
@@ -87,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements
 
         apiKey = BuildConfig.MOVIE_DB_API_KEY;
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.grid_columns));
+        GridLayoutManager layoutManager = new GridLayoutManager(this,
+                getGridViewSpanFromItemWidth(POSTER_WIDTH));
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new MovieAdapter(this, new ArrayList<Movie>(), this);
@@ -356,5 +360,19 @@ public class MainActivity extends AppCompatActivity implements
         Movie movie = movies.get(position);
         intent.putExtra(KEY_MOVIE, movie);
         startActivity(intent);
+    }
+
+    /**
+     * Calculate GridView span based on preferred item width
+     *
+     * @param itemWidth preferred grid item width
+     * @return number of columns for GridView to display
+     */
+    private int getGridViewSpanFromItemWidth (int itemWidth){
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+        float dpWidth = (displayMetrics.widthPixels / displayMetrics.densityDpi) * 160;
+
+        return Math.round(dpWidth / itemWidth);
     }
 }
