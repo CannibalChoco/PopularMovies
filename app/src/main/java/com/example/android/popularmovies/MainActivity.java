@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,11 +72,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setElevation(10f);
-        }
 
         if(savedInstanceState != null){
             movies = savedInstanceState.getParcelableArrayList(KEY_MOVIE_LIST);
@@ -375,4 +369,19 @@ public class MainActivity extends AppCompatActivity implements
 
         return Math.round(dpWidth / itemWidth);
     }
+
+    private int getStatusbarHeight (){
+        int height;
+
+        int idStatusbarHeight = getResources().getIdentifier("status_bar_height", "dimen", "android");
+
+        if (idStatusbarHeight > 0){
+            height = getResources().getDimensionPixelSize(idStatusbarHeight);
+        } else {
+            height = 0;
+        }
+
+        return height;
+    }
+
 }

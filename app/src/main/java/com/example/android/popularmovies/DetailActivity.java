@@ -17,13 +17,13 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
-    @BindView(R.id.tvTitle) TextView titleTv;
     @BindView(R.id.tvOverview) TextView overviewTv;
     @BindView(R.id.ivPoster) ImageView posterIv;
     @BindView(R.id.tvRating) TextView ratingTv;
     @BindView(R.id.tvReleaseDate) TextView releaseDateTv;
     @BindView(R.id.ratingBar) RatingBar ratingBar;
     @BindView(R.id.tvLanguage) TextView languageTv;
+    @BindView(R.id.ivBackdrop) ImageView backdropIv;
 
 
     @Override
@@ -45,16 +45,16 @@ public class DetailActivity extends AppCompatActivity {
             Movie movie = data.getParcelable(MainActivity.KEY_MOVIE);
 
             if(movie != null){
-                String title = movie.getMovieTitle();
                 String overview = movie.getOverview();
                 String posterPath = movie.getPosterPath();
+                String backdropPath = movie.getBackdropPath();
                 String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
+                String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
                 String rating = movie.getRatingString();
                 String releaseDate = movie.getReleaseDate();
                 String language = movie.getLanguage();
                 float ratingForFiveStars = movie.getRatingForFiveStars();
 
-                titleTv.setText(title);
                 overviewTv.setText(overview);
                 ratingTv.setText(rating);
                 releaseDateTv.setText(releaseDate);
@@ -62,6 +62,7 @@ public class DetailActivity extends AppCompatActivity {
                 languageTv.setText(language);
 
                 Picasso.with(this).load(posterUrl).into(posterIv);
+                Picasso.with(this).load(backdropUrl).into(backdropIv);
             }
         }
     }

@@ -31,6 +31,9 @@ class MoviesJsonUtils {
     /* key  for poster path string in movie JSON object */
     private static final String POSTER_PATH = "poster_path";
 
+    /* key  for backdrop path string in movie JSON object */
+    private static final String BACKDROP_PATH = "backdrop_path";
+
     /* key  for the average vote float in movie JSON object */
     private static final String VOTE_AVERAGE = "vote_average";
 
@@ -81,8 +84,9 @@ class MoviesJsonUtils {
         String posterPath = movieJsonObject.optString(POSTER_PATH);
         double rating = movieJsonObject.optDouble(VOTE_AVERAGE);
         String releaseDate = movieJsonObject.optString(RELEASE_DATE);
+        String backdropPath = movieJsonObject.optString(BACKDROP_PATH);
 
-        return new Movie(title, overview, posterPath, releaseDate, rating, language);
+        return new Movie(title, overview, posterPath, backdropPath, releaseDate, rating, language);
     }
 
     /**
@@ -91,48 +95,48 @@ class MoviesJsonUtils {
      * @param json the JSON response from query
      * @return a single Movie object
      */
-    @Nullable
-    public static Movie parseSingleMovieJson(String json){
-
-        // JSON keys
-        final String TITLE = "original_title";
-        final String LANGUAGE = "original_language";
-        final String OVERVIEW = "overview";
-//        final String TAGLINE = "tagline";
-        final String POSTER_PATH = "poster_path";
-        final String RELEASE_DATE = "release_date";
-        final String RATING = "vote_average";
-//        final String RUNTIME = "runtime";
-//        // genres array
-//        final String GENRES = "genres";
-//        final String GENRES_NAME = "name";
-
-        try {
-            JSONObject rootObject = new JSONObject(json);
-
-            String title = rootObject.optString(TITLE);
-            String overview = rootObject.optString(OVERVIEW);
-            String language = rootObject.optString(LANGUAGE);
-            //String tagline = rootObject.optString(TAGLINE);
-            String posterPath = rootObject.optString(POSTER_PATH);
-            String releaseDate = rootObject.optString(RELEASE_DATE);
-            double rating = rootObject.optDouble(RATING);
-            //int runtime = rootObject.optInt(RUNTIME);
-
-//            JSONArray genresArray = rootObject.optJSONArray(GENRES);
-//            List<String> genresList = new ArrayList<>();
+//    @Nullable
+//    public static Movie parseSingleMovieJson(String json){
 //
-//            for (int i = 0, j = genresArray.length(); i < j; i ++){
-//                JSONObject genreObject = genresArray.optJSONObject(i);
-//                genresList.add(genreObject.optString(GENRES_NAME));
-//            }
-
-            return new Movie(title, overview, posterPath, releaseDate, rating,
-                            language);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//        // JSON keys
+//        final String TITLE = "original_title";
+//        final String LANGUAGE = "original_language";
+//        final String OVERVIEW = "overview";
+////        final String TAGLINE = "tagline";
+//        final String POSTER_PATH = "poster_path";
+//        final String RELEASE_DATE = "release_date";
+//        final String RATING = "vote_average";
+////        final String RUNTIME = "runtime";
+////        // genres array
+////        final String GENRES = "genres";
+////        final String GENRES_NAME = "name";
+//
+//        try {
+//            JSONObject rootObject = new JSONObject(json);
+//
+//            String title = rootObject.optString(TITLE);
+//            String overview = rootObject.optString(OVERVIEW);
+//            String language = rootObject.optString(LANGUAGE);
+//            //String tagline = rootObject.optString(TAGLINE);
+//            String posterPath = rootObject.optString(POSTER_PATH);
+//            String releaseDate = rootObject.optString(RELEASE_DATE);
+//            double rating = rootObject.optDouble(RATING);
+//            //int runtime = rootObject.optInt(RUNTIME);
+//
+////            JSONArray genresArray = rootObject.optJSONArray(GENRES);
+////            List<String> genresList = new ArrayList<>();
+////
+////            for (int i = 0, j = genresArray.length(); i < j; i ++){
+////                JSONObject genreObject = genresArray.optJSONObject(i);
+////                genresList.add(genreObject.optString(GENRES_NAME));
+////            }
+//
+//            return new Movie(title, overview, posterPath, releaseDate, rating,
+//                            language);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 }

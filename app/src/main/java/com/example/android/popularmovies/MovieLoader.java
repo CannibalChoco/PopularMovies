@@ -32,7 +32,7 @@ class MovieLoader extends AsyncTaskLoader<List<Movie>> {
 
     @Override
     public List<Movie> loadInBackground() {
-        return NetworkUtils.fetchMovieData(path, apiKey);
+        return NetworkUtils.fetchMovieData(path, NetworkUtils.NO_MOVIE_ID, apiKey);
     }
 }
 
