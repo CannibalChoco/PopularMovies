@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,6 +16,7 @@
             android:gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
+            tools:src="@drawable/sample_w500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -24,15 +25,15 @@
             android:id="@+id/tvRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/ratingBar"
             app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:text="3.6" />
+            tools:text="3.6"
+            android:layout_marginLeft="8dp" />
 
         <TextView
             android:id="@+id/tvReleaseDate"
@@ -63,16 +64,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="250dp"
             android:adjustViewBounds="true"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:src="@drawable/sample_w500" />
+            app:layout_constraintTop_toTopOf="@+id/ivBackdrop"
+            tools:src="@drawable/sample_w500"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp" />
 
         <TextView
             android:id="@+id/tvOverview"
@@ -91,19 +92,19 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:numStars="5"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop" />
+            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
+            android:layout_marginLeft="8dp" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="205dp" />
+            app:layout_constraintGuide_percent="0.35" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
