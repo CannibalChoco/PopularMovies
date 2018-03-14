@@ -3,8 +3,10 @@ package com.example.android.popularmovies.Utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.android.popularmovies.Movie;
+import com.example.android.popularmovies.MovieReview;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,8 +18,12 @@ import java.util.List;
 
 class MoviesJsonUtils {
 
-    /* key  for all movie result array in JSON */
+    /* key  for all movie result array in JSON and for review result array*/
     private static final String RESULTS_ARRAY = "results";
+
+    /************************
+     * JSON keys for movies *
+     ************************/
 
     /* key  for title string in movie JSON object*/
     private static final String TITLE = "title";
@@ -39,6 +45,20 @@ class MoviesJsonUtils {
 
     /* key  for release date string in movie JSON object*/
     private static final String RELEASE_DATE = "release_date";
+
+    /* key  for id int in movie JSON object*/
+    private static final String MOVIE_ID = "id";
+
+    /*************************
+     * JSON keys for reviews *
+     *************************/
+
+    /* Key for review author*/
+    private static final String REVIEW_AUTHOR = "author";
+
+    /* Key for review content*/
+    private static final String REVIEW_CONTENT = "content";
+
 
     /**
      * Parse the JSON response received when query returns multiple movies
@@ -71,6 +91,54 @@ class MoviesJsonUtils {
     }
 
     /**
+     * Parse the JSON response for review query
+     *
+     * @param json json the JSON response from query
+     * @return a List of MovieReview objects
+     */
+    @Nullable
+    public static List<Movie> parseReviewJson (String json){
+        if (TextUtils.isEmpty(json)){
+            return null;
+        }
+
+        List<MovieReview> reviewList = new ArrayList<>();
+
+        try {
+            JSONObject root = new JSONObject(json);
+            JSONArray resultsArray = root.getJSONArray(RESULTS_ARRAY);
+
+            for (int i = 0, j = resultsArray.length(); i < j; i++){
+                MovieReview review = getReviewFromJsonObject(resultsArray.getJSONObject(i));
+                reviewList.add(review);
+            }
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        Movie movie = new Movie(reviewList);
+        List<Movie> list = new ArrayList<>();
+        list.add(movie);
+        return list;
+    }
+
+    /**
+     * Helper method to parse a single JSON object review
+     *
+     * @param reviewJsonObject JSONObject from the root object of JSON response
+     * @return Movie
+     */
+    @NonNull
+    private static MovieReview getReviewFromJsonObject (JSONObject reviewJsonObject){
+        String author = reviewJsonObject.optString(REVIEW_AUTHOR);
+        String review = reviewJsonObject.optString(REVIEW_CONTENT);
+
+        Log.d("REVIEWS", author + "   " + review);
+        return new MovieReview(author, review);
+    }
+
+    /**
      * Helper method to parse a single JSON object movie
      *
      * @param movieJsonObject JSONObject from the root object of JSON response
@@ -85,8 +153,9 @@ class MoviesJsonUtils {
         double rating = movieJsonObject.optDouble(VOTE_AVERAGE);
         String releaseDate = movieJsonObject.optString(RELEASE_DATE);
         String backdropPath = movieJsonObject.optString(BACKDROP_PATH);
+        int id = movieJsonObject.optInt(MOVIE_ID, 0);
 
-        return new Movie(title, overview, posterPath, backdropPath, releaseDate, rating, language);
+        return new Movie(title, overview, posterPath, backdropPath, releaseDate, rating, language, id);
     }
 
     /**

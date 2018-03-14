@@ -13,18 +13,19 @@
             android:id="@+id/ivBackdrop"
             android:layout_width="0dp"
             android:layout_height="300dp"
-            android:gravity="center"
             android:adjustViewBounds="true"
+            android:gravity="center"
             android:scaleType="centerCrop"
-            tools:src="@drawable/sample_w500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/sample_w500" />
 
         <TextView
             android:id="@+id/tvRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
@@ -32,8 +33,7 @@
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/ratingBar"
             app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:text="3.6"
-            android:layout_marginLeft="8dp" />
+            tools:text="3.6" />
 
         <TextView
             android:id="@+id/tvReleaseDate"
@@ -64,6 +64,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="250dp"
             android:adjustViewBounds="true"
@@ -71,9 +73,7 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ivBackdrop"
-            tools:src="@drawable/sample_w500"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp" />
+            tools:src="@drawable/sample_w500" />
 
         <TextView
             android:id="@+id/tvOverview"
@@ -92,12 +92,12 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:numStars="5"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            android:layout_marginLeft="8dp" />
+            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline"
@@ -105,6 +105,55 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.35" />
+
+        <HorizontalScrollView
+            android:id="@+id/svTrailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvOverview">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvTrailers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:id="@+id/svReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/svTrailers"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvReviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </HorizontalScrollView>
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

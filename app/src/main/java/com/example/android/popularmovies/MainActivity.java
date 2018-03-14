@@ -41,8 +41,11 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         ConnectivityReceiver.ConnectivityReceiverListener{
 
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.gridView) RecyclerView recyclerView;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.progressBar) ProgressBar progressBar;
 
     public static final String KEY_MOVIE = "movie";
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int POSTER_WIDTH = 200;
 
-    private String apiKey;
     private List<Movie> movies;
 
     private MovieAdapter adapter;
@@ -78,14 +80,12 @@ public class MainActivity extends AppCompatActivity implements
             isWaitingForInternetConnection =
                     savedInstanceState.getBoolean(KEY_IS_WAITING_CONNECTION);
         } else {
-            movies = new ArrayList<Movie>();
+            movies = new ArrayList<>();
             isWaitingForInternetConnection = false;
         }
 
-        apiKey = BuildConfig.MOVIE_DB_API_KEY;
-
         GridLayoutManager layoutManager = new GridLayoutManager(this,
-                getGridViewSpanFromItemWidth(POSTER_WIDTH));
+                getGridViewSpanFromItemWidth());
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new MovieAdapter(this, new ArrayList<Movie>(), this);
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements
     @NonNull
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        return new MovieLoader(this, args, apiKey);
+        return new MovieLoader(this, args);
     }
 
     @Override
@@ -359,15 +359,14 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Calculate GridView span based on preferred item width
      *
-     * @param itemWidth preferred grid item width
      * @return number of columns for GridView to display
      */
-    private int getGridViewSpanFromItemWidth (int itemWidth){
+    private int getGridViewSpanFromItemWidth (){
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         float dpWidth = (displayMetrics.widthPixels / displayMetrics.densityDpi) * 160;
 
-        return Math.round(dpWidth / itemWidth);
+        return Math.round(dpWidth / POSTER_WIDTH);
     }
 
     private int getStatusbarHeight (){

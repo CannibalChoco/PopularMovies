@@ -6,8 +6,12 @@ import android.os.Parcelable;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class Movie implements Parcelable {
+
+    private static final int NO_RATING = -1;
+    private static final int NO_ID = -1;
 
     private final String title;
     private final String overview;
@@ -16,9 +20,11 @@ public class Movie implements Parcelable {
     private final String releaseDate;
     private final double rating;
     private final String language;
+    private final int id;
+    private List<MovieReview> reviewList;
 
     public Movie(String title, String overview, String posterPath, String backdropPath, String releaseDate,
-                 double rating, String language) {
+                 double rating, String language, int id) {
         this.title = title;
         this.overview = overview;
         this.posterPath = posterPath;
@@ -26,6 +32,20 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
         this.rating = rating;
         this.language = language;
+        this.id = id;
+        this.reviewList = null;
+    }
+
+    public Movie (List<MovieReview> reviews){
+        this.title = null;
+        this.overview = null;
+        this.posterPath = null;
+        this.backdropPath = null;
+        this.releaseDate = null;
+        this.rating = NO_RATING;
+        this.language = null;
+        this.id = NO_ID;
+        this.reviewList = reviews;
     }
 
     private Movie(Parcel in) {
@@ -36,6 +56,8 @@ public class Movie implements Parcelable {
         releaseDate = in.readString();
         rating = in.readDouble();
         language = in.readString();
+        id = in.readInt();
+        // TODO: add reviews
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -85,6 +107,9 @@ public class Movie implements Parcelable {
 
         return df.format(getRating());
     }
+    public List<MovieReview> getReviews(){
+        return reviewList;
+    }
 
     public float getRatingForFiveStars(){
         double starRating = (rating / 10) * 5;
@@ -94,6 +119,10 @@ public class Movie implements Parcelable {
 
     public String getLanguage() {
         return language;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**
@@ -107,6 +136,7 @@ public class Movie implements Parcelable {
                             posterPath + "; " +  "\n" +
                             releaseDate + "; " +  "\n" +
                             String.valueOf(rating) + "; " + "\n" +
+                            String.valueOf(id) + "; " + "\n" +
                             language;
     }
 
@@ -124,5 +154,7 @@ public class Movie implements Parcelable {
         dest.writeString(releaseDate);
         dest.writeDouble(rating);
         dest.writeString(language);
+        dest.writeInt(id);
+        // TODO: add reviews
     }
 }
