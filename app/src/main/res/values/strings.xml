@@ -18,11 +18,13 @@
       - Used by Preferences  -
       - - - - - - - - - - - - - - - -->
     <!-- Label for most popular option in Sort By preference -->
-    <string name="pref_sort_label_popular">Most Popular</string>
+    <string name="pref_sort_label_popular">Popular</string>
 
     <!-- Label for Highest Rated option Sort By preference -->
-    <string name="pref_sort_label_highest_rated">Highest Rated</string>
+    <string name="pref_sort_label_highest_rated">Top</string>
 
+    <!-- Label for Highest Rated option Sort By preference -->
+    <string name="pref_sort_label_favorites">Favorites</string>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - -
       - Used to notify user of network state changes  -

@@ -57,7 +57,6 @@ public class Movie implements Parcelable {
         rating = in.readDouble();
         language = in.readString();
         id = in.readInt();
-        // TODO: add reviews
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -155,6 +154,5 @@ public class Movie implements Parcelable {
         dest.writeDouble(rating);
         dest.writeString(language);
         dest.writeInt(id);
-        // TODO: add reviews
     }
 }

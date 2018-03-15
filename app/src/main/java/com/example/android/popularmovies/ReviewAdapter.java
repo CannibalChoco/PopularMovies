@@ -13,13 +13,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+// TODO: fix bug adapter not displaying more than 2 reviews
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder> {
 
     private final List<MovieReview> reviews;
 
     public ReviewAdapter (List<MovieReview> reviews){
         this.reviews = reviews;
-        Log.d("REVIEWS", reviews.toString());
+
+        Log.d("REVIEWS", String.valueOf(reviews.size()));
     }
 
     @NonNull
@@ -43,7 +45,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return reviews != null ? reviews.size() : 0;
+        return reviews.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

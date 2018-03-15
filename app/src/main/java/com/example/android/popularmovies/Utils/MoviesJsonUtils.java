@@ -3,7 +3,6 @@ package com.example.android.popularmovies.Utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.android.popularmovies.Movie;
 import com.example.android.popularmovies.MovieReview;
@@ -134,7 +133,7 @@ class MoviesJsonUtils {
         String author = reviewJsonObject.optString(REVIEW_AUTHOR);
         String review = reviewJsonObject.optString(REVIEW_CONTENT);
 
-        Log.d("REVIEWS", author + "   " + review);
+        //Log.d("REVIEWS", author + "   " + review);
         return new MovieReview(author, review);
     }
 

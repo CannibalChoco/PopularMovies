@@ -23,10 +23,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
+// TODO: implemet bottom nav to switch between fragments- overview and reviews
 public class DetailActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>{
 
+    private static final String KEY_REVIEW_LIST = "reviews";
     private static final int REVIEW_LOADER_ID = 2;
 
     @SuppressWarnings("WeakerAccess")
@@ -49,7 +50,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     private int id;
     private ReviewAdapter reviewAdapter;
-    private List<MovieReview> reviewList;
+    private List<MovieReview> reviews;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +63,11 @@ public class DetailActivity extends AppCompatActivity implements
             actionBar.setElevation(10f);
         }
 
-        reviewList = new ArrayList<>();
+        if(savedInstanceState != null){
+            reviews = savedInstanceState.getParcelableArrayList(KEY_REVIEW_LIST);
+        } else {
+            reviews = new ArrayList<>();
+        }
 
         setTitle(getString(R.string.label_details));
 
@@ -77,16 +82,26 @@ public class DetailActivity extends AppCompatActivity implements
                 id = movie.getId();
                 if (id != 0){
                     Log.d("REVIEWS", "init layout");
+                    Log.d("REVIEWS", String.valueOf(reviews.size()));
                     LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.HORIZONTAL, false);
                     reviewRecyclerView.setLayoutManager(layoutManager);
-                    reviewAdapter = new ReviewAdapter(reviewList);
+                    reviewAdapter = new ReviewAdapter(reviews);
                     reviewRecyclerView.setAdapter(reviewAdapter);
                     searchReviews();
                 }
 
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (reviews != null){
+            outState.putParcelableArrayList(KEY_REVIEW_LIST, (ArrayList<MovieReview>) reviews);
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -126,15 +141,16 @@ public class DetailActivity extends AppCompatActivity implements
         reviewAdapter.clear();
 
         if (data != null && !data.isEmpty()) {
-            if (reviewList != null) {
-                reviewList.clear();
-                reviewList.addAll(data.get(0).getReviews());
+            if (reviews != null) {
+                reviews.clear();
+                reviews.addAll(data.get(0).getReviews());
             } else {
-                reviewList = data.get(0).getReviews();
+                reviews = data.get(0).getReviews();
             }
 
-            reviewAdapter.addAll(reviewList);
+            Log.d("REVIEWS", String.valueOf(reviews.size()));
 
+            reviewAdapter.addAll(data.get(0).getReviews());
         }
     }
 

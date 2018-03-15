@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.Utils.BottomNavigationViewBehavior;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.progressBar) ProgressBar progressBar;
+    @BindView(R.id.main_bottom_nav) BottomNavigationView bottomNav;
 
     public static final String KEY_MOVIE = "movie";
     private static final String KEY_MOVIE_LIST = "movies";
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private boolean isWaitingForInternetConnection;
 
-    private Menu menu;
+    BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +98,37 @@ public class MainActivity extends AppCompatActivity implements
         preferences = getSharedPreferences(PopularMoviesPreferences.PREFS_POPULAR_MOVIES, 0);
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
                 PopularMoviesPreferences.PREFS_SORT_DEFAULT);
+
+        navigationItemSelectedListener =
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_sort_highest_rated:
+                                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
+                                break;
+                            case R.id.action_sort_most_popular:
+                                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
+                                break;
+                            case R.id.action_sort_favorite:
+                                Toast.makeText(MainActivity.this, "Nothing hrere yet", Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
+                        }
+
+                        updatePreferences();
+                        return true;
+                    }
+                };
+
+        bottomNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        bottomNav.setSelectedItemId(getSelectedBottomNavItem());
+
+        // set hide/show bottom navigation on scroll
+        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams)
+                bottomNav.getLayoutParams();
+        coordinatorLayoutParams.setBehavior(new BottomNavigationViewBehavior());
 
         if (movies.isEmpty()){
             searchMoviesIfConnected();
@@ -180,32 +215,32 @@ public class MainActivity extends AppCompatActivity implements
         launchDetailActivity(position);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-
-        this.menu = menu;
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_sort_highest_rated:
-                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
-                break;
-            case R.id.action_sort_most_popular:
-                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
-                break;
-        }
-
-        updatePreferences();
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu, menu);
+//
+//        this.menu = menu;
+//
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        int id = item.getItemId();
+//        switch (id) {
+//            case R.id.action_sort_highest_rated:
+//                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
+//                break;
+//            case R.id.action_sort_most_popular:
+//                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
+//                break;
+//        }
+//
+//        updatePreferences();
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -214,23 +249,23 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
+
+        Menu menu = bottomNav.getMenu();
+
         if (isConnected){
             if (isWaitingForInternetConnection){
                 searchMovies();
                 isWaitingForInternetConnection = false;
             }
-            if (menu != null){
-                menu.setGroupEnabled(R.id.sort_order_menu, true);
-            }
 
+            menu.setGroupEnabled(R.id.sort_order_menu, true);
         } else {
             if (!isWaitingForInternetConnection){
                 Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
                 isWaitingForInternetConnection = true;
             }
-            if (menu != null){
-                menu.setGroupEnabled(R.id.sort_order_menu, false);
-            }
+
+            menu.setGroupEnabled(R.id.sort_order_menu, false);
         }
     }
 
@@ -367,6 +402,16 @@ public class MainActivity extends AppCompatActivity implements
         float dpWidth = (displayMetrics.widthPixels / displayMetrics.densityDpi) * 160;
 
         return Math.round(dpWidth / POSTER_WIDTH);
+    }
+
+    private int getSelectedBottomNavItem(){
+        if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_RATINGS) ){
+            return R.id.action_sort_highest_rated;
+        } else if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_POPULAR_MOVIES)){
+            return R.id.action_sort_most_popular;
+        }
+
+        return R.id.action_sort_most_popular;
     }
 
     private int getStatusbarHeight (){
