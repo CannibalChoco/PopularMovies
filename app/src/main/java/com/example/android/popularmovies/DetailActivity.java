@@ -7,8 +7,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -24,11 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // TODO: implemet bottom nav to switch between fragments- overview and reviews
-public class DetailActivity extends AppCompatActivity implements
-        android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>{
+public class DetailActivity extends AppCompatActivity{
 
     private static final String KEY_REVIEW_LIST = "reviews";
-    private static final int REVIEW_LOADER_ID = 2;
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvOverview) TextView overviewTv;
@@ -45,12 +41,51 @@ public class DetailActivity extends AppCompatActivity implements
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
 
-    @SuppressWarnings("WeakerAccess")
-    @BindView(R.id.rvReviews)RecyclerView reviewRecyclerView;
+//    @SuppressWarnings("WeakerAccess")
+//    @BindView(R.id.rvReviews)RecyclerView reviewRecyclerView;
 
     private int id;
     private ReviewAdapter reviewAdapter;
     private List<MovieReview> reviews;
+
+    private LoaderManager.LoaderCallbacks reviewLoaderListener = new
+            LoaderManager.LoaderCallbacks<List<Movie>>() {
+        @NonNull
+        @Override
+        public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
+            return new MovieLoader(DetailActivity.this,
+                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS));
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
+            //Log.i("LOADERS", "REVIEW " + (data != null ? data.toString() : "null"));
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+        }
+    };
+
+    private LoaderManager.LoaderCallbacks trailerLoaderListener = new
+            LoaderManager.LoaderCallbacks<List<Movie>>() {
+        @NonNull
+        @Override
+        public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
+            return new MovieLoader(DetailActivity.this,
+                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS));
+        }
+
+        @Override
+        public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
+            Log.i("LOADERS", "TRAILER " + (data != null ? data.toString() : "null"));
+        }
+
+        @Override
+        public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,14 +116,15 @@ public class DetailActivity extends AppCompatActivity implements
 
                 id = movie.getId();
                 if (id != 0){
-                    Log.d("REVIEWS", "init layout");
-                    Log.d("REVIEWS", String.valueOf(reviews.size()));
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-                            LinearLayoutManager.HORIZONTAL, false);
-                    reviewRecyclerView.setLayoutManager(layoutManager);
-                    reviewAdapter = new ReviewAdapter(reviews);
-                    reviewRecyclerView.setAdapter(reviewAdapter);
+//                    Log.d("REVIEWS", "init layout");
+//                    Log.d("REVIEWS", String.valueOf(reviews.size()));
+//                    LinearLayoutManager layoutManager = new LinearLayoutManager(this,
+//                            LinearLayoutManager.HORIZONTAL, false);
+//                    reviewRecyclerView.setLayoutManager(layoutManager);
+//                    reviewAdapter = new ReviewAdapter(reviews);
+//                    reviewRecyclerView.setAdapter(reviewAdapter);
                     searchReviews();
+                    searchTrailers();
                 }
 
             }
@@ -130,42 +166,13 @@ public class DetailActivity extends AppCompatActivity implements
         Picasso.with(this).load(backdropUrl).into(backdropIv);
     }
 
-    @NonNull
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new MovieLoader(this, getPathArgsBundle());
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-        reviewAdapter.clear();
-
-        if (data != null && !data.isEmpty()) {
-            if (reviews != null) {
-                reviews.clear();
-                reviews.addAll(data.get(0).getReviews());
-            } else {
-                reviews = data.get(0).getReviews();
-            }
-
-            Log.d("REVIEWS", String.valueOf(reviews.size()));
-
-            reviewAdapter.addAll(data.get(0).getReviews());
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
-        reviewAdapter.clear();
-    }
-
     /**
      *
      * @return Bundle with path for reviews
      */
-    private Bundle getPathArgsBundle (){
+    private Bundle getPathArgsBundle (String path){
         Bundle args = new Bundle();
-        args.putString(NetworkUtils.PATH_KEY, NetworkUtils.PATH_REVIEWS);
+        args.putString(NetworkUtils.PATH_KEY, path);
         args.putInt(NetworkUtils.ID_KEY, id);
         return args;
     }
@@ -176,10 +183,27 @@ public class DetailActivity extends AppCompatActivity implements
     private void searchReviews() {
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
-            loaderManager.restartLoader(REVIEW_LOADER_ID, getPathArgsBundle(), this);
+            loaderManager.restartLoader(MovieLoader.REVIEW_LOADER_ID,
+                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
         } else {
             //noinspection ConstantConditions
-            loaderManager.initLoader(REVIEW_LOADER_ID, getPathArgsBundle(), this);
+            loaderManager.initLoader(MovieLoader.REVIEW_LOADER_ID,
+                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
+        }
+    }
+
+    /**
+     * Preform trailer search with LoaderManager initLoader() or restartLoader()
+     */
+    private void searchTrailers() {
+        LoaderManager loaderManager = getSupportLoaderManager();
+        if (loaderManager != null) {
+            loaderManager.restartLoader(MovieLoader.TRAILER_LOADER_ID,
+                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS), trailerLoaderListener);
+        } else {
+            //noinspection ConstantConditions
+            loaderManager.initLoader(MovieLoader.TRAILER_LOADER_ID,
+                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS), trailerLoaderListener);
         }
     }
 }

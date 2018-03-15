@@ -22,6 +22,7 @@ public class Movie implements Parcelable {
     private final String language;
     private final int id;
     private List<MovieReview> reviewList;
+    private List<MovieTrailer> trailerList;
 
     public Movie(String title, String overview, String posterPath, String backdropPath, String releaseDate,
                  double rating, String language, int id) {
@@ -34,9 +35,10 @@ public class Movie implements Parcelable {
         this.language = language;
         this.id = id;
         this.reviewList = null;
+        this.trailerList = null;
     }
 
-    public Movie (List<MovieReview> reviews){
+    public Movie (List<MovieReview> reviews, List<MovieTrailer> trailers){
         this.title = null;
         this.overview = null;
         this.posterPath = null;
@@ -45,6 +47,7 @@ public class Movie implements Parcelable {
         this.rating = NO_RATING;
         this.language = null;
         this.id = NO_ID;
+        this.trailerList = trailers;
         this.reviewList = reviews;
     }
 
@@ -76,20 +79,20 @@ public class Movie implements Parcelable {
     }
 
     public String getOverview() {
-        return overview;
+        return overview != null ? overview : "";
     }
 
 
     public String getPosterPath() {
-        return posterPath;
+        return posterPath != null ? posterPath : "";
     }
 
     public String getBackdropPath() {
-        return backdropPath;
+        return backdropPath != null ? backdropPath : "";
     }
 
     public String getReleaseDate() {
-        return releaseDate;
+        return releaseDate != null ? releaseDate : "";
     }
 
     public String getReleaseYear() {
@@ -106,8 +109,21 @@ public class Movie implements Parcelable {
 
         return df.format(getRating());
     }
+
     public List<MovieReview> getReviews(){
         return reviewList;
+    }
+
+    public List<MovieTrailer> getTrailers() {
+        return trailerList;
+    }
+
+    public void setReviewList(List<MovieReview> reviewList) {
+        this.reviewList = reviewList;
+    }
+
+    public void setTrailerList(List<MovieTrailer> trailerList) {
+        this.trailerList = trailerList;
     }
 
     public float getRatingForFiveStars(){
@@ -117,26 +133,27 @@ public class Movie implements Parcelable {
     }
 
     public String getLanguage() {
-        return language;
+        return language != null ? language : "";
     }
 
     public int getId() {
         return id;
     }
 
-    /**
-     * Get all Movie objects fields as a string
-     *
-     * @return all fields as a string
-     */
-    public String toString (){
-        return title + "; " + "\n" +
-                            overview + "; " +  "\n" +
-                            posterPath + "; " +  "\n" +
-                            releaseDate + "; " +  "\n" +
-                            String.valueOf(rating) + "; " + "\n" +
-                            String.valueOf(id) + "; " + "\n" +
-                            language;
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", overview='" + overview + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", backdropPath='" + backdropPath + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", rating=" + rating +
+                ", language='" + language + '\'' +
+                ", id=" + id +
+                ", reviewList=" + (reviewList != null ? reviewList.toString() : "") +
+                ", trailerList=" + (trailerList != null ? trailerList.toString() : "") +
+                '}';
     }
 
     @Override

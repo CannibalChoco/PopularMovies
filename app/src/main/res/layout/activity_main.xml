@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -50,8 +46,7 @@
             app:itemIconTint="@color/color"
             app:itemTextColor="@color/color"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/menu"
+            app:menu="@menu/menu_main"
             android:layout_gravity="bottom"/>
 
     </android.support.design.widget.CoordinatorLayout>
-</android.support.constraint.ConstraintLayout>

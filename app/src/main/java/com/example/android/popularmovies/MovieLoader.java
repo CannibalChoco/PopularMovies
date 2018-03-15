@@ -11,8 +11,12 @@ import java.util.List;
 
 class MovieLoader extends AsyncTaskLoader<List<Movie>> {
 
+    public static final int MOVIE_LOADER_ID = 1;
+    public static final int REVIEW_LOADER_ID = 2;
+    public static final int TRAILER_LOADER_ID = 3;
+
     private final String path;
-    private final int id;
+    private final int movieId;
 
     public MovieLoader(Context context, Bundle args) {
         super(context);
@@ -24,9 +28,9 @@ class MovieLoader extends AsyncTaskLoader<List<Movie>> {
         }
 
         if (args != null && args.containsKey(NetworkUtils.ID_KEY)) {
-            id = args.getInt(NetworkUtils.ID_KEY);
+            movieId = args.getInt(NetworkUtils.ID_KEY);
         } else {
-            id = NetworkUtils.NO_MOVIE_ID;
+            movieId = NetworkUtils.NO_MOVIE_ID;
         }
     }
 
@@ -37,8 +41,8 @@ class MovieLoader extends AsyncTaskLoader<List<Movie>> {
 
     @Override
     public List<Movie> loadInBackground() {
-        if (id != NetworkUtils.NO_MOVIE_ID){
-            return NetworkUtils.fetchReviews(id);
+        if (movieId != NetworkUtils.NO_MOVIE_ID){
+            return NetworkUtils.fetchAdditionalData(movieId, path);
         } else {
             return NetworkUtils.fetchMovieData(path);
         }

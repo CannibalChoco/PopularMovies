@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String KEY_MOVIE_LIST = "movies";
     private static final String KEY_IS_WAITING_CONNECTION = "isWaitingConnection";
 
-    private static final int MOVIE_LOADER_ID = 1;
-
     private static final int POSTER_WIDTH = 200;
 
     private List<Movie> movies;
@@ -216,10 +214,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu, menu);
+//    public boolean onCreateOptionsMenu(Menu menu_main) {
+//        getMenuInflater().inflate(R.menu_main.menu_main, menu_main);
 //
-//        this.menu = menu;
+//        this.menu_main = menu_main;
 //
 //        return true;
 //    }
@@ -301,11 +299,11 @@ public class MainActivity extends AppCompatActivity implements
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
-            loaderManager.restartLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
+            loaderManager.restartLoader(MovieLoader.MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         } else {
             Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
             //noinspection ConstantConditions
-            loaderManager.initLoader(MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
+            loaderManager.initLoader(MovieLoader.MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         }
     }
 
@@ -368,10 +366,10 @@ public class MainActivity extends AppCompatActivity implements
     private void setTitleToSortOrder() {
         switch (prefSortOrder) {
             case PopularMoviesPreferences.PREFS_SORT_POPULAR:
-                setTitle(getString(R.string.pref_sort_label_popular));
+                setTitle(getString(R.string.nav_sort_label_popular));
                 break;
             case PopularMoviesPreferences.PREFS_SORT_RATINGS:
-                setTitle(getString(R.string.pref_sort_label_highest_rated));
+                setTitle(getString(R.string.nav_sort_label_highest_rated));
                 break;
             default:
                 setTitle(getString(R.string.app_name));

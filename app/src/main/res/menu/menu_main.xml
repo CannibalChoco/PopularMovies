@@ -5,16 +5,16 @@
         <item
             android:id="@+id/action_sort_most_popular"
             android:icon="@drawable/ic_action_popular_light"
-            android:title="@string/pref_sort_label_popular" />
+            android:title="@string/nav_sort_label_popular" />
 
         <item
             android:id="@+id/action_sort_highest_rated"
             android:icon="@drawable/ic_action_ratings_light"
-            android:title="@string/pref_sort_label_highest_rated" />
+            android:title="@string/nav_sort_label_highest_rated" />
 
         <item
             android:id="@+id/action_sort_favorite"
             android:icon="@drawable/ic_action_favorite_light"
-            android:title="@string/pref_sort_label_favorites" />
+            android:title="@string/nav_sort_label_favorites" />
     </group>
 </menu>

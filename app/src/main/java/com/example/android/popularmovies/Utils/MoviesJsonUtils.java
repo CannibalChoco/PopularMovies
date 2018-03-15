@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.example.android.popularmovies.Movie;
 import com.example.android.popularmovies.MovieReview;
+import com.example.android.popularmovies.MovieTrailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +59,16 @@ class MoviesJsonUtils {
     /* Key for review content*/
     private static final String REVIEW_CONTENT = "content";
 
+    /*************************
+     * JSON keys for trailers *
+     *************************/
+
+    /* Key for trailers name*/
+    private static final String TRAILER_NAME = "name";
+
+    /* Key for trailers key (path to viedo) */
+    private static final String TRAILER_KEY = "key";
+
 
     /**
      * Parse the JSON response received when query returns multiple movies
@@ -92,8 +103,8 @@ class MoviesJsonUtils {
     /**
      * Parse the JSON response for review query
      *
-     * @param json json the JSON response from query
-     * @return a List of MovieReview objects
+     * @param json the JSON response from query
+     * @return a List of Movie objects containing reviews
      */
     @Nullable
     public static List<Movie> parseReviewJson (String json){
@@ -116,10 +127,58 @@ class MoviesJsonUtils {
             e.printStackTrace();
         }
 
-        Movie movie = new Movie(reviewList);
+        Movie movie = new Movie(reviewList, null);
         List<Movie> list = new ArrayList<>();
         list.add(movie);
         return list;
+    }
+
+    /**
+     * Parse the JSON response for video query
+     *
+     * @param json the JSON response from query
+     * @return a List of Movie objects containing trailers
+     */
+    @Nullable
+    public static List<Movie> parseTrailerJson (String json){
+        if (TextUtils.isEmpty(json)){
+            return null;
+        }
+
+        List<MovieTrailer> trailerList = new ArrayList<>();
+
+        try {
+            JSONObject root = new JSONObject(json);
+            JSONArray resultsArray = root.getJSONArray(RESULTS_ARRAY);
+
+            for (int i = 0, j = resultsArray.length(); i < j; i++){
+                MovieTrailer trailer = getTrailerFromJsonObject(resultsArray.getJSONObject(i));
+                trailerList.add(trailer);
+            }
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        Movie movie = new Movie(null, trailerList);
+        List<Movie> list = new ArrayList<>();
+        list.add(movie);
+        return list;
+    }
+
+    /**
+     * Helper method to parse a single JSON object review
+     *
+     * @param trailerJsonObject JSONObject from the root object of JSON response
+     * @return Movie
+     */
+    @NonNull
+    private static MovieTrailer getTrailerFromJsonObject (JSONObject trailerJsonObject){
+        String name = trailerJsonObject.optString(TRAILER_NAME);
+        String key = trailerJsonObject.optString(TRAILER_KEY);
+
+        //Log.d("REVIEWS", author + "   " + review);
+        return new MovieTrailer(name, key);
     }
 
     /**

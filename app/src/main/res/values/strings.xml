@@ -10,26 +10,30 @@
     <!-- DetailActivity label -->
     <string name="label_details">Details</string>
 
-    <!-- Settings menu label -->
-    <string name="label_settings">Settings</string>
 
+    <!-- - - - - - - - - - - - - - - - - - - - - -
+      - Used by Preferences and BottomNavigation -
+      - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Label for most popular option in bottom navigation in main screen-->
+    <string name="nav_sort_label_popular">Popular</string>
 
-    <!-- - - - - - - - - - - - - - - -
-      - Used by Preferences  -
-      - - - - - - - - - - - - - - - -->
-    <!-- Label for most popular option in Sort By preference -->
-    <string name="pref_sort_label_popular">Popular</string>
+    <!-- Label for Highest Rated option bottom navigation in main screen -->
+    <string name="nav_sort_label_highest_rated">Top</string>
 
-    <!-- Label for Highest Rated option Sort By preference -->
-    <string name="pref_sort_label_highest_rated">Top</string>
+    <!-- Label for Highest Rated option bottom navigation in main screen -->
+    <string name="nav_sort_label_favorites">Favorites</string>
 
-    <!-- Label for Highest Rated option Sort By preference -->
-    <string name="pref_sort_label_favorites">Favorites</string>
+    <!-- Label for overview option in detail screen -->
+    <string name="nav_overview">Overview</string>
+
+    <!-- Label for review option in detail screen -->
+    <string name="nav_review">Reviews</string>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - -
       - Used to notify user of network state changes  -
       - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- Notify user when connection is lost -->
     <string name="connectivity_lost_message">Connection to the internet lost</string>
+
 
 </resources>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -107,52 +107,12 @@
             app:layout_constraintGuide_percent="0.35" />
 
         <HorizontalScrollView
-            android:id="@+id/svTrailers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:paddingEnd="8dp"
-            android:paddingRight="8dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvOverview">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvTrailers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            </android.support.v7.widget.RecyclerView>
 
         </HorizontalScrollView>
-
-        <HorizontalScrollView
-            android:id="@+id/svReviews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:paddingEnd="8dp"
-            android:paddingRight="8dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/svTrailers"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvReviews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </android.support.v7.widget.RecyclerView>
-
-        </HorizontalScrollView>
-
     </android.support.constraint.ConstraintLayout>
+
 </ScrollView>
