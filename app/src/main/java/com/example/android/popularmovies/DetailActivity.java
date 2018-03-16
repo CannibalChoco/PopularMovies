@@ -229,8 +229,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String key = trailers.get(position).getKey();
 
         Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.buildUrlForMovieTrailer(key));
-        // TODO: fix DetailActivity land layout first?
-        //intent.putExtra("force_fullscreen", true);
+
+        intent.putExtra("force_fullscreen", true);
         startActivity(intent);
     }
 }
