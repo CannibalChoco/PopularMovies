@@ -7,7 +7,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -41,12 +42,13 @@ public class DetailActivity extends AppCompatActivity{
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
 
-//    @SuppressWarnings("WeakerAccess")
-//    @BindView(R.id.rvReviews)RecyclerView reviewRecyclerView;
+    @BindView(R.id.rvTrailers) RecyclerView recyclerViewTrailers;
 
     private int id;
-    private ReviewAdapter reviewAdapter;
     private List<MovieReview> reviews;
+    private List<MovieTrailer> trailers;
+
+    private TrailerAdapter trailerAdapter;
 
     private LoaderManager.LoaderCallbacks reviewLoaderListener = new
             LoaderManager.LoaderCallbacks<List<Movie>>() {
@@ -69,23 +71,38 @@ public class DetailActivity extends AppCompatActivity{
 
     private LoaderManager.LoaderCallbacks trailerLoaderListener = new
             LoaderManager.LoaderCallbacks<List<Movie>>() {
-        @NonNull
-        @Override
-        public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
-            return new MovieLoader(DetailActivity.this,
-                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS));
-        }
+                @NonNull
+                @Override
+                public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
+                    return new MovieLoader(DetailActivity.this,
+                            getPathArgsBundle(NetworkUtils.PATH_TRAILERS));
+                }
 
-        @Override
-        public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-            Log.i("LOADERS", "TRAILER " + (data != null ? data.toString() : "null"));
-        }
+                @Override
+                public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
 
-        @Override
-        public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+                    trailerAdapter.clear();
 
-        }
-    };
+                    if(data != null && !data.isEmpty()){
+                        Movie movie = data.get(0);
+                        List<MovieTrailer> newTrailers = movie.getTrailers();
+
+                        if (trailers != null){
+                            trailers.clear();
+                            trailerAdapter.addAll(newTrailers);
+                        } else {
+                            trailers = newTrailers;
+                        }
+
+                        trailerAdapter.addAll(trailers);
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+
+                }
+            };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,12 +113,6 @@ public class DetailActivity extends AppCompatActivity{
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
             actionBar.setElevation(10f);
-        }
-
-        if(savedInstanceState != null){
-            reviews = savedInstanceState.getParcelableArrayList(KEY_REVIEW_LIST);
-        } else {
-            reviews = new ArrayList<>();
         }
 
         setTitle(getString(R.string.label_details));
@@ -116,28 +127,19 @@ public class DetailActivity extends AppCompatActivity{
 
                 id = movie.getId();
                 if (id != 0){
-//                    Log.d("REVIEWS", "init layout");
-//                    Log.d("REVIEWS", String.valueOf(reviews.size()));
-//                    LinearLayoutManager layoutManager = new LinearLayoutManager(this,
-//                            LinearLayoutManager.HORIZONTAL, false);
-//                    reviewRecyclerView.setLayoutManager(layoutManager);
-//                    reviewAdapter = new ReviewAdapter(reviews);
-//                    reviewRecyclerView.setAdapter(reviewAdapter);
+                    LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(this,
+                            LinearLayoutManager.HORIZONTAL, false);
+                    recyclerViewTrailers.setLayoutManager(trailerLayoutManager);
+                    trailerAdapter = new TrailerAdapter(this,
+                            trailers != null ? trailers : new ArrayList<MovieTrailer>());
+                    recyclerViewTrailers.setAdapter(trailerAdapter);
+
                     searchReviews();
                     searchTrailers();
                 }
 
             }
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        if (reviews != null){
-            outState.putParcelableArrayList(KEY_REVIEW_LIST, (ArrayList<MovieReview>) reviews);
-        }
-
-        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -206,4 +208,9 @@ public class DetailActivity extends AppCompatActivity{
                     getPathArgsBundle(NetworkUtils.PATH_TRAILERS), trailerLoaderListener);
         }
     }
+
+    private void viewTrailer (String key){
+
+    }
+
 }

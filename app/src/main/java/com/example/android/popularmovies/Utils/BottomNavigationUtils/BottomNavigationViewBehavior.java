@@ -1,4 +1,4 @@
-package com.example.android.popularmovies.Utils;
+package com.example.android.popularmovies.Utils.BottomNavigationUtils;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -39,20 +39,35 @@ public class BottomNavigationViewBehavior extends CoordinatorLayout.Behavior<Bot
                                int dxUnconsumed, int dyUnconsumed,
                                @ViewCompat.NestedScrollType int type)
     {
-        if (dyConsumed > 0) {
-            slideDown(child);
-        } else if (dyConsumed < 0) {
-            slideUp(child);
+
+        if (dyConsumed < 0){
+            showBottomNavigationView(child);
+        } else if (dyConsumed > 0){
+            hideBottomNavigationView(child);
         }
+
+//        if (dyConsumed > 0) {
+//            slideDown(child);
+//        } else if (dyConsumed < 0) {
+//            slideUp(child);
+//        }
     }
 
     private void slideUp(BottomNavigationView child) {
         child.clearAnimation();
-        child.animate().translationY(0).setDuration(200);
+        child.animate().translationY(0).setDuration(300);
     }
 
     private void slideDown(BottomNavigationView child) {
         child.clearAnimation();
-        child.animate().translationY(height).setDuration(200);
+        child.animate().translationY(height).setDuration(300);
+    }
+
+    private void showBottomNavigationView(BottomNavigationView view){
+        view.animate().translationY(0);
+    }
+
+    private void hideBottomNavigationView(BottomNavigationView view){
+        view.animate().translationY(view.getHeight());
     }
 }
