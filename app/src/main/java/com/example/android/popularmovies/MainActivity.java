@@ -38,6 +38,7 @@ import butterknife.ButterKnife;
  * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
  * some code is taken from the tutorial, which is disclosed above that code.
  */
+// TODO loader restarted when DetailActivity up button clicked; not restarted when device back clicked
 public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.GridItemListener,

@@ -23,9 +23,16 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     private List<MovieTrailer> trailers;
     private Context context;
 
-    public TrailerAdapter(Context context, List<MovieTrailer> trailers){
+    private static ListItemListener onClickListener;
+
+    public interface ListItemListener {
+        void onListItemClick(int position);
+    }
+
+    public TrailerAdapter(Context context, List<MovieTrailer> trailers, ListItemListener listener){
         this.context = context;
         this.trailers = trailers;
+        onClickListener = listener;
     }
 
     @NonNull
@@ -53,12 +60,19 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         return trailers != null ? trailers.size() : 0;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.ivThumbnail) ImageView thumbnailIv;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            onClickListener.onListItemClick(position);
         }
     }
 

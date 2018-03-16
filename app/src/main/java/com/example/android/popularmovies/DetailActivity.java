@@ -1,14 +1,15 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -23,9 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // TODO: implemet bottom nav to switch between fragments- overview and reviews
-public class DetailActivity extends AppCompatActivity{
+public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemListener{
 
-    private static final String KEY_REVIEW_LIST = "reviews";
+    private static final String TRAILERS_LIST_KEY = "trailers";
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvOverview) TextView overviewTv;
@@ -80,21 +81,23 @@ public class DetailActivity extends AppCompatActivity{
 
                 @Override
                 public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-
-                    trailerAdapter.clear();
-
+                    Log.i("POSITION", "onLoadFinished");
                     if(data != null && !data.isEmpty()){
+
                         Movie movie = data.get(0);
                         List<MovieTrailer> newTrailers = movie.getTrailers();
+                        Log.i("POSITION", newTrailers.toString());
 
                         if (trailers != null){
+                            trailerAdapter.clear();
                             trailers.clear();
-                            trailerAdapter.addAll(newTrailers);
                         } else {
-                            trailers = newTrailers;
+                            trailers = new ArrayList<>();
                         }
 
-                        trailerAdapter.addAll(trailers);
+                        trailers.addAll(newTrailers);
+                        trailerAdapter.addAll(newTrailers);
+                        Log.i("POSITION", trailers.toString());
                     }
                 }
 
@@ -110,10 +113,7 @@ public class DetailActivity extends AppCompatActivity{
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setElevation(10f);
-        }
+        Log.i("POSITION", "onCreate");
 
         setTitle(getString(R.string.label_details));
 
@@ -131,15 +131,30 @@ public class DetailActivity extends AppCompatActivity{
                             LinearLayoutManager.HORIZONTAL, false);
                     recyclerViewTrailers.setLayoutManager(trailerLayoutManager);
                     trailerAdapter = new TrailerAdapter(this,
-                            trailers != null ? trailers : new ArrayList<MovieTrailer>());
+                            trailers != null ? trailers : new ArrayList<MovieTrailer>(), this);
                     recyclerViewTrailers.setAdapter(trailerAdapter);
 
                     searchReviews();
+                    // TODO: trailers are re-queried when user comes back from youtube
                     searchTrailers();
                 }
 
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (trailers != null){
+            outState.putParcelableArrayList(TRAILERS_LIST_KEY, (ArrayList<MovieTrailer>) trailers);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
     }
 
     /**
@@ -209,8 +224,13 @@ public class DetailActivity extends AppCompatActivity{
         }
     }
 
-    private void viewTrailer (String key){
+    @Override
+    public void onListItemClick(int position) {
+        String key = trailers.get(position).getKey();
 
+        Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.buildUrlForMovieTrailer(key));
+        // TODO: fix DetailActivity land layout first?
+        //intent.putExtra("force_fullscreen", true);
+        startActivity(intent);
     }
-
 }
