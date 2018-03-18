@@ -1,6 +1,7 @@
 package com.example.android.popularmovies;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -42,8 +45,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.tvLanguage) TextView languageTv;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
+    @BindView(R.id.trailersPb) ProgressBar trailersPb;
 
     @BindView(R.id.rvTrailers) RecyclerView recyclerViewTrailers;
+    @BindView(R.id.trailerEmptyStateTv) TextView trailerEmptyStateTextTv;
 
     private int id;
     private List<MovieReview> reviews;
@@ -81,23 +86,27 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
                 @Override
                 public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-                    Log.i("POSITION", "onLoadFinished");
+                    trailerAdapter.clear();
                     if(data != null && !data.isEmpty()){
-
                         Movie movie = data.get(0);
-                        List<MovieTrailer> newTrailers = movie.getTrailers();
-                        Log.i("POSITION", newTrailers.toString());
 
-                        if (trailers != null){
-                            trailerAdapter.clear();
-                            trailers.clear();
-                        } else {
-                            trailers = new ArrayList<>();
+                        if (movie != null && movie.getTrailers() != null){
+                            List<MovieTrailer> newTrailers = movie.getTrailers();
+
+                            if (newTrailers != null && !newTrailers.isEmpty()){
+                                if (trailers != null){
+                                    trailers.clear();
+                                } else {
+                                    trailers = new ArrayList<>();
+                                }
+
+                                trailers.addAll(movie.getTrailers());
+                                trailerAdapter.addAll(trailers);
+                                showTrailers();
+                            } else {
+                                showEmptyStateText();
+                            }
                         }
-
-                        trailers.addAll(newTrailers);
-                        trailerAdapter.addAll(newTrailers);
-                        Log.i("POSITION", trailers.toString());
                     }
                 }
 
@@ -112,8 +121,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-
-        Log.i("POSITION", "onCreate");
 
         setTitle(getString(R.string.label_details));
 
@@ -138,7 +145,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     // TODO: trailers are re-queried when user comes back from youtube
                     searchTrailers();
                 }
-
             }
         }
     }
@@ -213,6 +219,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
      * Preform trailer search with LoaderManager initLoader() or restartLoader()
      */
     private void searchTrailers() {
+        showLoadingTrailers();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             loaderManager.restartLoader(MovieLoader.TRAILER_LOADER_ID,
@@ -228,9 +235,29 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     public void onListItemClick(int position) {
         String key = trailers.get(position).getKey();
 
-        Intent intent = new Intent(Intent.ACTION_VIEW, NetworkUtils.buildUrlForMovieTrailer(key));
+        Uri uri = NetworkUtils.buildUrlForMovieTrailer(key);
+        Log.i("POSITION", uri.toString());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
         intent.putExtra("force_fullscreen", true);
         startActivity(intent);
+    }
+
+    public void showTrailers( ){
+        trailerEmptyStateTextTv.setVisibility(View.GONE);
+        recyclerViewTrailers.setVisibility(View.VISIBLE);
+        trailersPb.setVisibility(View.GONE);
+    }
+
+    public void showEmptyStateText( ){
+        trailerEmptyStateTextTv.setVisibility(View.VISIBLE);
+        recyclerViewTrailers.setVisibility(View.GONE);
+        trailersPb.setVisibility(View.GONE);
+    }
+
+    public void showLoadingTrailers( ){
+        trailersPb.setVisibility(View.VISIBLE);
+        trailerEmptyStateTextTv.setVisibility(View.GONE);
+        recyclerViewTrailers.setVisibility(View.GONE);
     }
 }

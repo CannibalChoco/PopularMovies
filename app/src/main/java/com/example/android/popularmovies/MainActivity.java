@@ -191,11 +191,11 @@ public class MainActivity extends AppCompatActivity implements
         if (movieData != null && !movieData.isEmpty()) {
             if (movies != null) {
                 movies.clear();
-                movies.addAll(movieData);
             } else {
-                movies = movieData;
+                movies = new ArrayList<>();
             }
 
+            movies.addAll(movieData);
             adapter.addAll(movieData);
             showMovies();
         } else {

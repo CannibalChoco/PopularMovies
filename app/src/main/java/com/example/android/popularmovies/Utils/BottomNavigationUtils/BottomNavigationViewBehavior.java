@@ -34,33 +34,12 @@ public class BottomNavigationViewBehavior extends CoordinatorLayout.Behavior<Bot
     }
 
     @Override
-    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull BottomNavigationView child,
-                               @NonNull View target, int dxConsumed, int dyConsumed,
-                               int dxUnconsumed, int dyUnconsumed,
-                               @ViewCompat.NestedScrollType int type)
-    {
+    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout,
+                                  @NonNull BottomNavigationView child,
+                                  @NonNull View target, int dx, int dy,
+                                  @NonNull int[] consumed, int type) {
+        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
 
-        if (dyConsumed < 0){
-            showBottomNavigationView(child);
-        } else if (dyConsumed > 0){
-            hideBottomNavigationView(child);
-        }
-
-//        if (dyConsumed > 0) {
-//            slideDown(child);
-//        } else if (dyConsumed < 0) {
-//            slideUp(child);
-//        }
-    }
-
-    private void slideUp(BottomNavigationView child) {
-        child.clearAnimation();
-        child.animate().translationY(0).setDuration(300);
-    }
-
-    private void slideDown(BottomNavigationView child) {
-        child.clearAnimation();
-        child.animate().translationY(height).setDuration(300);
     }
 
     private void showBottomNavigationView(BottomNavigationView view){

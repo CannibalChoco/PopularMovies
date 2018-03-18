@@ -81,10 +81,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivPoster"
+            app:layout_constraintTop_toBottomOf="@+id/labelOverviewTv"
             tools:text="@string/empty_state_default" />
 
         <RatingBar
@@ -110,14 +110,63 @@
             android:id="@+id/rvTrailers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
             android:background="@color/colorPrimaryLight"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvOverview"
+            app:layout_constraintTop_toBottomOf="@+id/labelTrailersTv" />
+
+        <TextView
+            android:id="@+id/trailerEmptyStateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/trailers_empty_state_text"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="16dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/labelTrailersTv" />
+
+        <TextView
+            android:id="@+id/labelTrailersTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/label_trailers"
+            android:textColor="@color/colorPrimaryLight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvOverview"
+            android:layout_marginLeft="16dp" />
+
+        <TextView
+            android:id="@+id/labelOverviewTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/label_overview"
+            android:textColor="@color/colorPrimaryLight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivPoster"
+            android:layout_marginLeft="16dp" />
+
+        <ProgressBar
+            android:id="@+id/trailersPb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelTrailersTv" />
 
     </android.support.constraint.ConstraintLayout>
 

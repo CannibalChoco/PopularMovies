@@ -69,6 +69,9 @@ class MoviesJsonUtils {
     /* Key for trailers key (path to viedo) */
     private static final String TRAILER_KEY = "key";
 
+    /* Key for site where trailer is hosted */
+    private static final String TRAILER_SITE = "site";
+
 
     /**
      * Parse the JSON response received when query returns multiple movies
@@ -176,9 +179,9 @@ class MoviesJsonUtils {
     private static MovieTrailer getTrailerFromJsonObject (JSONObject trailerJsonObject){
         String name = trailerJsonObject.optString(TRAILER_NAME);
         String key = trailerJsonObject.optString(TRAILER_KEY);
+        String site = trailerJsonObject.optString(TRAILER_SITE);
 
-        //Log.d("REVIEWS", author + "   " + review);
-        return new MovieTrailer(name, key);
+        return new MovieTrailer(name, key, site);
     }
 
     /**

@@ -36,4 +36,16 @@
     <string name="connectivity_lost_message">Connection to the internet lost</string>
 
 
+    <!-- - - - - - - - - - -
+      - Used DetailActivity -
+      - - - - - - - - - - -->
+    <!-- Empty state text  -->
+    <string name="trailers_empty_state_text">No trailers found</string>
+
+    <!-- Label for overview  -->
+    <string name="label_overview">Overview</string>
+
+    <!-- Label for trailers  -->
+    <string name="label_trailers">Trailers</string>
+
 </resources>

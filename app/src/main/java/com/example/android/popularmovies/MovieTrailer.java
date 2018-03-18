@@ -8,15 +8,18 @@ public class MovieTrailer implements Parcelable{
 
     private final String name;
     private final String key;
+    private final String site;
 
-    public MovieTrailer (String name, String key){
+    public MovieTrailer (String name, String key, String site){
         this.name = name;
         this.key = key;
+        this.site = site;
     }
 
     protected MovieTrailer(Parcel in) {
         name = in.readString();
         key = in.readString();
+        site = in.readString();
     }
 
     public static final Creator<MovieTrailer> CREATOR = new Creator<MovieTrailer>() {
@@ -44,6 +47,7 @@ public class MovieTrailer implements Parcelable{
         return "MovieTrailer{" +
                 "name='" + name + '\'' +
                 ", key='" + key + '\'' +
+                ", site='" + site + '\'' +
                 '}';
     }
 
@@ -56,5 +60,6 @@ public class MovieTrailer implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(key);
+        dest.writeString(site);
     }
 }
