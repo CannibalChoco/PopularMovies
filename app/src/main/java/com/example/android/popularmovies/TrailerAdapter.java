@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -44,15 +45,32 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         MovieTrailer trailer = trailers.get(position);
 
+        holder.trailerNameTv.setVisibility(View.GONE);
+        holder.playIv.setVisibility(View.GONE);
+
         String trailerKey = trailer.getKey();
+        String trailerName = trailer.getName();
 
         if (trailerKey != null && !TextUtils.isEmpty(trailerKey)){
             String thumbnailUrl = NetworkUtils.buildUrlForMovieThumbnail(trailerKey);
-            Picasso.with(context).load(thumbnailUrl).into(holder.thumbnailIv);
+            Picasso.with(context).load(thumbnailUrl).into(holder.thumbnailIv, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    holder.trailerNameTv.setVisibility(View.VISIBLE);
+                    holder.playIv.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
         }
+
+        holder.trailerNameTv.setText(trailerName);
     }
 
     @Override
@@ -62,6 +80,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.ivThumbnail) ImageView thumbnailIv;
+        @BindView(R.id.tvTrailerName) TextView trailerNameTv;
+        @BindView(R.id.ivPlay) ImageView playIv;
 
         public ViewHolder(View itemView) {
             super(itemView);
