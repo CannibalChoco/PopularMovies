@@ -26,7 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-// TODO: implemet bottom nav to switch between fragments- overview and reviews
+import static android.view.View.GONE;
+
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemListener{
 
     private static final String TRAILERS_LIST_KEY = "trailers";
@@ -46,14 +47,19 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
     @BindView(R.id.trailersPb) ProgressBar trailersPb;
+    @BindView(R.id.reviewsPb) ProgressBar reviewsPb;
 
-    @BindView(R.id.rvTrailers) RecyclerView recyclerViewTrailers;
-    @BindView(R.id.trailerEmptyStateTv) TextView trailerEmptyStateTextTv;
+    @BindView(R.id.rvTrailers) RecyclerView rvTrailers;
+    @BindView(R.id.rvReviews) RecyclerView rvReviews;
+    @BindView(R.id.tvTrailerEmptyStateText) TextView trailerEmptyStateTextTv;
+    @BindView(R.id.tvReviewEmptyStateText) TextView reviewEmptyStateTextTv;
 
     private int id;
     private List<MovieTrailer> trailers;
+    private List<MovieReview> reviews;
 
     private TrailerAdapter trailerAdapter;
+    private ReviewAdapter reviewAdapter;
 
     private LoaderManager.LoaderCallbacks reviewLoaderListener = new
             LoaderManager.LoaderCallbacks<List<Movie>>() {
@@ -66,7 +72,28 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
         @Override
         public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-            //Log.i("LOADERS", "REVIEW " + (data != null ? data.toString() : "null"));
+            reviewAdapter.clear();
+            if(data != null && !data.isEmpty()){
+                Movie movie = data.get(0);
+
+                if (movie != null && movie.getReviews() != null){
+                    List<MovieReview> newReviews = movie.getReviews();
+
+                    if (newReviews != null && !newReviews.isEmpty()){
+                        if (reviews != null){
+                            reviews.clear();
+                        } else {
+                            reviews = new ArrayList<>();
+                        }
+
+                        reviews.addAll(newReviews);
+                        reviewAdapter.addAll(reviews);
+                        showReviews();
+                    } else {
+                        showReviewEmptyStateText();
+                    }
+                }
+            }
         }
 
         @Override
@@ -99,11 +126,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                                     trailers = new ArrayList<>();
                                 }
 
-                                trailers.addAll(movie.getTrailers());
+                                trailers.addAll(newTrailers);
                                 trailerAdapter.addAll(trailers);
                                 showTrailers();
                             } else {
-                                showEmptyStateText();
+                                showTrailerEmptyStateText();
                             }
                         }
                     }
@@ -135,10 +162,18 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 if (id != 0){
                     LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.HORIZONTAL, false);
-                    recyclerViewTrailers.setLayoutManager(trailerLayoutManager);
+                    rvTrailers.setLayoutManager(trailerLayoutManager);
                     trailerAdapter = new TrailerAdapter(this,
                             trailers != null ? trailers : new ArrayList<MovieTrailer>(), this);
-                    recyclerViewTrailers.setAdapter(trailerAdapter);
+                    rvTrailers.setAdapter(trailerAdapter);
+
+                    LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this,
+                            LinearLayoutManager.VERTICAL, false);
+                    rvReviews.setLayoutManager(reviewLayoutManager);
+
+                    reviewAdapter = new ReviewAdapter(
+                            reviews != null ? reviews : new ArrayList<MovieReview>());
+                    rvReviews.setAdapter(reviewAdapter);
 
                     searchReviews();
                     // TODO: trailers are re-queried when user comes back from youtube
@@ -203,6 +238,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
      * Preform Review search with LoaderManager initLoader() or restartLoader()
      */
     private void searchReviews() {
+        showLoadingReviews();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             loaderManager.restartLoader(MovieLoader.REVIEW_LOADER_ID,
@@ -242,21 +278,40 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         startActivity(intent);
     }
 
-    public void showTrailers( ){
-        trailerEmptyStateTextTv.setVisibility(View.GONE);
-        recyclerViewTrailers.setVisibility(View.VISIBLE);
-        trailersPb.setVisibility(View.GONE);
+    private void showTrailers( ){
+        trailerEmptyStateTextTv.setVisibility(GONE);
+        rvTrailers.setVisibility(View.VISIBLE);
+        trailersPb.setVisibility(GONE);
     }
 
-    public void showEmptyStateText( ){
+    private void showReviews( ){
+       rvReviews.setVisibility(View.VISIBLE);
+       reviewEmptyStateTextTv.setVisibility(GONE);
+       reviewsPb.setVisibility(GONE);
+    }
+
+    private void showTrailerEmptyStateText( ){
         trailerEmptyStateTextTv.setVisibility(View.VISIBLE);
-        recyclerViewTrailers.setVisibility(View.GONE);
-        trailersPb.setVisibility(View.GONE);
+        rvTrailers.setVisibility(GONE);
+        trailersPb.setVisibility(GONE);
     }
 
-    public void showLoadingTrailers( ){
+    private void showReviewEmptyStateText (){
+        rvReviews.setVisibility(GONE);
+        reviewEmptyStateTextTv.setVisibility(View.VISIBLE);
+        reviewsPb.setVisibility(GONE);
+    }
+
+    private void showLoadingTrailers( ){
         trailersPb.setVisibility(View.VISIBLE);
-        trailerEmptyStateTextTv.setVisibility(View.GONE);
-        recyclerViewTrailers.setVisibility(View.GONE);
+        trailerEmptyStateTextTv.setVisibility(GONE);
+        rvTrailers.setVisibility(GONE);
+    }
+
+
+    private void showLoadingReviews() {
+        rvReviews.setVisibility(GONE);
+        reviewEmptyStateTextTv.setVisibility(GONE);
+        reviewsPb.setVisibility(View.VISIBLE);
     }
 }

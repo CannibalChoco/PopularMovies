@@ -39,13 +39,20 @@
     <!-- - - - - - - - - - -
       - Used DetailActivity -
       - - - - - - - - - - -->
-    <!-- Empty state text  -->
+    <!-- Empty state text for trailers recycler view -->
     <string name="trailers_empty_state_text">No trailers found</string>
+
+    <!-- Empty state text for reviews recycler view -->
+    <string name="reviews_empty_state_text">No reviews found</string>
 
     <!-- Label for overview  -->
     <string name="label_overview">Overview</string>
 
     <!-- Label for trailers  -->
     <string name="label_trailers">Trailers</string>
+
+    <!-- Label for overview  -->
+    <string name="label_reviews">Reviews</string>
+
 
 </resources>
