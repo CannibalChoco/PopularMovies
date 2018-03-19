@@ -5,14 +5,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_scrollFlags="exitUntilCollapsed">
+    android:orientation="vertical">
+
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme"
+        android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolBar"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        tools:context="com.example.android.popularmovies.MainActivity" />
+        tools:context="com.example.android.popularmovies.MainActivity"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <TextView
         android:id="@+id/emptyStateTextView"
@@ -37,7 +56,10 @@
         app:itemIconTint="@color/color"
         app:itemTextColor="@color/color"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
         app:menu="@menu/menu_main"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -8,12 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.Utils.BottomNavigationUtils.BottomNavigationViewBehavior;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 
@@ -53,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.progressBar) ProgressBar progressBar;
     @BindView(R.id.main_bottom_nav) BottomNavigationView bottomNav;
 
+    @BindView(R.id.toolBar) Toolbar toolbar;
+
     public static final String KEY_MOVIE = "movie";
     private static final String KEY_MOVIE_LIST = "movies";
     private static final String KEY_IS_WAITING_CONNECTION = "isWaitingConnection";
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         if(savedInstanceState != null){
             movies = savedInstanceState.getParcelableArrayList(KEY_MOVIE_LIST);
@@ -125,9 +128,9 @@ public class MainActivity extends AppCompatActivity implements
         bottomNav.setSelectedItemId(getSelectedBottomNavItem());
 
         // set hide/show bottom navigation on scroll
-        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams)
-                bottomNav.getLayoutParams();
-        coordinatorLayoutParams.setBehavior(new BottomNavigationViewBehavior());
+//        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams)
+//                bottomNav.getLayoutParams();
+//        coordinatorLayoutParams.setBehavior(new BottomNavigationViewBehavior());
 
         if (movies.isEmpty()){
             searchMoviesIfConnected();
@@ -191,11 +194,11 @@ public class MainActivity extends AppCompatActivity implements
         if (movieData != null && !movieData.isEmpty()) {
             if (movies != null) {
                 movies.clear();
+                movies.addAll(movieData);
             } else {
-                movies = new ArrayList<>();
+                movies = movieData;
             }
 
-            movies.addAll(movieData);
             adapter.addAll(movieData);
             showMovies();
         } else {
