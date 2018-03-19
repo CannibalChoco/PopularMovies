@@ -51,7 +51,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.trailerEmptyStateTv) TextView trailerEmptyStateTextTv;
 
     private int id;
-    private List<MovieReview> reviews;
     private List<MovieTrailer> trailers;
 
     private TrailerAdapter trailerAdapter;

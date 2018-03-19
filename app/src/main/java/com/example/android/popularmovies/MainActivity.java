@@ -127,11 +127,6 @@ public class MainActivity extends AppCompatActivity implements
         bottomNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         bottomNav.setSelectedItemId(getSelectedBottomNavItem());
 
-        // set hide/show bottom navigation on scroll
-//        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams)
-//                bottomNav.getLayoutParams();
-//        coordinatorLayoutParams.setBehavior(new BottomNavigationViewBehavior());
-
         if (movies.isEmpty()){
             searchMoviesIfConnected();
         } else {
@@ -217,33 +212,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onGridItemClick(int position) {
         launchDetailActivity(position);
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu_main) {
-//        getMenuInflater().inflate(R.menu_main.menu_main, menu_main);
-//
-//        this.menu_main = menu_main;
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.action_sort_highest_rated:
-//                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
-//                break;
-//            case R.id.action_sort_most_popular:
-//                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
-//                break;
-//        }
-//
-//        updatePreferences();
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -415,20 +383,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return R.id.action_sort_most_popular;
-    }
-
-    private int getStatusbarHeight (){
-        int height;
-
-        int idStatusbarHeight = getResources().getIdentifier("status_bar_height", "dimen", "android");
-
-        if (idStatusbarHeight > 0){
-            height = getResources().getDimensionPixelSize(idStatusbarHeight);
-        } else {
-            height = 0;
-        }
-
-        return height;
     }
 
 }
