@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
     @BindView(R.id.trailersPb) ProgressBar trailersPb;
     @BindView(R.id.reviewsPb) ProgressBar reviewsPb;
+
+    @BindView(R.id.favoriteFab) FloatingActionButton favoriteFab;
 
     @BindView(R.id.rvTrailers) RecyclerView rvTrailers;
     @BindView(R.id.rvReviews) RecyclerView rvReviews;
