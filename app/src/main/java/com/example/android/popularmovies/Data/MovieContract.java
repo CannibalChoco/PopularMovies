@@ -56,14 +56,48 @@ public class MovieContract {
          *
          * Type: INTEGER
          */
-        public static final String COLUMN_MOVIE_ID= "movieId";
+        public static final String COLUMN_ID= "movieId";
 
         /**
          * Movie Title
          *
          * Type: TEXT
          */
-        public static final String COLUMN_MOVIE_TITLE= "movieTitle";
+        public static final String COLUMN_TITLE= "title";
 
+        /**
+         * Movie year
+         *
+         * Type: INTEGER
+         */
+        public static final String COLUMN_YEAR= "year";
+
+        /**
+         * Movie rating
+         *
+         * Type: REAL
+         */
+        public static final String COLUMN_RATING = "rating";
+
+        /**
+         * Movie original language
+         *
+         * Type: TEXT
+         */
+        public static final String COLUMN_LANGUAGE = "language";
+
+        /**
+         * Movie synopsis
+         *
+         * Type: TEXT
+         */
+        public static final String COLUMN_SYNOPSIS = "synopsis";
+
+        /**
+         * Movie poster path
+         *
+         * Type: TEXT
+         */
+        public static final String COLUMN_POSTER_PATH = "posterPath";
     }
 }

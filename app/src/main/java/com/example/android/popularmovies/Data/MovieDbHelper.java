@@ -24,8 +24,13 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                     MovieContract.MoviesEntry.TABLE_NAME +
                     " (" +
                     MovieContract.MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    MovieContract.MoviesEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-                    MovieContract.MoviesEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL);";
+                    MovieContract.MoviesEntry.COLUMN_ID + " INTEGER NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_YEAR + " INTEGER NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_RATING + " REAL NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_LANGUAGE + " TEXT NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_POSTER_PATH + " TEXT);";
 
     public MovieDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
