@@ -27,7 +27,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     private static ListItemListener onClickListener;
 
     public interface ListItemListener {
-        void onListItemClick(int position);
+        void onTrailerClick(int position);
     }
 
     public TrailerAdapter(Context context, List<MovieTrailer> trailers, ListItemListener listener){
@@ -92,7 +92,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            onClickListener.onListItemClick(position);
+            onClickListener.onTrailerClick(position);
         }
     }
 

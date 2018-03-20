@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,7 +11,7 @@
     >
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
@@ -21,12 +21,24 @@
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:maxLines="5"
             android:ellipsize="end"
-            android:maxLines="7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Some long review for the movie. the reviewer didn't particularly like the movie, but is very passionate review writer. Even though he/she has nothing of value to say. Maybe it\'s his/her way of socializing." />
+            tools:text="Some long review for the movie." />
+
+        <TextView
+            android:id="@+id/tvExpandableIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/expandable_text_more"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvReview"
+            android:layout_marginRight="8dp" />
 
         <TextView
             android:id="@+id/tvAuthor"
@@ -38,7 +50,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvReview"
+            app:layout_constraintTop_toBottomOf="@+id/tvExpandableIndicator"
             tools:text="honeybadger"
             android:layout_marginRight="8dp" />
 

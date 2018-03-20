@@ -54,5 +54,13 @@
     <!-- Label for overview  -->
     <string name="label_reviews">Reviews</string>
 
+    <!-- - - - - - - - - - - - - - -
+      - Used by expandableTextView -
+      - - - - - - - - - - - - - - -->
+    <!-- label for show more -->
+    <string name="expandable_text_more">  more</string>
+
+    <!-- label for show less -->
+    <string name="expandable_text_less">  less</string>
 
 </resources>

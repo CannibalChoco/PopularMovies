@@ -267,7 +267,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     }
 
     @Override
-    public void onListItemClick(int position) {
+    public void onTrailerClick(int position) {
         String key = trailers.get(position).getKey();
 
         Uri uri = NetworkUtils.buildUrlForMovieTrailer(key);
@@ -308,10 +308,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         rvTrailers.setVisibility(GONE);
     }
 
-
     private void showLoadingReviews() {
         rvReviews.setVisibility(GONE);
         reviewEmptyStateTextTv.setVisibility(GONE);
         reviewsPb.setVisibility(View.VISIBLE);
     }
+
 }
