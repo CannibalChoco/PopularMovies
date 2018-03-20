@@ -23,11 +23,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <!-- TODO: why adding layout_behavior results in recyclerview not populating views on launch? -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.example.android.popularmovies.MainActivity"/>
 
     <TextView
