@@ -91,7 +91,15 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+        int match = uriMatcher.match(uri);
+        switch (match){
+            case MOVIES:
+                return MovieContract.MoviesEntry.CONTENT_LIST_TYPE;
+            case ID_MOVIE:
+                return MovieContract.MoviesEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 
     @Nullable
@@ -125,7 +133,36 @@ public class MovieProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rowsDeleted;
+
+        int match = uriMatcher.match(uri);
+        switch (match){
+            case MOVIES:
+                rowsDeleted = db.delete(MovieContract.MoviesEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+            case ID_MOVIE:
+                selection = MovieContract.MoviesEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = db.delete(MovieContract.MoviesEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+
+        if (rowsDeleted != 0){
+            ContentResolver resolver = getContext().getContentResolver();
+
+            if (resolver != null) {
+                resolver.notifyChange(uri, null);
+            }
+        }
+
+        return rowsDeleted;
     }
 
     @Override
