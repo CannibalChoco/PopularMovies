@@ -1,15 +1,21 @@
 package com.example.android.popularmovies.Data;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 
 public class MovieProvider extends ContentProvider {
+
+    private static final String LOG_TAG = MovieProvider.class.getSimpleName();
 
     private MovieDbHelper dbHelper;
 
@@ -42,6 +48,8 @@ public class MovieProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
                         @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+
+
         return null;
     }
 
@@ -54,7 +62,30 @@ public class MovieProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+        long id;
+        SQLiteDatabase db;
+
+        int match = uriMatcher.match(uri);
+        switch (match) {
+            case MOVIES:
+                db = dbHelper.getWritableDatabase();
+                id = db.insert(MovieContract.MoviesEntry.TABLE_NAME, null,
+                        values);
+
+                if (id == -1) {
+                    Log.e(LOG_TAG, "Failed to insert row for " + uri);
+                    return null;
+                }
+
+                ContentResolver resolver = getContext().getContentResolver();
+
+                if (resolver != null) {
+                    resolver.notifyChange(uri, null);
+                    return ContentUris.withAppendedId(uri, id);
+                }
+            default:
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
     }
 
     @Override
