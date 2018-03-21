@@ -38,6 +38,10 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <provider
+            android:authorities="com.example.android.popularmovies"
+            android:name=".Data.MovieProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

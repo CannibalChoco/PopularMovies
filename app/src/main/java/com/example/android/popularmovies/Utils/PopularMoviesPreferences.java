@@ -18,6 +18,7 @@ public class PopularMoviesPreferences {
      */
     public static final String PREFS_SORT_POPULAR = "popular";
     public static final String PREFS_SORT_RATINGS = "ratings";
+    public static final String PREFS_SORT_FAVORITES = "favorites";
 
     /**
      *  Default sort order

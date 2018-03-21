@@ -90,6 +90,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             holder.gridItem.setLayoutParams(lp);
 
             holder.ratingBar.setRating(movie.getRatingForFiveStars());
+        } else {
+            Picasso.with(context).load(R.drawable.sample_w500).into(holder.posterImageView);
         }
     }
 

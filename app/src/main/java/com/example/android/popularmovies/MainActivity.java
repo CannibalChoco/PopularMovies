@@ -3,12 +3,15 @@ package com.example.android.popularmovies;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.Data.MovieContract;
+import com.example.android.popularmovies.Utils.DbUtils;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.example.android.popularmovies.Utils.PopularMoviesPreferences;
 
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final String KEY_IS_WAITING_CONNECTION = "isWaitingConnection";
 
     private static final int POSTER_WIDTH = 200;
+    private static final int DB_LOADER = 8;
 
     private List<Movie> movies;
 
@@ -79,6 +85,48 @@ public class MainActivity extends AppCompatActivity implements
     private boolean hasLoadedMovies = false;
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener;
+
+    private LoaderManager.LoaderCallbacks favoritesLoaderListener = new
+            LoaderManager.LoaderCallbacks<Cursor>() {
+                @NonNull
+                @Override
+                public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+                    String[] projection = new String[]{" * "};
+
+                    return new CursorLoader(getApplicationContext(), MovieContract.MoviesEntry.CONTENT_URI,
+                            projection,
+                            null,
+                            null,
+                            null);
+                }
+
+                @Override
+                public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+                    adapter.clear();
+
+                    if (data != null){
+                        List<Movie> favorites = DbUtils.getMovieListFromCursor(data);
+
+                        if (movies != null){
+                            movies.clear();
+                            movies.addAll(favorites);
+                        } else {
+                            movies = favorites;
+                        }
+
+                        adapter.addAll(favorites);
+                        showMovies();
+                    } else {
+                        showEmptyState();
+                        emptyStateTextView.setText("no movies added to favorites yet");
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements
                                 prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
                                 break;
                             case R.id.action_sort_favorite:
-                                Toast.makeText(MainActivity.this, "Nothing hrere yet", Toast.LENGTH_SHORT).show();
+                                prefSortOrder = PopularMoviesPreferences.PREFS_SORT_FAVORITES;
                                 break;
                             default:
                                 prefSortOrder = PopularMoviesPreferences.PREFS_SORT_POPULAR;
@@ -222,7 +270,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        searchMoviesIfConnected();
+        if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)){
+            getFavoritesFromDb();
+        } else {
+            searchMoviesIfConnected();
+        }
     }
 
     @Override
@@ -289,6 +341,19 @@ public class MainActivity extends AppCompatActivity implements
             loaderManager.initLoader(MovieLoader.MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         }
 
+    }
+
+    private void getFavoritesFromDb(){
+        showLoading();
+        LoaderManager loaderManager = getSupportLoaderManager();
+        if (loaderManager != null) {
+            Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
+            loaderManager.restartLoader(DB_LOADER, null, favoritesLoaderListener);
+        } else {
+            Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
+            //noinspection ConstantConditions
+            loaderManager.initLoader(DB_LOADER, null, favoritesLoaderListener);
+        }
     }
 
     /**

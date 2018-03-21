@@ -32,10 +32,8 @@ public class MovieProvider extends ContentProvider {
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
-        uriMatcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TABLE_MOVIES,
-                MOVIES);
-        uriMatcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TABLE_MOVIES,
-                ID_MOVIE);
+        uriMatcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TABLE_MOVIES, MOVIES);
+        uriMatcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_TABLE_MOVIES + "/#", ID_MOVIE);
     }
 
     @Override
@@ -109,6 +107,7 @@ public class MovieProvider extends ContentProvider {
         SQLiteDatabase db;
 
         int match = uriMatcher.match(uri);
+        Log.i("DATABASE", String.valueOf(match));
         switch (match) {
             case MOVIES:
                 db = dbHelper.getWritableDatabase();
@@ -116,7 +115,7 @@ public class MovieProvider extends ContentProvider {
                         values);
 
                 if (id == -1) {
-                    Log.e(LOG_TAG, "Failed to insert row for " + uri);
+                    Log.i("DATABASE", "Failed to insert row for " + uri);
                     return null;
                 }
 

@@ -68,7 +68,7 @@ public class MovieContract {
         /**
          * Movie year
          *
-         * Type: INTEGER
+         * Type: TEXT
          */
         public static final String COLUMN_YEAR= "year";
 

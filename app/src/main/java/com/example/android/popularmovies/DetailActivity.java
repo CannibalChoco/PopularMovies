@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -22,6 +23,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -70,6 +72,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private boolean hasLoadedTrailers = false;
     private boolean hasLoadedReviwes = false;
 
+    private Movie movie;
     private int id;
     private List<MovieTrailer> trailers;
     private List<MovieReview> reviews;
@@ -160,7 +163,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private ConnectivityReceiver connectivityReceiver;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,7 +174,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         Bundle data = getIntent().getExtras();
 
         if (data != null && data.containsKey(MainActivity.KEY_MOVIE)){
-            Movie movie = data.getParcelable(MainActivity.KEY_MOVIE);
+            movie = data.getParcelable(MainActivity.KEY_MOVIE);
 
             if(movie != null){
                 loadMovieInfoInUi(movie);
@@ -200,6 +202,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             }
         }
+
+        favoriteFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addToFavorites();
+            }
+        });
     }
 
     @Override
@@ -451,5 +460,24 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             }
 
         }
+    }
+
+    private String downloadPoster(){
+        return null;
+    }
+
+    private void addToFavorites(){
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MoviesEntry.COLUMN_ID, movie.getId());
+        values.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getMovieTitle());
+        values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRatingForFiveStars());
+        values.put(MovieContract.MoviesEntry.COLUMN_SYNOPSIS, movie.getOverview());
+        values.put(MovieContract.MoviesEntry.COLUMN_LANGUAGE, movie.getLanguage());
+        //values.put(MovieContract.MoviesEntry.COLUMN_POSTER_PATH, get posterpath from local storage);
+        values.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseYear());
+
+        Log.i("DATABASE", MovieContract.MoviesEntry.CONTENT_URI.toString());
+        Uri uri = getContentResolver().insert(MovieContract.MoviesEntry.CONTENT_URI, values);
+
     }
 }
