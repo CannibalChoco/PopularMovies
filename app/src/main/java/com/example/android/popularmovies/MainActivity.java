@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements
     private ConnectivityReceiver connectivityReceiver;
 
     private boolean isWaitingForInternetConnection;
+    // TODO store in savedInstanceState
+    private boolean hasLoadedMovies = false;
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener;
 
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements
         if (movies.isEmpty()){
             searchMoviesIfConnected();
         } else {
-            adapter.clear();
+//            adapter.clear();
             adapter.addAll(movies);
             showMovies();
         }
@@ -269,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements
      * when emptyStateTextView is displayed
      */
     private void searchMovies() {
+        showLoading();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
@@ -304,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements
         progressBar.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+        hasLoadedMovies = true;
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.example.android.popularmovies;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -29,7 +33,12 @@ import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
 
-public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemListener{
+public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemListener,
+        ConnectivityReceiver.ConnectivityReceiverListener{
+
+    private static final int ID_TRAILERS = 0;
+    private static final int ID_REVIEWS = 1;
+    private static final int ID_MOVIE = 2;
 
     private static final String TRAILERS_LIST_KEY = "trailers";
 
@@ -56,6 +65,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.rvReviews) RecyclerView rvReviews;
     @BindView(R.id.tvTrailerEmptyStateText) TextView trailerEmptyStateTextTv;
     @BindView(R.id.tvReviewEmptyStateText) TextView reviewEmptyStateTextTv;
+
+    private boolean isWaitingForInternetConnection = false;
+    private boolean hasLoadedTrailers = false;
+    private boolean hasLoadedReviwes = false;
 
     private int id;
     private List<MovieTrailer> trailers;
@@ -145,6 +158,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             };
 
+    private ConnectivityReceiver connectivityReceiver;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,11 +194,37 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                             reviews != null ? reviews : new ArrayList<MovieReview>());
                     rvReviews.setAdapter(reviewAdapter);
 
-                    searchReviews();
+                    getDetailsIfConnected(ID_TRAILERS);
                     // TODO: trailers are re-queried when user comes back from youtube
-                    searchTrailers();
+                    getDetailsIfConnected(ID_REVIEWS);
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            connectivityReceiver = new ConnectivityReceiver();
+            this.registerReceiver(connectivityReceiver,
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
+
+        /*
+         * register connection status listener
+         * as shown in the androidhive tutorial
+         */
+        MyApplication.getInstance().setConnectivityListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (connectivityReceiver != null){
+            this.unregisterReceiver(connectivityReceiver);
         }
     }
 
@@ -199,6 +241,35 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         super.onRestoreInstanceState(savedInstanceState);
         trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
     }
+
+    @Override
+    public void onTrailerClick(int position) {
+        String key = trailers.get(position).getKey();
+
+        Uri uri = NetworkUtils.buildUrlForMovieTrailer(key);
+        Log.i("POSITION", uri.toString());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+        intent.putExtra("force_fullscreen", true);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if (isConnected){
+            if (isWaitingForInternetConnection){
+                getDetailsIfConnected(ID_TRAILERS);
+                getDetailsIfConnected(ID_REVIEWS);
+                isWaitingForInternetConnection = false;
+            }
+
+        } else {
+            if (!isWaitingForInternetConnection){
+                isWaitingForInternetConnection = true;
+            }
+        }
+    }
+
 
     /**
      * Load the movie details in UI from a  nonull movie object
@@ -244,9 +315,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         showLoadingReviews();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
+            Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
             loaderManager.restartLoader(MovieLoader.REVIEW_LOADER_ID,
                     getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
         } else {
+            Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
             //noinspection ConstantConditions
             loaderManager.initLoader(MovieLoader.REVIEW_LOADER_ID,
                     getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
@@ -269,28 +342,20 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-    @Override
-    public void onTrailerClick(int position) {
-        String key = trailers.get(position).getKey();
-
-        Uri uri = NetworkUtils.buildUrlForMovieTrailer(key);
-        Log.i("POSITION", uri.toString());
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-
-        intent.putExtra("force_fullscreen", true);
-        startActivity(intent);
-    }
 
     private void showTrailers( ){
         trailerEmptyStateTextTv.setVisibility(GONE);
         rvTrailers.setVisibility(View.VISIBLE);
         trailersPb.setVisibility(GONE);
+
+        hasLoadedTrailers = true;
     }
 
     private void showReviews( ){
        rvReviews.setVisibility(View.VISIBLE);
        reviewEmptyStateTextTv.setVisibility(GONE);
        reviewsPb.setVisibility(GONE);
+       hasLoadedReviwes = true;
     }
 
     private void showTrailerEmptyStateText( ){
@@ -317,4 +382,42 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         reviewsPb.setVisibility(View.VISIBLE);
     }
 
+    private void getDetailsIfConnected(int id) {
+        if (ConnectivityReceiver.isConnected()) {
+            switch (id){
+                case ID_TRAILERS:
+                    showLoadingTrailers();
+                    searchTrailers();
+                    break;
+                case ID_REVIEWS:
+                    showLoadingReviews();
+                    searchReviews();
+                    break;
+                case ID_MOVIE:
+                    // additional movie info, like tagline, actors, etc
+                    // TODO: showLoading, search, showResults;
+                    break;
+            }
+        } else {
+            isWaitingForInternetConnection = true;
+
+            switch (id){
+                case ID_TRAILERS:
+                    // TODO: adjust message
+                    showTrailerEmptyStateText();
+                    trailerEmptyStateTextTv.setText("no connection");
+                    break;
+                case ID_REVIEWS:
+                    // TODO: adjust message
+                    showReviewEmptyStateText();
+                    reviewEmptyStateTextTv.setText("no connection");
+                    break;
+                case ID_MOVIE:
+                    // additional movie info, like tagline, actors, etc
+                    // TODO: showEmptyState, adjust message
+                    break;
+            }
+
+        }
+    }
 }
