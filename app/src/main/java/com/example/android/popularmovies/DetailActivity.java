@@ -258,8 +258,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     public void onNetworkConnectionChanged(boolean isConnected) {
         if (isConnected){
             if (isWaitingForInternetConnection){
-                getDetailsIfConnected(ID_TRAILERS);
-                getDetailsIfConnected(ID_REVIEWS);
+                if (!hasLoadedTrailers){
+                    getDetailsIfConnected(ID_TRAILERS);
+                }
+                if(!hasLoadedReviwes){
+                    getDetailsIfConnected(ID_REVIEWS);
+                }
+
                 isWaitingForInternetConnection = false;
             }
 
@@ -324,6 +329,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             loaderManager.initLoader(MovieLoader.REVIEW_LOADER_ID,
                     getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
         }
+
     }
 
     /**
@@ -342,7 +348,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-
+    /**
+     * Sets trailer recyclerVew visible. Called by the trailer loader callback onLoadFinished()
+     * when trailers are not null or empty.
+     *
+     * Sets hasLoadedTrailers to true
+     */
     private void showTrailers( ){
         trailerEmptyStateTextTv.setVisibility(GONE);
         rvTrailers.setVisibility(View.VISIBLE);
@@ -351,23 +362,44 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         hasLoadedTrailers = true;
     }
 
+    /**
+     * Sets review recyclerVew visible. Called by the review loader callback onLoadFinished()
+     * when reviews are not null or empty.
+     *
+     * sets hasLoadedReviews to true.
+     */
     private void showReviews( ){
        rvReviews.setVisibility(View.VISIBLE);
        reviewEmptyStateTextTv.setVisibility(GONE);
        reviewsPb.setVisibility(GONE);
+
        hasLoadedReviwes = true;
     }
 
+    /**
+     * Sets emptyStateText when there is a problem loading Trailers.
+     * Called by : 1) onLoadFinished() when trailer data is empty or null;
+     *             2) getDetailsIfConnected() there is no internet connection
+     */
     private void showTrailerEmptyStateText( ){
         trailerEmptyStateTextTv.setVisibility(View.VISIBLE);
         rvTrailers.setVisibility(GONE);
         trailersPb.setVisibility(GONE);
+
+        hasLoadedTrailers = false;
     }
 
+    /**
+     * Sets emptyStateText when there is a problem loading reviews.
+     * Called by : 1) onLoadFinished() when review data is empty or null;
+     *             2) getDetailsIfConnected() there is no internet connection
+     */
     private void showReviewEmptyStateText (){
         rvReviews.setVisibility(GONE);
         reviewEmptyStateTextTv.setVisibility(View.VISIBLE);
         reviewsPb.setVisibility(GONE);
+
+        hasLoadedReviwes = false;
     }
 
     private void showLoadingTrailers( ){

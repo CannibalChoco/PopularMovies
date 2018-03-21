@@ -42,17 +42,22 @@ public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.GridItemListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
-        ConnectivityReceiver.ConnectivityReceiverListener{
+        ConnectivityReceiver.ConnectivityReceiverListener {
 
     @SuppressWarnings("WeakerAccess")
-    @BindView(R.id.gridView) RecyclerView recyclerView;
+    @BindView(R.id.gridView)
+    RecyclerView recyclerView;
     @SuppressWarnings("WeakerAccess")
-    @BindView(R.id.emptyStateTextView) TextView emptyStateTextView;
+    @BindView(R.id.emptyStateTextView)
+    TextView emptyStateTextView;
     @SuppressWarnings("WeakerAccess")
-    @BindView(R.id.progressBar) ProgressBar progressBar;
-    @BindView(R.id.main_bottom_nav) BottomNavigationView bottomNav;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.main_bottom_nav)
+    BottomNavigationView bottomNav;
 
-    @BindView(R.id.toolBar) Toolbar toolbar;
+    @BindView(R.id.toolBar)
+    Toolbar toolbar;
 
     public static final String KEY_MOVIE = "movie";
     private static final String KEY_MOVIE_LIST = "movies";
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements
 
         setSupportActionBar(toolbar);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             movies = savedInstanceState.getParcelableArrayList(KEY_MOVIE_LIST);
             isWaitingForInternetConnection =
                     savedInstanceState.getBoolean(KEY_IS_WAITING_CONNECTION);
@@ -129,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements
         bottomNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         bottomNav.setSelectedItemId(getSelectedBottomNavItem());
 
-        if (movies.isEmpty()){
+        if (movies.isEmpty()) {
             searchMoviesIfConnected();
         } else {
 //            adapter.clear();
@@ -144,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements
 
         preferences.registerOnSharedPreferenceChangeListener(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             connectivityReceiver = new ConnectivityReceiver();
             this.registerReceiver(connectivityReceiver,
                     new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -161,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        if (connectivityReceiver != null){
+        if (connectivityReceiver != null) {
             this.unregisterReceiver(connectivityReceiver);
         }
 
@@ -170,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (movies != null){
+        if (movies != null) {
             outState.putParcelableArrayList(KEY_MOVIE_LIST, (ArrayList<Movie>) movies);
             outState.putBoolean(KEY_IS_WAITING_CONNECTION, isWaitingForInternetConnection);
         }
@@ -225,15 +230,17 @@ public class MainActivity extends AppCompatActivity implements
 
         Menu menu = bottomNav.getMenu();
 
-        if (isConnected){
-            if (isWaitingForInternetConnection){
-                searchMovies();
+        if (isConnected) {
+            if (isWaitingForInternetConnection) {
+                if (!hasLoadedMovies){
+                    searchMovies();
+                }
                 isWaitingForInternetConnection = false;
             }
 
             menu.setGroupEnabled(R.id.sort_order_menu, true);
         } else {
-            if (!isWaitingForInternetConnection){
+            if (!isWaitingForInternetConnection) {
                 Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
                 isWaitingForInternetConnection = true;
             }
@@ -244,12 +251,12 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Get users preferred sort order from SharedPreferences and put it in a Bundle
-     *
+     * <p>
      * Used in MovieLoader as argument
      *
      * @return Bundle with preferred sort order ready to be used by MovieLoader
      */
-    private Bundle getSortOrderArgsBundle (){
+    private Bundle getSortOrderArgsBundle() {
         Bundle args = new Bundle();
 
         switch (prefSortOrder) {
@@ -266,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Preform Movie search with LoaderManager initLoader() or restartLoader()
-     *
+     * <p>
      * Used by searchMoviesIfConnected() and onNetworkConnectionChanged() when connection is regained
      * when emptyStateTextView is displayed
      */
@@ -281,6 +288,7 @@ public class MainActivity extends AppCompatActivity implements
             //noinspection ConstantConditions
             loaderManager.initLoader(MovieLoader.MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         }
+
     }
 
     /**
@@ -321,11 +329,15 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Set emptyState text visible and hide all other views
+     * Called by : 1) onLoadFinished() when movie data is empty or null
+     * 2) searchMoviesIfConnected() when there is no internet connection
      */
     private void showEmptyState() {
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         emptyStateTextView.setVisibility(View.VISIBLE);
+
+        hasLoadedMovies = false;
     }
 
     /**
@@ -357,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
      * Start DetailActivity when Movie poster is clicked, passing the movie data
      *
      * @param position Movie position in RecyclerView, corresponding to the
-     * Movie in List<Movie>
+     *                 Movie in List<Movie>
      */
     private void launchDetailActivity(int position) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
@@ -371,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements
      *
      * @return number of columns for GridView to display
      */
-    private int getGridViewSpanFromItemWidth (){
+    private int getGridViewSpanFromItemWidth() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
         float dpWidth = (displayMetrics.widthPixels / displayMetrics.densityDpi) * 160;
@@ -379,10 +391,10 @@ public class MainActivity extends AppCompatActivity implements
         return Math.round(dpWidth / POSTER_WIDTH);
     }
 
-    private int getSelectedBottomNavItem(){
-        if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_RATINGS) ){
+    private int getSelectedBottomNavItem() {
+        if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_RATINGS)) {
             return R.id.action_sort_highest_rated;
-        } else if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_POPULAR_MOVIES)){
+        } else if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_POPULAR_MOVIES)) {
             return R.id.action_sort_most_popular;
         }
 
