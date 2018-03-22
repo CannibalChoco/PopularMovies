@@ -18,7 +18,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -102,23 +102,28 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-                    adapter.clear();
+                    Log.i("ADAPTER", "onLoadFinished - cursor");
+                    if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)){
+                        Log.i("ADAPTER", "onLoadFinished - cursor - pref favorites");
+                        adapter.clear();
 
-                    if (data != null){
-                        List<Movie> favorites = DbUtils.getMovieListFromCursor(data);
+                        if (data != null){
+                            List<Movie> favorites = DbUtils.getMovieListFromCursor(data);
+                            Log.i("MOVIES", favorites.toString());
 
-                        if (movies != null){
-                            movies.clear();
-                            movies.addAll(favorites);
+                            if (movies != null){
+                                movies.clear();
+                                movies.addAll(favorites);
+                            } else {
+                                movies = favorites;
+                            }
+
+                            adapter.addAll(favorites);
+                            showMovies();
                         } else {
-                            movies = favorites;
+                            showEmptyState();
+                            emptyStateTextView.setText("no movies added to favorites yet");
                         }
-
-                        adapter.addAll(favorites);
-                        showMovies();
-                    } else {
-                        showEmptyState();
-                        emptyStateTextView.setText("no movies added to favorites yet");
                     }
                 }
 
@@ -133,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Log.i("ADAPTER", "onCreate");
 
         setSupportActionBar(toolbar);
 
@@ -155,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements
         preferences = getSharedPreferences(PopularMoviesPreferences.PREFS_POPULAR_MOVIES, 0);
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
                 PopularMoviesPreferences.PREFS_SORT_DEFAULT);
+
+        Log.i("PREFS", prefSortOrder);
 
         navigationItemSelectedListener =
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -182,13 +191,7 @@ public class MainActivity extends AppCompatActivity implements
         bottomNav.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         bottomNav.setSelectedItemId(getSelectedBottomNavItem());
 
-        if (movies.isEmpty()) {
-            searchMoviesIfConnected();
-        } else {
-//            adapter.clear();
-            adapter.addAll(movies);
-            showMovies();
-        }
+        setUpAdapter();
     }
 
     @Override
@@ -239,23 +242,27 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> movieData) {
-        adapter.clear();
+        Log.i("ADAPTER", "onLoadFinished - movie");
+        if (!prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)) {
+            Log.i("ADAPTER", "onLoadFinished - movie - pref other");
+            adapter.clear();
+            if (movieData != null && !movieData.isEmpty()) {
+                if (movies != null) {
+                    movies.clear();
+                    movies.addAll(movieData);
 
-        if (movieData != null && !movieData.isEmpty()) {
-            if (movies != null) {
-                movies.clear();
-                movies.addAll(movieData);
+                } else {
+                    movies = movieData;
+                }
 
+                adapter.addAll(movieData);
+                showMovies();
             } else {
-                movies = movieData;
+                showEmptyState();
+                emptyStateTextView.setText(R.string.empty_state_default);
             }
-
-            adapter.addAll(movieData);
-            showMovies();
-        } else {
-            showEmptyState();
-            emptyStateTextView.setText(R.string.empty_state_default);
         }
+
     }
 
     @Override
@@ -279,9 +286,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-
-        Menu menu = bottomNav.getMenu();
-
         if (isConnected) {
             if (isWaitingForInternetConnection) {
                 if (!hasLoadedMovies){
@@ -290,14 +294,27 @@ public class MainActivity extends AppCompatActivity implements
                 isWaitingForInternetConnection = false;
             }
 
-            menu.setGroupEnabled(R.id.sort_order_menu, true);
         } else {
             if (!isWaitingForInternetConnection) {
                 Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
                 isWaitingForInternetConnection = true;
             }
 
-            menu.setGroupEnabled(R.id.sort_order_menu, false);
+        }
+    }
+
+    private void setUpAdapter(){
+        if (movies.isEmpty()) {
+            if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)){
+                getFavoritesFromDb();
+            } else {
+                searchMoviesIfConnected();
+            }
+
+        } else {
+            adapter.clear();
+            adapter.addAll(movies);
+            showMovies();
         }
     }
 
@@ -309,6 +326,7 @@ public class MainActivity extends AppCompatActivity implements
      * @return Bundle with preferred sort order ready to be used by MovieLoader
      */
     private Bundle getSortOrderArgsBundle() {
+        Log.i("ADAPTER", "getSortOrderArgsBundle");
         Bundle args = new Bundle();
 
         switch (prefSortOrder) {
@@ -330,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements
      * when emptyStateTextView is displayed
      */
     private void searchMovies() {
+        Log.i("ADAPTER", "searchMovies");
         showLoading();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
@@ -344,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void getFavoritesFromDb(){
+        Log.i("ADAPTER", "getFavoritesFromDb");
         showLoading();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
@@ -354,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements
             //noinspection ConstantConditions
             loaderManager.initLoader(DB_LOADER, null, favoritesLoaderListener);
         }
+        setTitleToSortOrder();
     }
 
     /**
@@ -361,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements
      * there is no internet connection
      */
     private void searchMoviesIfConnected() {
+        Log.i("ADAPTER", "searchMoviesIfConnected");
         if (ConnectivityReceiver.isConnected()) {
             showLoading();
             searchMovies();
@@ -425,6 +447,9 @@ public class MainActivity extends AppCompatActivity implements
             case PopularMoviesPreferences.PREFS_SORT_RATINGS:
                 setTitle(getString(R.string.nav_sort_label_highest_rated));
                 break;
+            case PopularMoviesPreferences.PREFS_SORT_FAVORITES:
+                setTitle(getString(R.string.nav_sort_label_favorites));
+                break;
             default:
                 setTitle(getString(R.string.app_name));
         }
@@ -457,10 +482,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private int getSelectedBottomNavItem() {
-        if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_RATINGS)) {
-            return R.id.action_sort_highest_rated;
-        } else if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_POPULAR_MOVIES)) {
-            return R.id.action_sort_most_popular;
+        switch (prefSortOrder){
+            case PopularMoviesPreferences.PREFS_SORT_RATINGS:
+                return R.id.action_sort_highest_rated;
+            case PopularMoviesPreferences.PREFS_POPULAR_MOVIES:
+                return R.id.action_sort_most_popular;
+            case  PopularMoviesPreferences.PREFS_SORT_FAVORITES:
+                return R.id.action_sort_favorite;
         }
 
         return R.id.action_sort_most_popular;

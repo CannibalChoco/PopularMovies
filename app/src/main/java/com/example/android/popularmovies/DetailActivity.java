@@ -301,6 +301,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String language = movie.getLanguage();
         float ratingForFiveStars = movie.getRatingForFiveStars();
 
+        setTitle(movie.getMovieTitle());
+
         overviewTv.setText(overview);
         ratingTv.setText(rating);
         releaseDateTv.setText(releaseDate);

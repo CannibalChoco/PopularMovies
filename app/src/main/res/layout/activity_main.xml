@@ -54,8 +54,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_scrollFlags="scroll|enterAlways|snap"
         app:menu="@menu/menu_main"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        />
-
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 </android.support.design.widget.CoordinatorLayout>

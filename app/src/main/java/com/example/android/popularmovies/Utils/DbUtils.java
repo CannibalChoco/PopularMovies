@@ -10,6 +10,11 @@ import java.util.List;
 
 public class DbUtils {
 
+    /**
+     * Convert data in cursor to a List of movies
+     * @param cursor cursor of movie data from the db
+     * @return cursor data inside a list of movies
+     */
     public static List<Movie> getMovieListFromCursor(Cursor cursor) {
         List<Movie> movieList = new ArrayList<>();
 
@@ -24,8 +29,12 @@ public class DbUtils {
 
             Movie movie = new Movie(title, synopsis, "", "", year, rating, language, id);
             movieList.add(movie);
+            cursor.moveToNext();
         }
+
+        cursor.close();
 
         return movieList;
     }
+
 }

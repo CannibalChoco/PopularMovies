@@ -8,6 +8,9 @@
     <!-- Transparent color for gradient background -->
     <color name="colorPrimaryLightTransparent">#7f484848</color>
 
-    <!-- Text and icon color for bottom navigation items-->
-    <color name="colorBottomNavItem">#cfcfcf</color>
+    <!-- Selected item text and icon color for bottom navigation items-->
+    <color name="colorBottomNavItemSelected">#ffffff</color>
+
+    <!-- Default item text and icon color for bottom navigation items-->
+    <color name="colorBottomNavItemDefault">#9e9e9e</color>
 </resources>

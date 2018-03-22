@@ -2,19 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/sort_order_menu">
-        <item
-            android:id="@+id/action_sort_most_popular"
-            android:icon="@drawable/ic_action_popular_light"
-            android:title="@string/nav_sort_label_popular" />
 
-        <item
-            android:id="@+id/action_sort_highest_rated"
-            android:icon="@drawable/ic_action_ratings_light"
-            android:title="@string/nav_sort_label_highest_rated" />
 
-        <item
-            android:id="@+id/action_sort_favorite"
-            android:icon="@drawable/ic_action_favorite_light"
-            android:title="@string/nav_sort_label_favorites" />
     </group>
+
+    <item
+        android:id="@+id/action_sort_most_popular"
+        android:icon="@drawable/ic_action_popular_light"
+        android:title="@string/nav_sort_label_popular" />
+
+    <item
+        android:id="@+id/action_sort_highest_rated"
+        android:icon="@drawable/ic_action_ratings_light"
+        android:title="@string/nav_sort_label_highest_rated" />
+
+    <item
+        android:id="@+id/action_sort_favorite"
+        android:icon="@drawable/ic_action_favorite_light"
+        android:title="@string/nav_sort_label_favorites" />
 </menu>
