@@ -13,4 +13,6 @@
 
     <!-- Default item text and icon color for bottom navigation items-->
     <color name="colorBottomNavItemDefault">#9e9e9e</color>
+
+    <color name="colorFavorite">#d62a66</color>
 </resources>

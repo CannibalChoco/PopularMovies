@@ -3,25 +3,26 @@ package com.example.android.popularmovies;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utils.NetworkUtils;
@@ -42,6 +43,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private static final int ID_REVIEWS = 1;
     private static final int ID_MOVIE = 2;
 
+    private static final int MOVIE_DB_SEARCH_LOADER_ID = 4;
+    private static final int MOVIE_DB_INSERT_LOADER_ID = 5;
+
     private static final String TRAILERS_LIST_KEY = "trailers";
 
     @SuppressWarnings("WeakerAccess")
@@ -61,16 +65,21 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.trailersPb) ProgressBar trailersPb;
     @BindView(R.id.reviewsPb) ProgressBar reviewsPb;
 
-    @BindView(R.id.favoriteFab) FloatingActionButton favoriteFab;
-
     @BindView(R.id.rvTrailers) RecyclerView rvTrailers;
     @BindView(R.id.rvReviews) RecyclerView rvReviews;
     @BindView(R.id.tvTrailerEmptyStateText) TextView trailerEmptyStateTextTv;
     @BindView(R.id.tvReviewEmptyStateText) TextView reviewEmptyStateTextTv;
 
+    @BindView(R.id.favoritesBtn) Button btnFavorites;
+
     private boolean isWaitingForInternetConnection = false;
     private boolean hasLoadedTrailers = false;
-    private boolean hasLoadedReviwes = false;
+    private boolean hasLoadedReviews = false;
+
+    private boolean isFavorite = false;
+
+    private String posterPath;
+    private String backdropPath;
 
     private Movie movie;
     private int id;
@@ -80,86 +89,114 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
 
-    private LoaderManager.LoaderCallbacks reviewLoaderListener = new
-            LoaderManager.LoaderCallbacks<List<Movie>>() {
-        @NonNull
-        @Override
-        public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
-            return new MovieLoader(DetailActivity.this,
-                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS));
-        }
-
-        @Override
-        public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-            reviewAdapter.clear();
-            if(data != null && !data.isEmpty()){
-                Movie movie = data.get(0);
-
-                if (movie != null && movie.getReviews() != null){
-                    List<MovieReview> newReviews = movie.getReviews();
-
-                    if (newReviews != null && !newReviews.isEmpty()){
-                        if (reviews != null){
-                            reviews.clear();
-                        } else {
-                            reviews = new ArrayList<>();
-                        }
-
-                        reviews.addAll(newReviews);
-                        reviewAdapter.addAll(reviews);
-                        showReviews();
-                    } else {
-                        showReviewEmptyStateText();
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
-        }
-    };
-
-    private LoaderManager.LoaderCallbacks trailerLoaderListener = new
+    private LoaderManager.LoaderCallbacks moreDataLoaderListener = new
             LoaderManager.LoaderCallbacks<List<Movie>>() {
                 @NonNull
                 @Override
                 public Loader<List<Movie>> onCreateLoader(int id, @Nullable Bundle args) {
-                    return new MovieLoader(DetailActivity.this,
-                            getPathArgsBundle(NetworkUtils.PATH_TRAILERS));
+
+                    switch (id){
+                        case MovieLoader.REVIEW_LOADER_ID:
+                            return new MovieLoader(DetailActivity.this,
+                                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS));
+                        case MovieLoader.TRAILER_LOADER_ID:
+                            return new MovieLoader(DetailActivity.this,
+                                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS));
+                        default:
+                            throw new RuntimeException("Loader Not Implemented: " + id);
+                    }
                 }
 
                 @Override
                 public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> data) {
-                    trailerAdapter.clear();
-                    if(data != null && !data.isEmpty()){
-                        Movie movie = data.get(0);
+                    int id = loader.getId();
+                    switch (id){
+                        case MovieLoader.REVIEW_LOADER_ID:
+                            reviewAdapter.clear();
+                            if(data != null && !data.isEmpty()){
+                                Movie movie = data.get(0);
 
-                        if (movie != null && movie.getTrailers() != null){
-                            List<MovieTrailer> newTrailers = movie.getTrailers();
+                                if (movie != null && movie.getReviews() != null){
+                                    List<MovieReview> newReviews = movie.getReviews();
 
-                            if (newTrailers != null && !newTrailers.isEmpty()){
-                                if (trailers != null){
-                                    trailers.clear();
-                                } else {
-                                    trailers = new ArrayList<>();
+                                    if (newReviews != null && !newReviews.isEmpty()){
+                                        if (reviews != null){
+                                            reviews.clear();
+                                        } else {
+                                            reviews = new ArrayList<>();
+                                        }
+
+                                        reviews.addAll(newReviews);
+                                        reviewAdapter.addAll(reviews);
+                                        showReviews();
+                                    } else {
+                                        showReviewEmptyStateText();
+                                    }
                                 }
-
-                                trailers.addAll(newTrailers);
-                                trailerAdapter.addAll(trailers);
-                                showTrailers();
-                            } else {
-                                showTrailerEmptyStateText();
                             }
-                        }
+
+                            break;
+                        case MovieLoader.TRAILER_LOADER_ID:
+                            trailerAdapter.clear();
+                            if(data != null && !data.isEmpty()){
+                                Movie movie = data.get(0);
+
+                                if (movie != null && movie.getTrailers() != null){
+                                    List<MovieTrailer> newTrailers = movie.getTrailers();
+
+                                    if (newTrailers != null && !newTrailers.isEmpty()){
+                                        if (trailers != null){
+                                            trailers.clear();
+                                        } else {
+                                            trailers = new ArrayList<>();
+                                        }
+
+                                        trailers.addAll(newTrailers);
+                                        trailerAdapter.addAll(trailers);
+                                        showTrailers();
+                                    } else {
+                                        showTrailerEmptyStateText();
+                                    }
+                                }
+                            }
+
+                            break;
                     }
                 }
 
                 @Override
                 public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+                }
+            };
+
+    // check if movie is in favorites db
+    private LoaderManager.LoaderCallbacks dbLoaderListener = new
+            LoaderManager.LoaderCallbacks<Cursor>() {
+                @NonNull
+                @Override
+                public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+                    String[] projection = new String[]{MovieContract.MoviesEntry.COLUMN_TITLE};
+                    String selection = MovieContract.MoviesEntry.COLUMN_TITLE + " = ? ";
+                    String[] selectionArgs = new String[]{movie.getMovieTitle()};
+                    return new CursorLoader(getApplicationContext(), MovieContract.MoviesEntry.CONTENT_URI,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null);
+                }
+
+                @Override
+                public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+                    if(data.moveToFirst()) isFavorite = true;
+                    btnFavorites.setPressed(isFavorite);
+                }
+
+                @Override
+                public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
                 }
             };
+
 
     private ConnectivityReceiver connectivityReceiver;
 
@@ -203,10 +240,18 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             }
         }
 
-        favoriteFab.setOnClickListener(new View.OnClickListener() {
+        searchMovieInDb();
+
+        // TODO: set state according to movie presence in bd
+        btnFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToFavorites();
+                if (!isFavorite){
+                    addToFavorites();
+                } else {
+                    removeFromFavorites();
+                }
+                btnFavorites.setPressed(isFavorite);
             }
         });
     }
@@ -270,7 +315,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 if (!hasLoadedTrailers){
                     getDetailsIfConnected(ID_TRAILERS);
                 }
-                if(!hasLoadedReviwes){
+                if(!hasLoadedReviews){
                     getDetailsIfConnected(ID_REVIEWS);
                 }
 
@@ -284,18 +329,18 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-
     /**
      * Load the movie details in UI from a  nonull movie object
      *
      * @param movie holds info to be displayed in the UI
      */
     private void loadMovieInfoInUi (Movie movie){
+
+//        if (idsInDb.contains(movie.getId())){
+//
+//        }
+
         String overview = movie.getOverview();
-        String posterPath = movie.getPosterPath();
-        String backdropPath = movie.getBackdropPath();
-        String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-        String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
         String rating = movie.getRatingString();
         String releaseDate = movie.getReleaseDate();
         String language = movie.getLanguage();
@@ -308,6 +353,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         releaseDateTv.setText(releaseDate);
         ratingBar.setRating(ratingForFiveStars);
         languageTv.setText(language);
+
+        posterPath = movie.getPosterPath();
+        backdropPath = movie.getBackdropPath();
+        String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
+        String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
 
         Picasso.with(this).load(posterUrl).into(posterIv);
         Picasso.with(this).load(backdropUrl).into(backdropIv);
@@ -331,14 +381,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         showLoadingReviews();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
-            Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
             loaderManager.restartLoader(MovieLoader.REVIEW_LOADER_ID,
-                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
+                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS), moreDataLoaderListener);
         } else {
-            Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
-            //noinspection ConstantConditions
             loaderManager.initLoader(MovieLoader.REVIEW_LOADER_ID,
-                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS), reviewLoaderListener);
+                    getPathArgsBundle(NetworkUtils.PATH_REVIEWS), moreDataLoaderListener);
         }
 
     }
@@ -351,11 +398,23 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             loaderManager.restartLoader(MovieLoader.TRAILER_LOADER_ID,
-                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS), trailerLoaderListener);
+                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS), moreDataLoaderListener);
         } else {
-            //noinspection ConstantConditions
             loaderManager.initLoader(MovieLoader.TRAILER_LOADER_ID,
-                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS), trailerLoaderListener);
+                    getPathArgsBundle(NetworkUtils.PATH_TRAILERS), moreDataLoaderListener);
+        }
+    }
+
+    /**
+     * Preform movie search in favorites db with LoaderManager initLoader() or restartLoader()
+     */
+    private void searchMovieInDb() {
+        showLoadingTrailers();
+        LoaderManager loaderManager = getSupportLoaderManager();
+        if (loaderManager != null) {
+            loaderManager.restartLoader(MOVIE_DB_SEARCH_LOADER_ID,null, dbLoaderListener);
+        } else {
+            loaderManager.initLoader(MOVIE_DB_SEARCH_LOADER_ID,null, dbLoaderListener);
         }
     }
 
@@ -384,7 +443,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
        reviewEmptyStateTextTv.setVisibility(GONE);
        reviewsPb.setVisibility(GONE);
 
-       hasLoadedReviwes = true;
+       hasLoadedReviews = true;
     }
 
     /**
@@ -410,7 +469,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         reviewEmptyStateTextTv.setVisibility(View.VISIBLE);
         reviewsPb.setVisibility(GONE);
 
-        hasLoadedReviwes = false;
+        hasLoadedReviews = false;
     }
 
     private void showLoadingTrailers( ){
@@ -464,22 +523,53 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-    private String downloadPoster(){
-        return null;
-    }
-
     private void addToFavorites(){
-        ContentValues values = new ContentValues();
-        values.put(MovieContract.MoviesEntry.COLUMN_ID, movie.getId());
-        values.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getMovieTitle());
-        values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRatingForFiveStars());
-        values.put(MovieContract.MoviesEntry.COLUMN_SYNOPSIS, movie.getOverview());
-        values.put(MovieContract.MoviesEntry.COLUMN_LANGUAGE, movie.getLanguage());
-        //values.put(MovieContract.MoviesEntry.COLUMN_POSTER_PATH, get posterpath from local storage);
-        values.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseYear());
+        Thread insert = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentValues values = new ContentValues();
 
-        Log.i("DATABASE", MovieContract.MoviesEntry.CONTENT_URI.toString());
-        Uri uri = getContentResolver().insert(MovieContract.MoviesEntry.CONTENT_URI, values);
+                values.put(MovieContract.MoviesEntry.COLUMN_ID, movie.getId());
+                values.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getMovieTitle());
+                values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRatingForFiveStars());
+                values.put(MovieContract.MoviesEntry.COLUMN_SYNOPSIS, movie.getOverview());
+                values.put(MovieContract.MoviesEntry.COLUMN_LANGUAGE, movie.getLanguage());
+                values.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseYear());
+                values.put(MovieContract.MoviesEntry.COLUMN_POSTER_PATH, posterPath);
+                values.put(MovieContract.MoviesEntry.COLUMN_BACKDROP_PATH, backdropPath);
 
+                Log.i("DATABASE", MovieContract.MoviesEntry.CONTENT_URI.toString());
+                Uri uri = getContentResolver().insert(MovieContract.MoviesEntry.CONTENT_URI, values);
+
+                if (uri != null){
+                    isFavorite = true;
+                }
+
+            }
+        });
+
+        insert.start();
     }
+
+    private void removeFromFavorites(){
+        Thread delete = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Uri uri = MovieContract.MoviesEntry.CONTENT_URI;
+
+                String selection = MovieContract.MoviesEntry.COLUMN_TITLE + " = ? ";
+                String[] selectionArgs = new String[]{movie.getMovieTitle()};
+
+                int rows = getContentResolver().delete(uri, selection, selectionArgs);
+
+                if (rows != -1){
+                    isFavorite = false;
+                }
+
+            }
+        });
+
+        delete.start();
+    }
+
 }

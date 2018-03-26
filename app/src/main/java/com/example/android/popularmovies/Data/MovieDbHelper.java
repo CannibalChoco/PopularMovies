@@ -30,7 +30,8 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                     MovieContract.MoviesEntry.COLUMN_RATING + " REAL NOT NULL, " +
                     MovieContract.MoviesEntry.COLUMN_LANGUAGE + " TEXT NOT NULL, " +
                     MovieContract.MoviesEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL, " +
-                    MovieContract.MoviesEntry.COLUMN_POSTER_PATH + " TEXT);";
+                    MovieContract.MoviesEntry.COLUMN_BACKDROP_PATH + " TEXT NOT NULL, " +
+                    MovieContract.MoviesEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL );";
 
     public MovieDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

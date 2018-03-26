@@ -26,13 +26,15 @@ public class DbUtils {
             double rating = cursor.getFloat(cursor.getColumnIndex(MovieContract.MoviesEntry.COLUMN_RATING));
             String language = cursor.getString(cursor.getColumnIndex(MovieContract.MoviesEntry.COLUMN_LANGUAGE));
             String synopsis = cursor.getString(cursor.getColumnIndex(MovieContract.MoviesEntry.COLUMN_SYNOPSIS));
+            String posterPath = cursor.getString(cursor.getColumnIndex(MovieContract.MoviesEntry.COLUMN_POSTER_PATH));
+            String backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MoviesEntry.COLUMN_BACKDROP_PATH));
 
-            Movie movie = new Movie(title, synopsis, "", "", year, rating, language, id);
+            Movie movie = new Movie(title, synopsis, posterPath, backdropPath, year, rating, language, id);
             movieList.add(movie);
             cursor.moveToNext();
         }
-
-        cursor.close();
+//
+//        cursor.close();
 
         return movieList;
     }

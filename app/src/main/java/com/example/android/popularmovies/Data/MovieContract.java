@@ -99,5 +99,12 @@ public class MovieContract {
          * Type: TEXT
          */
         public static final String COLUMN_POSTER_PATH = "posterPath";
+
+        /**
+         * Movie backdrop path
+         *
+         * Type: TEXT
+         */
+        public static final String COLUMN_BACKDROP_PATH = "backdropPath";
     }
 }

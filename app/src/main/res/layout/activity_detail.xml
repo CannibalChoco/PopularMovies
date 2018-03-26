@@ -167,16 +167,18 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/favoriteFab"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="16dp"
+        <Button
+            android:id="@+id/favoritesBtn"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             app:layout_constraintBottom_toBottomOf="@id/ivPoster"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_action_favorite_light"
-            android:layout_marginRight="16dp" />
+            android:background="@drawable/button_favorite_custom"/>
+
+
+
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

@@ -111,18 +111,25 @@ public class MainActivity extends AppCompatActivity implements
                             List<Movie> favorites = DbUtils.getMovieListFromCursor(data);
                             Log.i("MOVIES", favorites.toString());
 
-                            if (movies != null){
-                                movies.clear();
-                                movies.addAll(favorites);
+                            if (!favorites.isEmpty()){
+                                if (movies != null){
+                                    movies.clear();
+                                    movies.addAll(favorites);
+                                } else {
+                                    movies = favorites;
+                                }
+
+                                adapter.addAll(favorites);
+                                showMovies();
                             } else {
-                                movies = favorites;
+                                showEmptyState();
+                                emptyStateTextView.setText("no movies added to favorites yet");
                             }
 
-                            adapter.addAll(favorites);
-                            showMovies();
+
                         } else {
                             showEmptyState();
-                            emptyStateTextView.setText("no movies added to favorites yet");
+                            emptyStateTextView.setText("no movies here");
                         }
                     }
                 }
