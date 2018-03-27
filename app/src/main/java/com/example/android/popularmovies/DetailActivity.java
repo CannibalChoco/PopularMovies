@@ -1,11 +1,13 @@
 package com.example.android.popularmovies;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,11 +25,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,6 +204,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private ConnectivityReceiver connectivityReceiver;
 
+    private AsyncTask dbInsertTask;
+    private AsyncTask dbDeleteTask;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,14 +249,19 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
         searchMovieInDb();
 
-        // TODO: set state according to movie presence in bd
         btnFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isFavorite){
-                    addToFavorites();
+                    dbInsertTask = new DbInsertTask(DetailActivity.this, movie, btnFavorites)
+                            .execute();
+                    isFavorite = true;
+                    Toast.makeText(DetailActivity.this, R.string.msg_favorites_movie_added, Toast.LENGTH_SHORT).show();
                 } else {
-                    removeFromFavorites();
+                    dbDeleteTask = new DbDeleteTask(DetailActivity.this, movie.getMovieTitle(),
+                            btnFavorites).execute();
+                    isFavorite = false;
+                    Toast.makeText(DetailActivity.this, R.string.msg_favorites_movie_removed, Toast.LENGTH_SHORT).show();
                 }
                 btnFavorites.setPressed(isFavorite);
             }
@@ -280,6 +292,14 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         if (connectivityReceiver != null){
             this.unregisterReceiver(connectivityReceiver);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (dbInsertTask != null) dbInsertTask.cancel(true);
+        if (dbDeleteTask != null) dbDeleteTask.cancel(true);
+
+        super.onDestroy();
     }
 
     @Override
@@ -326,6 +346,86 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             if (!isWaitingForInternetConnection){
                 isWaitingForInternetConnection = true;
             }
+        }
+    }
+
+    private static class DbInsertTask extends AsyncTask<Void, Void, Uri>{
+
+        private Movie movie;
+        private WeakReference<Context> context;
+        private WeakReference<Button> favoritesBtn;
+
+        public DbInsertTask (Context context, Movie movie, Button favoritesBtn){
+            this.movie = movie;
+            this.context = new WeakReference<>(context);
+            this.favoritesBtn = new WeakReference<>(favoritesBtn);
+        }
+
+        @Override
+        protected Uri doInBackground(Void... voids) {
+            ContentValues values = new ContentValues();
+
+            values.put(MovieContract.MoviesEntry.COLUMN_ID, movie.getId());
+            values.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getMovieTitle());
+            values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRatingForFiveStars());
+            values.put(MovieContract.MoviesEntry.COLUMN_SYNOPSIS, movie.getOverview());
+            values.put(MovieContract.MoviesEntry.COLUMN_LANGUAGE, movie.getLanguage());
+            values.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseYear());
+            values.put(MovieContract.MoviesEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
+            values.put(MovieContract.MoviesEntry.COLUMN_BACKDROP_PATH, movie.getBackdropPath());
+
+            //Log.i("DATABASE", MovieContract.MoviesEntry.CONTENT_URI.toString())
+
+            Context c = context.get();
+            return c.getContentResolver().insert(MovieContract.MoviesEntry.CONTENT_URI, values);
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            super.onPostExecute(uri);
+
+            Button button = favoritesBtn.get();
+
+            if (uri != null && button != null){
+                button.setPressed(true);
+            }
+        }
+    }
+
+
+    private static class DbDeleteTask extends AsyncTask<Void, Void, Integer>{
+
+        private WeakReference<Context> context;
+        private WeakReference<Button> favoritesBtn;
+        private String title;
+
+        public DbDeleteTask(Context context, String title, Button favoritesBtn){
+            this.context = new WeakReference<>(context);
+            this.favoritesBtn = new WeakReference<>(favoritesBtn);
+            this.title = title;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            Uri uri = MovieContract.MoviesEntry.CONTENT_URI;
+
+            String selection = MovieContract.MoviesEntry.COLUMN_TITLE + " = ? ";
+            String[] selectionArgs = new String[]{title};
+
+            Context c = context.get();
+
+            return c.getContentResolver().delete(uri, selection, selectionArgs);
+        }
+
+        @Override
+        protected void onPostExecute(Integer rows) {
+            Button button = favoritesBtn.get();
+
+            if (rows != 0 && button != null){
+                button.setPressed(false);
+            }
+
+            super.onPostExecute(rows);
         }
     }
 
@@ -521,55 +621,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             }
 
         }
-    }
-
-    private void addToFavorites(){
-        Thread insert = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ContentValues values = new ContentValues();
-
-                values.put(MovieContract.MoviesEntry.COLUMN_ID, movie.getId());
-                values.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getMovieTitle());
-                values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRatingForFiveStars());
-                values.put(MovieContract.MoviesEntry.COLUMN_SYNOPSIS, movie.getOverview());
-                values.put(MovieContract.MoviesEntry.COLUMN_LANGUAGE, movie.getLanguage());
-                values.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseYear());
-                values.put(MovieContract.MoviesEntry.COLUMN_POSTER_PATH, posterPath);
-                values.put(MovieContract.MoviesEntry.COLUMN_BACKDROP_PATH, backdropPath);
-
-                Log.i("DATABASE", MovieContract.MoviesEntry.CONTENT_URI.toString());
-                Uri uri = getContentResolver().insert(MovieContract.MoviesEntry.CONTENT_URI, values);
-
-                if (uri != null){
-                    isFavorite = true;
-                }
-
-            }
-        });
-
-        insert.start();
-    }
-
-    private void removeFromFavorites(){
-        Thread delete = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Uri uri = MovieContract.MoviesEntry.CONTENT_URI;
-
-                String selection = MovieContract.MoviesEntry.COLUMN_TITLE + " = ? ";
-                String[] selectionArgs = new String[]{movie.getMovieTitle()};
-
-                int rows = getContentResolver().delete(uri, selection, selectionArgs);
-
-                if (rows != -1){
-                    isFavorite = false;
-                }
-
-            }
-        });
-
-        delete.start();
     }
 
 }

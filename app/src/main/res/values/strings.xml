@@ -54,13 +54,10 @@
     <!-- Label for overview  -->
     <string name="label_reviews">Reviews</string>
 
-    <!-- - - - - - - - - - - - - - -
-      - Used by expandableTextView -
-      - - - - - - - - - - - - - - -->
-    <!-- label for show more -->
-    <string name="expandable_text_more">  more</string>
+    <!-- Message for Toast when user deletes movie from favorites -->
+    <string name="msg_favorites_movie_removed">Movie removed from Favorites</string>
 
-    <!-- label for show less -->
-    <string name="expandable_text_less">  less</string>
+    <!-- Message for Toast when user adds movie to favorites -->
+    <string name="msg_favorites_movie_added">Movie added to Favorites</string>
 
 </resources>
