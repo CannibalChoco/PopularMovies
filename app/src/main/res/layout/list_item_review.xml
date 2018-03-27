@@ -29,17 +29,6 @@
             tools:text="Some long review for the movie." />
 
         <TextView
-            android:id="@+id/tvExpandableIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvReview"
-            android:layout_marginRight="8dp" />
-
-        <TextView
             android:id="@+id/tvAuthor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +38,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvExpandableIndicator"
+            app:layout_constraintTop_toBottomOf="@+id/tvReview"
             tools:text="honeybadger"
             android:layout_marginRight="8dp" />
 

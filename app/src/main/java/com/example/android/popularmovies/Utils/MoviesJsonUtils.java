@@ -195,7 +195,6 @@ class MoviesJsonUtils {
         String author = reviewJsonObject.optString(REVIEW_AUTHOR);
         String review = reviewJsonObject.optString(REVIEW_CONTENT);
 
-        //Log.d("REVIEWS", author + "   " + review);
         return new MovieReview(author, review);
     }
 

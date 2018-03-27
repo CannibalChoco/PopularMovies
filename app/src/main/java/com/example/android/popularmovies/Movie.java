@@ -99,7 +99,7 @@ public class Movie implements Parcelable {
         return releaseDate.substring(0, 4);
     }
 
-    private double getRating() {
+    public double getRating() {
         return rating;
     }
 
@@ -116,14 +116,6 @@ public class Movie implements Parcelable {
 
     public List<MovieTrailer> getTrailers() {
         return trailerList;
-    }
-
-    public void setReviewList(List<MovieReview> reviewList) {
-        this.reviewList = reviewList;
-    }
-
-    public void setTrailerList(List<MovieTrailer> trailerList) {
-        this.trailerList = trailerList;
     }
 
     public float getRatingForFiveStars(){

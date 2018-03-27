@@ -42,7 +42,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
         holder.reviewTv.setText(reviewText);
         holder.author.setText(reviewersName);
-        holder.expandableIndicatorTv.setVisibility(View.GONE);
     }
 
     @Override
@@ -53,7 +52,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvReview) TextView reviewTv;
         @BindView(R.id.tvAuthor) TextView author;
-        @BindView(R.id.tvExpandableIndicator) TextView expandableIndicatorTv;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -68,12 +66,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             // is expanded, set to collapsed
                             reviewTv.setMaxLines(MAX_LINES_REVIEW_COLLAPSED);
                             reviewTv.setEllipsize(TextUtils.TruncateAt.END);
-                            //expandableIndicatorTv.setText(R.string.expandable_text_more);
                         } else {
                             // is collapsed, set to expanded
                             reviewTv.setMaxLines(MAX_LINES_REVIEW_EXPANDED);
                             reviewTv.setEllipsize(null);
-                            //expandableIndicatorTv.setText(R.string.expandable_text_less);
                         }
                 }
             });

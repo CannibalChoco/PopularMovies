@@ -42,7 +42,6 @@ import butterknife.ButterKnife;
  * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
  * some code is taken from the tutorial, which is disclosed above that code.
  */
-// TODO loader restarted when DetailActivity up button clicked; not restarted when device back clicked
 public class MainActivity extends AppCompatActivity implements
         android.support.v4.app.LoaderManager.LoaderCallbacks<List<Movie>>,
         MovieAdapter.GridItemListener,
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements
     private ConnectivityReceiver connectivityReceiver;
 
     private boolean isWaitingForInternetConnection;
-    // TODO store in savedInstanceState
     private boolean hasLoadedMovies = false;
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener;
@@ -146,8 +144,6 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Log.i("ADAPTER", "onCreate");
-
         setSupportActionBar(toolbar);
 
         if (savedInstanceState != null) {
@@ -169,8 +165,6 @@ public class MainActivity extends AppCompatActivity implements
         preferences = getSharedPreferences(PopularMoviesPreferences.PREFS_POPULAR_MOVIES, 0);
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
                 PopularMoviesPreferences.PREFS_SORT_DEFAULT);
-
-        Log.i("PREFS", prefSortOrder);
 
         navigationItemSelectedListener =
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -249,9 +243,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<Movie>> loader, List<Movie> movieData) {
-        Log.i("ADAPTER", "onLoadFinished - movie");
         if (!prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)) {
-            Log.i("ADAPTER", "onLoadFinished - movie - pref other");
             adapter.clear();
             if (movieData != null && !movieData.isEmpty()) {
                 if (movies != null) {
@@ -333,7 +325,6 @@ public class MainActivity extends AppCompatActivity implements
      * @return Bundle with preferred sort order ready to be used by MovieLoader
      */
     private Bundle getSortOrderArgsBundle() {
-        Log.i("ADAPTER", "getSortOrderArgsBundle");
         Bundle args = new Bundle();
 
         switch (prefSortOrder) {
@@ -355,14 +346,11 @@ public class MainActivity extends AppCompatActivity implements
      * when emptyStateTextView is displayed
      */
     private void searchMovies() {
-        Log.i("ADAPTER", "searchMovies");
         showLoading();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
-            Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
             loaderManager.restartLoader(MovieLoader.MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         } else {
-            Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
             //noinspection ConstantConditions
             loaderManager.initLoader(MovieLoader.MOVIE_LOADER_ID, getSortOrderArgsBundle(), this);
         }
@@ -370,14 +358,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void getFavoritesFromDb(){
-        Log.i("ADAPTER", "getFavoritesFromDb");
         showLoading();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
-            Toast.makeText(this, "loader restarted", Toast.LENGTH_SHORT).show();
             loaderManager.restartLoader(DB_LOADER, null, favoritesLoaderListener);
         } else {
-            Toast.makeText(this, "loader initiated", Toast.LENGTH_SHORT).show();
             //noinspection ConstantConditions
             loaderManager.initLoader(DB_LOADER, null, favoritesLoaderListener);
         }
@@ -389,7 +374,6 @@ public class MainActivity extends AppCompatActivity implements
      * there is no internet connection
      */
     private void searchMoviesIfConnected() {
-        Log.i("ADAPTER", "searchMoviesIfConnected");
         if (ConnectivityReceiver.isConnected()) {
             showLoading();
             searchMovies();

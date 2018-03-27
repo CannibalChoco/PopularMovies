@@ -18,7 +18,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,10 +44,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private static final int ID_TRAILERS = 0;
     private static final int ID_REVIEWS = 1;
-    private static final int ID_MOVIE = 2;
 
     private static final int MOVIE_DB_SEARCH_LOADER_ID = 4;
-    private static final int MOVIE_DB_INSERT_LOADER_ID = 5;
 
     private static final String TRAILERS_LIST_KEY = "trailers";
 
@@ -135,6 +132,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                                         showReviews();
                                     } else {
                                         showReviewEmptyStateText();
+                                        reviewEmptyStateTextTv.setText(R.string.reviews_empty_state_text);
                                     }
                                 }
                             }
@@ -160,6 +158,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                                         showTrailers();
                                     } else {
                                         showTrailerEmptyStateText();
+                                        trailerEmptyStateTextTv.setText(R.string.trailers_empty_state_text);
                                     }
                                 }
                             }
@@ -241,7 +240,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     rvReviews.setAdapter(reviewAdapter);
 
                     getDetailsIfConnected(ID_TRAILERS);
-                    // TODO: trailers are re-queried when user comes back from youtube
                     getDetailsIfConnected(ID_REVIEWS);
                 }
             }
@@ -321,7 +319,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String key = trailers.get(position).getKey();
 
         Uri uri = NetworkUtils.buildUrlForMovieTrailer(key);
-        Log.i("POSITION", uri.toString());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
         intent.putExtra("force_fullscreen", true);
@@ -367,14 +364,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             values.put(MovieContract.MoviesEntry.COLUMN_ID, movie.getId());
             values.put(MovieContract.MoviesEntry.COLUMN_TITLE, movie.getMovieTitle());
-            values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRatingForFiveStars());
+            values.put(MovieContract.MoviesEntry.COLUMN_RATING, movie.getRating());
             values.put(MovieContract.MoviesEntry.COLUMN_SYNOPSIS, movie.getOverview());
             values.put(MovieContract.MoviesEntry.COLUMN_LANGUAGE, movie.getLanguage());
             values.put(MovieContract.MoviesEntry.COLUMN_YEAR, movie.getReleaseYear());
             values.put(MovieContract.MoviesEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
             values.put(MovieContract.MoviesEntry.COLUMN_BACKDROP_PATH, movie.getBackdropPath());
-
-            //Log.i("DATABASE", MovieContract.MoviesEntry.CONTENT_URI.toString())
 
             Context c = context.get();
             return c.getContentResolver().insert(MovieContract.MoviesEntry.CONTENT_URI, values);
@@ -435,11 +430,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
      * @param movie holds info to be displayed in the UI
      */
     private void loadMovieInfoInUi (Movie movie){
-
-//        if (idsInDb.contains(movie.getId())){
-//
-//        }
-
         String overview = movie.getOverview();
         String rating = movie.getRatingString();
         String releaseDate = movie.getReleaseDate();
@@ -509,7 +499,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
      * Preform movie search in favorites db with LoaderManager initLoader() or restartLoader()
      */
     private void searchMovieInDb() {
-        showLoadingTrailers();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             loaderManager.restartLoader(MOVIE_DB_SEARCH_LOADER_ID,null, dbLoaderListener);
@@ -586,18 +575,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private void getDetailsIfConnected(int id) {
         if (ConnectivityReceiver.isConnected()) {
+            isWaitingForInternetConnection = false;
             switch (id){
                 case ID_TRAILERS:
-                    showLoadingTrailers();
                     searchTrailers();
                     break;
                 case ID_REVIEWS:
-                    showLoadingReviews();
                     searchReviews();
-                    break;
-                case ID_MOVIE:
-                    // additional movie info, like tagline, actors, etc
-                    // TODO: showLoading, search, showResults;
                     break;
             }
         } else {
@@ -605,21 +589,14 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             switch (id){
                 case ID_TRAILERS:
-                    // TODO: adjust message
                     showTrailerEmptyStateText();
-                    trailerEmptyStateTextTv.setText("no connection");
+                    trailerEmptyStateTextTv.setText(R.string.empty_state_no_connection);
                     break;
                 case ID_REVIEWS:
-                    // TODO: adjust message
                     showReviewEmptyStateText();
-                    reviewEmptyStateTextTv.setText("no connection");
-                    break;
-                case ID_MOVIE:
-                    // additional movie info, like tagline, actors, etc
-                    // TODO: showEmptyState, adjust message
+                    reviewEmptyStateTextTv.setText(R.string.empty_state_no_connection);
                     break;
             }
-
         }
     }
 

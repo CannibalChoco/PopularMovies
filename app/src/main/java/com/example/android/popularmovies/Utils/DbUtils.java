@@ -33,8 +33,6 @@ public class DbUtils {
             movieList.add(movie);
             cursor.moveToNext();
         }
-//
-//        cursor.close();
 
         return movieList;
     }

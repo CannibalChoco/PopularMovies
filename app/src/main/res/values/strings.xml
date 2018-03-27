@@ -2,7 +2,7 @@
     <string name="app_name">Popular Movies</string>
 
     <string name="empty_state_default">Ooops! Nothing to show</string>
-    <string name="empty_state_no_connection">Looks like there\'s no network connection</string>
+    <string name="empty_state_no_connection">Looks like there\'s no internet connection</string>
 
     <!-- MainActivity label -->
     <string name="label_discover">Discover</string>
@@ -44,6 +44,9 @@
 
     <!-- Empty state text for reviews recycler view -->
     <string name="reviews_empty_state_text">No reviews found</string>
+
+    <!-- Empty state text for trailers and reviews when there is no connectivity -->
+    <string name="connectivity_empty_state_text">No InternetConnection</string>
 
     <!-- Label for overview  -->
     <string name="label_overview">Overview</string>

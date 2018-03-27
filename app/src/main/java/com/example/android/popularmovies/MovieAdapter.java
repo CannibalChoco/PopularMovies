@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.ratingBar.setVisibility(View.GONE);
 
         String posterPath = movie.getPosterPath();
-        Log.i("POSTER", posterPath);
         if (posterPath != null && !TextUtils.isEmpty(posterPath)) {
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
             Picasso.with(context).load(posterUrl).into(holder.posterImageView, new com.squareup.picasso.Callback() {
