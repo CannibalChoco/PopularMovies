@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener;
 
-    private LoaderManager.LoaderCallbacks favoritesLoaderListener = new
+    private final LoaderManager.LoaderCallbacks favoritesLoaderListener = new
             LoaderManager.LoaderCallbacks<Cursor>() {
                 @NonNull
                 @Override

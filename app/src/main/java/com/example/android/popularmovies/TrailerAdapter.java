@@ -21,8 +21,8 @@ import butterknife.ButterKnife;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHolder> {
 
-    private List<MovieTrailer> trailers;
-    private Context context;
+    private final List<MovieTrailer> trailers;
+    private final Context context;
 
     private static ListItemListener onClickListener;
 

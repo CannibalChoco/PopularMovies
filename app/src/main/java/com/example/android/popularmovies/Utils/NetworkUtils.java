@@ -77,8 +77,8 @@ public class NetworkUtils {
     /**
      * Fetches Movie data JSON parses it and returns list of movie objects
      *
-     * @param path
-     * @return
+     * @param path endpoint constants from NetworkUtils class
+     * @return a List of Movie
      */
     public static List<Movie> fetchMovieData(String path) {
         URL url = buildUrl(path, NO_MOVIE_ID);

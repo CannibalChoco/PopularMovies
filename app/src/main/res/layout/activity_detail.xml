@@ -123,22 +123,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/label_trailers"
             android:textColor="@color/colorPrimaryLight"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvOverview"
-            android:layout_marginStart="16dp" />
+            app:layout_constraintTop_toBottomOf="@id/tvOverview" />
 
         <include
             android:id="@+id/trailersCl"
+            layout="@layout/activity_detail_trailers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/activity_detail_trailers"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/labelTrailersTv"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelTrailersTv" />
 
 
         <TextView
@@ -146,26 +146,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/colorPrimaryLight"
             android:text="@string/label_reviews"
+            android:textColor="@color/colorPrimaryLight"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trailersCl"
-            android:layout_marginStart="16dp" />
+            app:layout_constraintTop_toBottomOf="@id/trailersCl" />
 
         <include
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/reviewsCl"
             layout="@layout/activity_detail_reviews"
-            app:layout_constraintTop_toBottomOf="@id/labelReviewsTv"
-            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/labelReviewsTv" />
+
+        <TextView
+            android:id="@+id/noConnectionTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tvOverview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            tools:text="@string/connectivity_empty_state_text"
+            />
 
         <Button
             android:id="@+id/favoritesBtn"
@@ -173,10 +186,9 @@
             android:layout_height="32dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
+            android:background="@drawable/button_favorite_custom"
             app:layout_constraintBottom_toBottomOf="@id/ivPoster"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/button_favorite_custom"/>
-
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

@@ -65,13 +65,14 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
     @BindView(R.id.trailersPb) ProgressBar trailersPb;
     @BindView(R.id.reviewsPb) ProgressBar reviewsPb;
-
     @BindView(R.id.rvTrailers) RecyclerView rvTrailers;
     @BindView(R.id.rvReviews) RecyclerView rvReviews;
     @BindView(R.id.tvTrailerEmptyStateText) TextView trailerEmptyStateTextTv;
     @BindView(R.id.tvReviewEmptyStateText) TextView reviewEmptyStateTextTv;
-
     @BindView(R.id.favoritesBtn) Button btnFavorites;
+    @BindView(R.id.noConnectionTv) TextView tvNoConnection;
+    @BindView(R.id.labelReviewsTv) TextView labelReviews;
+    @BindView(R.id.labelTrailersTv) TextView labelTrailers;
 
     private boolean isWaitingForInternetConnection = false;
     private boolean hasLoadedTrailers = false;
@@ -87,7 +88,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private TrailerAdapter trailerAdapter;
     private ReviewAdapter reviewAdapter;
 
-    private LoaderManager.LoaderCallbacks moreDataLoaderListener = new
+    private final LoaderManager.LoaderCallbacks moreDataLoaderListener = new
             LoaderManager.LoaderCallbacks<List<Movie>>() {
                 @NonNull
                 @Override
@@ -179,7 +180,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             };
 
     // check if movie is in favorites db
-    private LoaderManager.LoaderCallbacks dbLoaderListener = new
+    private final LoaderManager.LoaderCallbacks dbLoaderListener = new
             LoaderManager.LoaderCallbacks<Cursor>() {
                 @NonNull
                 @Override
@@ -354,9 +355,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
      */
     private static class DbInsertTask extends AsyncTask<Void, Void, Uri>{
 
-        private Movie movie;
-        private WeakReference<Context> context;
-        private WeakReference<Button> favoritesBtn;
+        private final Movie movie;
+        private final WeakReference<Context> context;
+        private final WeakReference<Button> favoritesBtn;
 
         public DbInsertTask (Context context, Movie movie, Button favoritesBtn){
             this.movie = movie;
@@ -398,9 +399,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
      */
     private static class DbDeleteTask extends AsyncTask<Void, Void, Integer>{
 
-        private WeakReference<Context> context;
-        private WeakReference<Button> favoritesBtn;
-        private String title;
+        private final WeakReference<Context> context;
+        private final WeakReference<Button> favoritesBtn;
+        private final String title;
 
         public DbDeleteTask(Context context, String title, Button favoritesBtn){
             this.context = new WeakReference<>(context);
@@ -526,6 +527,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         trailerEmptyStateTextTv.setVisibility(GONE);
         rvTrailers.setVisibility(View.VISIBLE);
         trailersPb.setVisibility(GONE);
+        labelTrailers.setVisibility(View.VISIBLE);
 
         hasLoadedTrailers = true;
     }
@@ -540,6 +542,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
        rvReviews.setVisibility(View.VISIBLE);
        reviewEmptyStateTextTv.setVisibility(GONE);
        reviewsPb.setVisibility(GONE);
+       labelReviews.setVisibility(View.VISIBLE);
 
        hasLoadedReviews = true;
     }
@@ -553,6 +556,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         trailerEmptyStateTextTv.setVisibility(View.VISIBLE);
         rvTrailers.setVisibility(GONE);
         trailersPb.setVisibility(GONE);
+        labelTrailers.setVisibility(View.VISIBLE);
 
         hasLoadedTrailers = false;
     }
@@ -566,24 +570,40 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         rvReviews.setVisibility(GONE);
         reviewEmptyStateTextTv.setVisibility(View.VISIBLE);
         reviewsPb.setVisibility(GONE);
+        labelReviews.setVisibility(View.VISIBLE);
 
         hasLoadedReviews = false;
     }
 
+    /**
+     * Display only trailer loading indicator, hide all other trailer views
+     */
     private void showLoadingTrailers( ){
         trailersPb.setVisibility(View.VISIBLE);
         trailerEmptyStateTextTv.setVisibility(GONE);
         rvTrailers.setVisibility(GONE);
+        labelTrailers.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Display only review loading indicator, hide all other review views
+     */
     private void showLoadingReviews() {
         rvReviews.setVisibility(GONE);
         reviewEmptyStateTextTv.setVisibility(GONE);
         reviewsPb.setVisibility(View.VISIBLE);
+        labelReviews.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Search for trailers and reviews only if there is connectivity, otherwise set emptyStateText
+     * @param id detail ID- trailers or reviews
+     */
     private void getDetailsIfConnected(int id) {
         if (ConnectivityReceiver.isConnected()) {
+
+            tvNoConnection.setVisibility(View.GONE);
+
             isWaitingForInternetConnection = false;
             switch (id){
                 case ID_TRAILERS:
@@ -595,18 +615,25 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             }
         } else {
             isWaitingForInternetConnection = true;
-
-            switch (id){
-                case ID_TRAILERS:
-                    showTrailerEmptyStateText();
-                    trailerEmptyStateTextTv.setText(R.string.empty_state_no_connection);
-                    break;
-                case ID_REVIEWS:
-                    showReviewEmptyStateText();
-                    reviewEmptyStateTextTv.setText(R.string.empty_state_no_connection);
-                    break;
-            }
+            showNoConnectionMessage();
         }
     }
 
+    /**
+     * When there is no connectivity, hide all trailers and reviews views and display a single
+     * message
+     */
+    private void showNoConnectionMessage(){
+            tvNoConnection.setText(R.string.connectivity_empty_state_text);
+            tvNoConnection.setVisibility(View.VISIBLE);
+
+            labelReviews.setVisibility(GONE);
+            labelTrailers.setVisibility(GONE);
+            rvTrailers.setVisibility(GONE);
+            rvReviews.setVisibility(GONE);
+            reviewsPb.setVisibility(GONE);
+            trailersPb.setVisibility(GONE);
+            reviewEmptyStateTextTv.setVisibility(GONE);
+            trailerEmptyStateTextTv.setVisibility(GONE);
+    }
 }
