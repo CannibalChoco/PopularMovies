@@ -13,7 +13,6 @@
             android:id="@+id/ivBackdrop"
             android:layout_width="0dp"
             android:layout_height="250dp"
-            android:layout_marginTop="16dp"
             android:adjustViewBounds="true"
             android:gravity="center"
             android:scaleType="centerCrop"
