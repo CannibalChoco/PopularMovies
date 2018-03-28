@@ -166,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements
         prefSortOrder = preferences.getString(PopularMoviesPreferences.PREFS_SORT_ORDER,
                 PopularMoviesPreferences.PREFS_SORT_DEFAULT);
 
+        setTitleToSortOrder();
+
         navigationItemSelectedListener =
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
