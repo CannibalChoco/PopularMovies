@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements
             movies = savedInstanceState.getParcelableArrayList(KEY_MOVIE_LIST);
             isWaitingForInternetConnection =
                     savedInstanceState.getBoolean(KEY_IS_WAITING_CONNECTION);
+            appBar.setExpanded(false);
         } else {
             movies = new ArrayList<>();
             isWaitingForInternetConnection = false;
@@ -172,9 +173,6 @@ public class MainActivity extends AppCompatActivity implements
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                        recyclerView.smoothScrollToPosition(0);
-                        appBar.setExpanded(true);
 
                         switch (item.getItemId()) {
                             case R.id.action_sort_highest_rated:
@@ -286,6 +284,8 @@ public class MainActivity extends AppCompatActivity implements
             getFavoritesFromDb();
         } else {
             searchMoviesIfConnected();
+            recyclerView.smoothScrollToPosition(0);
+            appBar.setExpanded(true);
         }
     }
 
