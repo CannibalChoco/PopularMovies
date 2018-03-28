@@ -79,9 +79,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private boolean isFavorite = false;
 
-    private String posterPath;
-    private String backdropPath;
-
     private Movie movie;
     private int id;
     private List<MovieTrailer> trailers;
@@ -169,6 +166,15 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
                 @Override
                 public void onLoaderReset(@NonNull Loader<List<Movie>> loader) {
+                    int id = loader.getId();
+                    switch (id){
+                        case MovieLoader.REVIEW_LOADER_ID:
+                            reviewAdapter.clear();
+                            break;
+                        case MovieLoader.TRAILER_LOADER_ID:
+                            trailerAdapter.clear();
+                    }
+
                 }
             };
 
@@ -196,7 +202,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
                 @Override
                 public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
                 }
             };
 
@@ -211,8 +216,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-
-        setTitle(getString(R.string.label_details));
 
         Bundle data = getIntent().getExtras();
 
@@ -346,6 +349,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
+    /**
+     * AsyncTask to insert a movie into favorites db
+     */
     private static class DbInsertTask extends AsyncTask<Void, Void, Uri>{
 
         private Movie movie;
@@ -387,7 +393,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
     }
 
-
+    /**
+     * AsyncTask to delete a movie from favorites db
+     */
     private static class DbDeleteTask extends AsyncTask<Void, Void, Integer>{
 
         private WeakReference<Context> context;
@@ -444,8 +452,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         ratingBar.setRating(ratingForFiveStars);
         languageTv.setText(language);
 
-        posterPath = movie.getPosterPath();
-        backdropPath = movie.getBackdropPath();
+        String posterPath = movie.getPosterPath();
+        String backdropPath = movie.getBackdropPath();
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
         String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
 
@@ -454,8 +462,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     }
 
     /**
+     * Builds Bundle of arguments for loader to load the right data
      *
-     * @return Bundle with path for reviews
+     * @return Bundle with path for reviews or trailers
      */
     private Bundle getPathArgsBundle (String path){
         Bundle args = new Bundle();

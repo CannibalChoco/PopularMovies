@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @BindView(R.id.toolBar)
     Toolbar toolbar;
+    @BindView(R.id.appBar) android.support.design.widget.AppBarLayout appBar;
 
     public static final String KEY_MOVIE = "movie";
     private static final String KEY_MOVIE_LIST = "movies";
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements
 
                 @Override
                 public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-                    Log.i("ADAPTER", "onLoadFinished - cursor");
                     if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)){
                         Log.i("ADAPTER", "onLoadFinished - cursor - pref favorites");
                         adapter.clear();
@@ -172,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                        recyclerView.smoothScrollToPosition(0);
+                        appBar.setExpanded(true);
+
                         switch (item.getItemId()) {
                             case R.id.action_sort_highest_rated:
                                 prefSortOrder = PopularMoviesPreferences.PREFS_SORT_RATINGS;
