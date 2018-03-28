@@ -48,6 +48,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private static final int MOVIE_DB_SEARCH_LOADER_ID = 4;
 
     private static final String TRAILERS_LIST_KEY = "trailers";
+    private static final String REVIEWS_LIST_KEY = "reviews";
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvOverview) TextView overviewTv;
@@ -243,8 +244,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                             reviews != null ? reviews : new ArrayList<MovieReview>());
                     rvReviews.setAdapter(reviewAdapter);
 
-                    getDetailsIfConnected(ID_TRAILERS);
-                    getDetailsIfConnected(ID_REVIEWS);
+                    if (trailers == null){
+                        getDetailsIfConnected(ID_TRAILERS);
+                    }
+                    if (reviews == null){
+                        getDetailsIfConnected(ID_REVIEWS);
+                    }
+
                 }
             }
         }
@@ -309,6 +315,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         if (trailers != null){
             outState.putParcelableArrayList(TRAILERS_LIST_KEY, (ArrayList<MovieTrailer>) trailers);
         }
+        if (reviews != null){
+            outState.putParcelableArrayList(REVIEWS_LIST_KEY, (ArrayList<MovieReview>) reviews);
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -316,6 +326,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
+        reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY);
     }
 
     @Override
