@@ -66,7 +66,7 @@ class MoviesJsonUtils {
     /* Key for trailers name*/
     private static final String TRAILER_NAME = "name";
 
-    /* Key for trailers key (path to viedo) */
+    /* Key for trailers key (path to video) */
     private static final String TRAILER_KEY = "key";
 
     /* Key for site where trailer is hosted */
@@ -173,7 +173,7 @@ class MoviesJsonUtils {
      * Helper method to parse a single JSON object review
      *
      * @param trailerJsonObject JSONObject from the root object of JSON response
-     * @return Movie
+     * @return MovieTrailer with data from JSON
      */
     @NonNull
     private static MovieTrailer getTrailerFromJsonObject (JSONObject trailerJsonObject){
@@ -188,7 +188,7 @@ class MoviesJsonUtils {
      * Helper method to parse a single JSON object review
      *
      * @param reviewJsonObject JSONObject from the root object of JSON response
-     * @return Movie
+     * @return MovieReview with data from JSON
      */
     @NonNull
     private static MovieReview getReviewFromJsonObject (JSONObject reviewJsonObject){
@@ -202,7 +202,7 @@ class MoviesJsonUtils {
      * Helper method to parse a single JSON object movie
      *
      * @param movieJsonObject JSONObject from the root object of JSON response
-     * @return Movie
+     * @return Movie with data from JSON
      */
     @NonNull
     private static Movie getMovieFromJsonObject (JSONObject movieJsonObject){
