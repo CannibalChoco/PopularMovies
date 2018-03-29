@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -40,6 +41,11 @@ import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
 
+/**
+ * RecyclerView state storing/restoring implementation taken from
+ * https://stackoverflow.com/questions/28236390/recyclerview-store-restore-state-between-activities
+ */
+
 public class DetailActivity extends AppCompatActivity implements TrailerAdapter.ListItemListener,
         ConnectivityReceiver.ConnectivityReceiverListener{
 
@@ -52,6 +58,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private static final String TRAILERS_LIST_KEY = "trailers";
     private static final String REVIEWS_LIST_KEY = "reviews";
     private static final String SCROLL_VIEW_POSITION = "scrollPosition";
+    private static final String TRAILERS_RV_STATE = "trailersRvState";
+    private static final String REVIEWS_RV_STATE = "reviewsRvState";
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvOverview) TextView overviewTv;
@@ -217,6 +225,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private AsyncTask dbInsertTask;
     private AsyncTask dbDeleteTask;
 
+    private Parcelable trailerRvState;
+    private Parcelable reviewRvState;
+
+    private LinearLayoutManager trailerLayoutManager;
+    private LinearLayoutManager reviewLayoutManager;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -233,16 +247,28 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
                 id = movie.getId();
                 if (id != 0){
-                    LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(this,
+                    trailerLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.HORIZONTAL, false);
+
+                    // restore state
+                    if (trailerRvState != null){
+                        trailerLayoutManager.onRestoreInstanceState(trailerRvState);
+                    }
+
                     rvTrailers.setLayoutManager(trailerLayoutManager);
 
                     trailerAdapter = new TrailerAdapter(this,
                             trailers != null ? trailers : new ArrayList<MovieTrailer>(), this);
                     rvTrailers.setAdapter(trailerAdapter);
 
-                    LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this,
+                    reviewLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.VERTICAL, false);
+
+                    // restore state
+                    if (reviewRvState != null){
+                        reviewLayoutManager.onRestoreInstanceState(reviewRvState);
+                    }
+
                     rvReviews.setLayoutManager(reviewLayoutManager);
 
                     reviewAdapter = new ReviewAdapter(
@@ -325,6 +351,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         }
 
         outState.putIntArray(SCROLL_VIEW_POSITION, new int[]{scrollView.getScrollX(), scrollView.getScrollY()});
+        outState.putParcelable(TRAILERS_RV_STATE, trailerLayoutManager.onSaveInstanceState());
+        outState.putParcelable(REVIEWS_RV_STATE, reviewLayoutManager.onSaveInstanceState());
 
         super.onSaveInstanceState(outState);
     }
@@ -345,6 +373,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             });
         }
+
+        trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
+        reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
     }
 
     @Override
