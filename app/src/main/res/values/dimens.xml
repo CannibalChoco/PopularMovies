@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="dimenBottomNavHeight">56dp</dimen>
 
+    <!-- Backdrop height in portrait -->
+    <dimen name="dimenBackdropHeight">300dp</dimen>
+
+    <!-- Backdrop height in landscape -->
+    <dimen name="dimenBackdropHeightLand">250dp</dimen>
+
+    <!-- DetailActivity RatingBar top margin in portrait -->
+    <dimen name="dimenRatingBarTopMargin">24dp</dimen>
+
+    <!-- DetailActivity RatingBar top margin in landscape -->
+    <dimen name="dimenRatingBarTopMarginLand">32dp</dimen>
+
+    <dimen name="dimenDefaultMargin">8dp</dimen>
+
+    <dimen name="dimenNormalMargin">16dp</dimen>
+    <dimen name="dimenMediumMargin">22dp</dimen>
+
+    <!-- Rating textSize -->
+    <dimen name="dimenRatingTextSize">22sp</dimen>
+
+    <!-- Favorites button dimensions -->
+    <dimen name="dimenFavoritesButton">32dp</dimen>
+
+    <!-- Favorites button margin -->
+    <dimen name="dimenFavoritesButtonMargin">24dp</dimen>
 </resources>

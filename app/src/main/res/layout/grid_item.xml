@@ -36,8 +36,8 @@
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/dimenDefaultMargin"
+            android:layout_marginTop="@dimen/dimenDefaultMargin"
             android:numStars="5" />
 
     </LinearLayout>
