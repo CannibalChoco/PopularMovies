@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -250,10 +251,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     trailerLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.HORIZONTAL, false);
 
-                    // restore state
-                    if (trailerRvState != null){
-                        trailerLayoutManager.onRestoreInstanceState(trailerRvState);
-                    }
+
 
                     rvTrailers.setLayoutManager(trailerLayoutManager);
 
@@ -264,10 +262,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     reviewLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.VERTICAL, false);
 
-                    // restore state
-                    if (reviewRvState != null){
-                        reviewLayoutManager.onRestoreInstanceState(reviewRvState);
-                    }
+
 
                     rvReviews.setLayoutManager(reviewLayoutManager);
 
@@ -285,6 +280,24 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             }
         }
+
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // restore state
+                if (trailerRvState != null){
+                    trailerLayoutManager.onRestoreInstanceState(trailerRvState);
+                }
+
+                // restore state
+                if (reviewRvState != null){
+                    reviewLayoutManager.onRestoreInstanceState(reviewRvState);
+                }
+            }
+        }, 100);
+
 
         searchMovieInDb();
 
