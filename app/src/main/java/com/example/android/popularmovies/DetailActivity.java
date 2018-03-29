@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,8 +48,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private static final int MOVIE_DB_SEARCH_LOADER_ID = 4;
 
+    /* constants for savedInstanceState */
     private static final String TRAILERS_LIST_KEY = "trailers";
     private static final String REVIEWS_LIST_KEY = "reviews";
+    private static final String SCROLL_VIEW_POSITION = "scrollPosition";
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvOverview) TextView overviewTv;
@@ -74,6 +77,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.noConnectionTv) TextView tvNoConnection;
     @BindView(R.id.labelReviewsTv) TextView labelReviews;
     @BindView(R.id.labelTrailersTv) TextView labelTrailers;
+    @BindView(R.id.scrollView) NestedScrollView scrollView;
 
     private boolean isWaitingForInternetConnection = false;
     private boolean hasLoadedTrailers = false;
@@ -232,6 +236,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.HORIZONTAL, false);
                     rvTrailers.setLayoutManager(trailerLayoutManager);
+
                     trailerAdapter = new TrailerAdapter(this,
                             trailers != null ? trailers : new ArrayList<MovieTrailer>(), this);
                     rvTrailers.setAdapter(trailerAdapter);
@@ -319,6 +324,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             outState.putParcelableArrayList(REVIEWS_LIST_KEY, (ArrayList<MovieReview>) reviews);
         }
 
+        outState.putIntArray(SCROLL_VIEW_POSITION, new int[]{scrollView.getScrollX(), scrollView.getScrollY()});
+
         super.onSaveInstanceState(outState);
     }
 
@@ -327,6 +334,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         super.onRestoreInstanceState(savedInstanceState);
         trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
         reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY);
+
+        // restore scroll position
+        final int[] position = savedInstanceState.getIntArray(SCROLL_VIEW_POSITION);
+        if (position != null){
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.scrollTo(position[0], position[1]);
+                }
+            });
+        }
     }
 
     @Override
