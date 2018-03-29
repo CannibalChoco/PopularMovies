@@ -5,6 +5,9 @@
     <color name="colorPrimaryLight">#484848</color>
     <color name="colorAccent">#FFC107</color>
 
+    <!-- DetailActivity label color-->
+    <color name="colorLabelDefault">#9e9e9e</color>
+
     <!-- Transparent color for gradient background -->
     <color name="colorPrimaryLightTransparent">#7f484848</color>
 

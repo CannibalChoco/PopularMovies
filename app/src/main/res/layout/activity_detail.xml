@@ -120,7 +120,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/label_overview"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/colorLabelDefault"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivPoster" />
 
@@ -132,7 +132,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/label_trailers"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/colorLabelDefault"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvOverview" />
 
@@ -155,7 +155,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/label_reviews"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/colorLabelDefault"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/trailersCl" />
 

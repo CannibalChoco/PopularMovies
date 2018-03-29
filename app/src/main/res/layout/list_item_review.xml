@@ -18,14 +18,13 @@
             android:id="@+id/tvReview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:maxLines="5"
-            android:ellipsize="end"
+            android:layout_marginTop="8dp"
+
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAuthor"
             tools:text="Some long review for the movie." />
 
         <TextView
@@ -33,13 +32,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold|italic"
+            android:textColor="@color/colorLabelDefault"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="honeybadger"
+            android:layout_marginLeft="8dp" />
+
+        <TextView
+            android:id="@+id/tvExpandableIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvReview"
-            tools:text="honeybadger"
+            tools:text="more"
             android:layout_marginRight="8dp" />
 
     </android.support.constraint.ConstraintLayout>

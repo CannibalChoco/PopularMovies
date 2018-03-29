@@ -50,4 +50,10 @@
     <!-- Message for Toast when user adds movie to favorites -->
     <string name="msg_favorites_movie_added">Movie added to Favorites</string>
 
+    <!-- Indicator text to switch to more text -->
+    <string name="expandable_text_more">More</string>
+
+    <!-- Indicator text to switch to less text -->
+    <string name="expandable_text_less">Less</string>
+
 </resources>
