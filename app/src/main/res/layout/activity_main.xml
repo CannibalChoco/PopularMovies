@@ -24,7 +24,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <!-- TODO: why adding layout_behavior results in recyclerview not populating views on launch? -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
