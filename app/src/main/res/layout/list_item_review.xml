@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dimenNormalMargin"
-    android:layout_marginLeft="@dimen/dimenNormalMargin"
-    android:layout_marginRight="@dimen/dimenNormalMargin"
+    android:layout_marginLeft="@dimen/dimenDefaultMargin"
+    android:layout_marginRight="@dimen/dimenDefaultMargin"
     android:background="@color/colorPrimary">
 
     <android.support.constraint.ConstraintLayout
