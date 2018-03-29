@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -61,6 +60,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private static final String SCROLL_VIEW_POSITION = "scrollPosition";
     private static final String TRAILERS_RV_STATE = "trailersRvState";
     private static final String REVIEWS_RV_STATE = "reviewsRvState";
+    private static final String IS_EXPANDED_ARRAY = "isExpandedArray";
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvOverview) TextView overviewTv;
@@ -167,6 +167,17 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
                                         trailers.addAll(newTrailers);
                                         trailerAdapter.addAll(trailers);
+
+                                        // set scrollViews position
+                                        if (scrollPosition != null){
+                                            scrollView.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    scrollView.scrollTo(scrollPosition[0], scrollPosition[1]);
+                                                }
+                                            });
+                                        }
+
                                         showTrailers();
                                     } else {
                                         showTrailerEmptyStateText();
@@ -220,7 +231,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                 }
             };
 
-
     private ConnectivityReceiver connectivityReceiver;
 
     private AsyncTask dbInsertTask;
@@ -232,11 +242,28 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private LinearLayoutManager trailerLayoutManager;
     private LinearLayoutManager reviewLayoutManager;
 
+    private int[] scrollPosition;
+    private boolean[] isExpandedArray;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+
+        if (savedInstanceState != null){
+            trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
+            reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY);
+
+            scrollPosition = savedInstanceState.getIntArray(SCROLL_VIEW_POSITION);
+
+            trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
+            reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
+
+            isExpandedArray = savedInstanceState.getBooleanArray(IS_EXPANDED_ARRAY);
+        } else {
+            isExpandedArray = new boolean[100];
+        }
 
         Bundle data = getIntent().getExtras();
 
@@ -251,8 +278,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     trailerLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.HORIZONTAL, false);
 
-
-
                     rvTrailers.setLayoutManager(trailerLayoutManager);
 
                     trailerAdapter = new TrailerAdapter(this,
@@ -262,42 +287,28 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     reviewLayoutManager = new LinearLayoutManager(this,
                             LinearLayoutManager.VERTICAL, false);
 
-
-
                     rvReviews.setLayoutManager(reviewLayoutManager);
 
                     reviewAdapter = new ReviewAdapter(
-                            reviews != null ? reviews : new ArrayList<MovieReview>());
+                            reviews != null ? reviews : new ArrayList<MovieReview>(),
+                            isExpandedArray);
                     rvReviews.setAdapter(reviewAdapter);
 
                     if (trailers == null){
                         getDetailsIfConnected(ID_TRAILERS);
+                    } else {
+                        showTrailers();
                     }
+
                     if (reviews == null){
                         getDetailsIfConnected(ID_REVIEWS);
+                    } else {
+                        showReviews();
                     }
 
                 }
             }
         }
-
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // restore state
-                if (trailerRvState != null){
-                    trailerLayoutManager.onRestoreInstanceState(trailerRvState);
-                }
-
-                // restore state
-                if (reviewRvState != null){
-                    reviewLayoutManager.onRestoreInstanceState(reviewRvState);
-                }
-            }
-        }, 100);
-
 
         searchMovieInDb();
 
@@ -367,28 +378,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         outState.putParcelable(TRAILERS_RV_STATE, trailerLayoutManager.onSaveInstanceState());
         outState.putParcelable(REVIEWS_RV_STATE, reviewLayoutManager.onSaveInstanceState());
 
+        outState.putBooleanArray(IS_EXPANDED_ARRAY, reviewAdapter.getIsExpandedArray());
+
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
-        reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY);
-
-        // restore scroll position
-        final int[] position = savedInstanceState.getIntArray(SCROLL_VIEW_POSITION);
-        if (position != null){
-            scrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.scrollTo(position[0], position[1]);
-                }
-            });
-        }
-
-        trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
-        reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
     }
 
     @Override

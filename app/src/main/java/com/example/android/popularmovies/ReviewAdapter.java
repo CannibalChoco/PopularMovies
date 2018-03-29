@@ -22,8 +22,22 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     private final List<MovieReview> reviews;
 
-    public ReviewAdapter (List<MovieReview> reviews){
+    private boolean[] isExpandedArray;
+
+    public ReviewAdapter (List<MovieReview> reviews,  boolean[] isExpandedArray){
         this.reviews = reviews;
+
+        this.isExpandedArray = new boolean[100];
+
+        if (isExpandedArray != null){
+            for (int i = 0, j = reviews.size(); i < j; i++){
+                this.isExpandedArray[i] = isExpandedArray[i];
+            }
+        } else {
+            for (int i = 0, j = reviews.size(); i < j; i++){
+                this.isExpandedArray[i] = false;
+            }
+        }
     }
 
     @NonNull
@@ -36,7 +50,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         MovieReview review = reviews.get(position);
 
         String reviewText = review.getReview();
@@ -44,7 +58,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
         holder.reviewTv.setText(reviewText);
         holder.author.setText(reviewersName);
-
 
         /*
             Implementation for getting textviews line count inside adapter, taken from SO post reply
@@ -68,9 +81,19 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             holder.expandableIndicator.setText(R.string.expandable_text_more);
                             holder.expandableIndicator.setVisibility(View.VISIBLE);
                         }
+
+                        if (isExpandedArray[holder.getAdapterPosition()] && holder.isExpandable){
+                            setExpanded(holder);
+                        }
                     }
                 });
 
+        holder.reviewTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleExpandableViewState(holder);
+            }
+        });
     }
 
     @Override
@@ -84,35 +107,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         @BindView(R.id.tvExpandableIndicator) TextView expandableIndicator;
         boolean isExpandable;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                        int shownLines = reviewTv.getLineCount();
-
-                        if(isExpandable){
-                            if (shownLines > MAX_LINES_REVIEW_COLLAPSED) {
-                                // is expanded, set to collapsed
-                                reviewTv.setMaxLines(MAX_LINES_REVIEW_COLLAPSED);
-                                reviewTv.setEllipsize(TextUtils.TruncateAt.END);
-                                expandableIndicator.setText(R.string.expandable_text_more);
-                                expandableIndicator.setVisibility(View.VISIBLE);
-                            } else {
-                                // is collapsed, set to expanded
-                                reviewTv.setMaxLines(MAX_LINES_REVIEW_EXPANDED);
-                                reviewTv.setEllipsize(null);
-                                expandableIndicator.setText(R.string.expandable_text_less);
-                                expandableIndicator.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-
-                }
-            });
         }
     }
 
@@ -133,4 +130,48 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public boolean[] getIsExpandedArray(){
+        return isExpandedArray;
+    }
+
+    /**
+     * Toggle views in ViewHolder between expanded and collapsed
+     * @param holder ViewHolder containing the views to be toggled
+     */
+    private void toggleExpandableViewState(ViewHolder holder){
+        int shownLines = holder.reviewTv.getLineCount();
+
+        if(holder.isExpandable){
+            // is expanded
+            if (shownLines > MAX_LINES_REVIEW_COLLAPSED) {
+                setCollapsed(holder);
+            } else {
+                setExpanded(holder);
+            }
+        }
+    }
+
+    /**
+     * Sets all views for the collapsed Review view state
+     * @param holder ViewHolder holding views to be set
+     */
+    private void setCollapsed (ViewHolder holder){
+        holder.reviewTv.setMaxLines(MAX_LINES_REVIEW_COLLAPSED);
+        holder.reviewTv.setEllipsize(TextUtils.TruncateAt.END);
+        holder.expandableIndicator.setText(R.string.expandable_text_more);
+        holder.expandableIndicator.setVisibility(View.VISIBLE);
+        isExpandedArray[holder.getAdapterPosition()] = false;
+    }
+
+    /**
+     * Sets all views for the expanded Review view state
+     * @param holder ViewHolder holding views to be set
+     */
+    private void setExpanded (ViewHolder holder){
+        holder.reviewTv.setMaxLines(MAX_LINES_REVIEW_EXPANDED);
+        holder.reviewTv.setEllipsize(null);
+        holder.expandableIndicator.setText(R.string.expandable_text_less);
+        holder.expandableIndicator.setVisibility(View.VISIBLE);
+        isExpandedArray[holder.getAdapterPosition()] = true;
+    }
 }
