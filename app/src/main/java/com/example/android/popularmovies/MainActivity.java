@@ -18,7 +18,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -102,12 +101,10 @@ public class MainActivity extends AppCompatActivity implements
                 @Override
                 public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
                     if (prefSortOrder.equals(PopularMoviesPreferences.PREFS_SORT_FAVORITES)){
-                        Log.i("ADAPTER", "onLoadFinished - cursor - pref favorites");
                         adapter.clear();
 
                         if (data != null){
                             List<Movie> favorites = DbUtils.getMovieListFromCursor(data);
-                            Log.i("MOVIES", favorites.toString());
 
                             if (!favorites.isEmpty()){
                                 if (movies != null){
