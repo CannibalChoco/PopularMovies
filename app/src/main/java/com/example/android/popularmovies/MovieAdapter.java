@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,28 +70,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         holder.ratingBar.setVisibility(View.GONE);
 
         String posterPath = movie.getPosterPath();
-        if (posterPath != null && !TextUtils.isEmpty(posterPath)) {
-            String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-            Picasso.with(context).load(posterUrl).into(holder.posterImageView, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    holder.ratingBar.setVisibility(View.VISIBLE);
-                }
+        String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
+        Picasso.with(context).load(posterUrl).placeholder(R.drawable.placeholder).into(holder.posterImageView, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                holder.ratingBar.setVisibility(View.VISIBLE);
+            }
 
-                @Override
-                public void onError() {
+            @Override
+            public void onError() {
 
-                }
-            });
+            }
+        });
 
-            ViewGroup.LayoutParams lp = new ConstraintLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            holder.gridItem.setLayoutParams(lp);
+        ViewGroup.LayoutParams lp = new ConstraintLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        holder.gridItem.setLayoutParams(lp);
 
-            holder.ratingBar.setRating(movie.getRatingForFiveStars());
-        } else {
-            Picasso.with(context).load(R.drawable.sample_w500).into(holder.posterImageView);
-        }
+        holder.ratingBar.setRating(movie.getRatingForFiveStars());
     }
 
     @Override

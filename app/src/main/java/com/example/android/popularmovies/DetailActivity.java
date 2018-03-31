@@ -523,8 +523,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
         String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
 
-        Picasso.with(this).load(posterUrl).into(posterIv);
-        Picasso.with(this).load(backdropUrl).into(backdropIv);
+        Picasso.with(this).load(posterUrl).placeholder(R.drawable.placeholder).into(posterIv);
+
+        Picasso.with(this).load(backdropUrl).placeholder(R.drawable.placeholder).into(backdropIv);
     }
 
     /**
