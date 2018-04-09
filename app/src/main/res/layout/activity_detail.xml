@@ -22,7 +22,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/placeholder_backdrop" />
+            tools:src="@drawable/placeholder_backdrop"
+            android:contentDescription="@string/description_backdrop" />
 
         <TextView
             android:id="@+id/tvRating"
@@ -77,7 +78,8 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:src="@drawable/placeholder_poster" />
+            tools:src="@drawable/placeholder_poster"
+            android:contentDescription="@string/description_poster_item" />
 
         <TextView
             android:id="@+id/labelOverviewTv"

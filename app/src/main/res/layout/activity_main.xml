@@ -16,9 +16,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolBar"
-            android:minHeight="?attr/actionBarSize"
+            android:minHeight="@dimen/dimenAppBarHeightLand"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="@dimen/dimenAppBarHeightPortrait"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 

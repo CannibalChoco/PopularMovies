@@ -27,7 +27,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@tools:sample/avatars" />
+                tools:src="@tools:sample/avatars"
+                android:contentDescription="@string/description_trailer_item" />
 
             <ImageView
                 android:id="@+id/ivPlay"
@@ -37,7 +38,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/ivThumbnail"
                 app:layout_constraintEnd_toEndOf="@id/ivThumbnail"
                 app:layout_constraintStart_toStartOf="@id/ivThumbnail"
-                app:layout_constraintTop_toTopOf="@id/ivThumbnail" />
+                app:layout_constraintTop_toTopOf="@id/ivThumbnail"
+                android:contentDescription="@string/description_trailer_play_button" />
 
         </android.support.constraint.ConstraintLayout>
 

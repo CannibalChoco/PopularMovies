@@ -23,9 +23,9 @@
     <string name="connectivity_lost_message">Connection to the internet lost</string>
 
 
-    <!-- - - - - - - - - - -
-      - Used DetailActivity -
-      - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - -
+      - Used by DetailActivity -
+      - - - - - - - - - - - - -->
     <!-- Empty state text for trailers recycler view -->
     <string name="trailers_empty_state_text">No trailers found</string>
 
@@ -55,5 +55,21 @@
 
     <!-- Indicator text to switch to less text -->
     <string name="expandable_text_less">Less</string>
+
+    <!-- - - - - - - - - - - - - - -
+      - Used by content description -
+      - - - - - - - - - - - - - - -->
+
+    <!-- Content description for poster image view -->
+    <string name="description_poster_item">Poster image</string>
+
+    <!-- Content description for trailer thumbnail image view -->
+    <string name="description_trailer_item">Trailer thumbnail</string>
+
+    <!-- Content description for trailer play image view -->
+    <string name="description_trailer_play_button">Trailer play button</string>
+
+    <!-- Content description for movie backdrop image view -->
+    <string name="description_backdrop">Movie backdrop</string>
 
 </resources>
