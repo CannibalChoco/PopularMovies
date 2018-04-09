@@ -14,7 +14,7 @@ class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE = "CREATE TABLE ";
 
-    private static final String DROP_TABLE = "DROP TABLE IF EXISTS";
+    private static final String ALTER_TABLE = "ALTER TABLE ";
 
     /**
      * String to create table of movies
@@ -44,6 +44,5 @@ class MovieDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 }

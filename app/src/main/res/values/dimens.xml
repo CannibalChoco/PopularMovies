@@ -22,6 +22,7 @@
     <dimen name="dimenDefaultMargin">8dp</dimen>
 
     <dimen name="dimenNormalMargin">16dp</dimen>
+
     <dimen name="dimenMediumMargin">22dp</dimen>
 
     <!-- Rating textSize -->

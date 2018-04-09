@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimenDefaultMargin"
             android:layout_marginStart="@dimen/dimenDefaultMargin"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/dimenNormalMargin"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textSize="@dimen/dimenRatingTextSize"
