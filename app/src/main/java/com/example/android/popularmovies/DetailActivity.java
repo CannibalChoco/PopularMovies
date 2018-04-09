@@ -535,13 +535,20 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String backdropPath = movie.getBackdropPath();
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
 
-        Picasso.with(this).load(posterUrl).placeholder(R.drawable.placeholder_poster).into(posterIv);
+        Picasso.with(this)
+                .load(posterUrl)
+                .placeholder(R.drawable.placeholder_poster)
+                .error(R.drawable.placeholder_poster)
+                .into(posterIv);
 
         if (ConnectivityReceiver.isConnected()){
             loadBackdrop(backdropPath);
         } else {
             // load poster into backdrop view
-            Picasso.with(this).load(posterUrl).into(backdropIv);
+            Picasso.with(this)
+                    .load(posterUrl)
+                    .error(R.drawable.placeholder_backdrop)
+                    .into(backdropIv);
             hasLoadedBackdrop = false;
         }
     }
@@ -725,7 +732,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         // get backdrop url
         String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
         // load backdrop in to backdrop view
-        Picasso.with(this).load(backdropUrl).into(backdropIv);
+        Picasso.with(this)
+                .load(backdropUrl)
+                .error(R.drawable.placeholder_backdrop)
+                .into(backdropIv);
+
         hasLoadedBackdrop = true;
     }
 }
