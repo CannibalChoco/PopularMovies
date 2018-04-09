@@ -75,16 +75,16 @@ public class Movie implements Parcelable {
     };
 
     public String getMovieTitle() {
-        return title != null ? title : "";
+        return title;
     }
 
     public String getOverview() {
-        return overview != null ? overview : "";
+        return overview;
     }
 
 
     public String getPosterPath() {
-        return posterPath != null ? posterPath : "";
+        return posterPath;
     }
 
     public String getBackdropPath() {
@@ -92,7 +92,7 @@ public class Movie implements Parcelable {
     }
 
     public String getReleaseDate() {
-        return releaseDate != null ? releaseDate : "";
+        return releaseDate;
     }
 
     public String getReleaseYear() {
@@ -125,7 +125,7 @@ public class Movie implements Parcelable {
     }
 
     public String getLanguage() {
-        return language != null ? language : "";
+        return language;
     }
 
     public int getId() {
