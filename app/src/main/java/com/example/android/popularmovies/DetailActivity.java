@@ -92,6 +92,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private boolean hasLoadedTrailers = false;
     private boolean hasLoadedReviews = false;
 
+    private boolean hasLoadedBackdrop = false;
+
     private boolean isFavorite = false;
 
     private Movie movie;
@@ -405,6 +407,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                     getDetailsIfConnected(ID_REVIEWS);
                 }
 
+                if (!hasLoadedBackdrop){
+                    loadBackdrop(movie.getBackdropPath());
+                }
                 isWaitingForInternetConnection = false;
             }
 
@@ -521,11 +526,16 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String posterPath = movie.getPosterPath();
         String backdropPath = movie.getBackdropPath();
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-        String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
 
-        Picasso.with(this).load(posterUrl).placeholder(R.drawable.placeholder).into(posterIv);
+        Picasso.with(this).load(posterUrl).placeholder(R.drawable.placeholder_poster).into(posterIv);
 
-        Picasso.with(this).load(backdropUrl).placeholder(R.drawable.placeholder).into(backdropIv);
+        if (ConnectivityReceiver.isConnected()){
+            loadBackdrop(backdropPath);
+        } else {
+            // load poster into backdrop view
+            Picasso.with(this).load(posterUrl).into(backdropIv);
+            hasLoadedBackdrop = false;
+        }
     }
 
     /**
@@ -701,5 +711,13 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             trailersPb.setVisibility(GONE);
             reviewEmptyStateTextTv.setVisibility(GONE);
             trailerEmptyStateTextTv.setVisibility(GONE);
+    }
+
+    private void loadBackdrop(String backdropPath){
+        // get backdrop url
+        String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
+        // load backdrop in to backdrop view
+        Picasso.with(this).load(backdropUrl).into(backdropIv);
+        hasLoadedBackdrop = true;
     }
 }

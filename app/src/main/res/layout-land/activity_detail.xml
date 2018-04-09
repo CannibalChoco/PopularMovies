@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/placeholder" />
+            tools:src="@drawable/placeholder_backdrop" />
 
         <TextView
             android:id="@+id/tvRating"
@@ -76,7 +76,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:src="@drawable/placeholder" />
+            tools:src="@drawable/placeholder_poster" />
 
         <TextView
             android:id="@+id/labelOverviewTv"

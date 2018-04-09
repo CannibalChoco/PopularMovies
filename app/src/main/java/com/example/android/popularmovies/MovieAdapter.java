@@ -71,7 +71,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         String posterPath = movie.getPosterPath();
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-        Picasso.with(context).load(posterUrl).placeholder(R.drawable.placeholder).into(holder.posterImageView, new com.squareup.picasso.Callback() {
+        Picasso.with(context).load(posterUrl).placeholder(R.drawable.placeholder_poster).into(holder.posterImageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 holder.ratingBar.setVisibility(View.VISIBLE);

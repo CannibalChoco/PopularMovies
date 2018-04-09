@@ -19,7 +19,7 @@
         app:layout_constraintDimensionRatio="2:3"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        tools:src="@drawable/placeholder"/>
+        tools:src="@drawable/placeholder_poster"/>
 
     <LinearLayout
         android:layout_width="0dp"

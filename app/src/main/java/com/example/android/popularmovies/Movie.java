@@ -88,7 +88,7 @@ public class Movie implements Parcelable {
     }
 
     public String getBackdropPath() {
-        return backdropPath != null ? backdropPath : "";
+        return backdropPath;
     }
 
     public String getReleaseDate() {
