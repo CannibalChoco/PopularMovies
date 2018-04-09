@@ -56,11 +56,14 @@ public class MainActivity extends AppCompatActivity implements
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.main_bottom_nav)
     BottomNavigationView bottomNav;
 
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.toolBar)
     Toolbar toolbar;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.appBar) android.support.design.widget.AppBarLayout appBar;
 
     public static final String KEY_MOVIE = "movie";
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements
     private boolean isWaitingForInternetConnection;
     private boolean hasLoadedMovies = false;
 
+    @SuppressWarnings("WeakerAccess")
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener;
 
     private final LoaderManager.LoaderCallbacks favoritesLoaderListener = new

@@ -76,16 +76,27 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.tvLanguage) TextView languageTv;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.ivBackdrop) ImageView backdropIv;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.trailersPb) ProgressBar trailersPb;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.reviewsPb) ProgressBar reviewsPb;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.rvTrailers) RecyclerView rvTrailers;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.rvReviews) RecyclerView rvReviews;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvTrailerEmptyStateText) TextView trailerEmptyStateTextTv;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.tvReviewEmptyStateText) TextView reviewEmptyStateTextTv;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.favoritesBtn) Button btnFavorites;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.noConnectionTv) TextView tvNoConnection;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.labelReviewsTv) TextView labelReviews;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.labelTrailersTv) TextView labelTrailers;
+    @SuppressWarnings("WeakerAccess")
     @BindView(R.id.scrollView) NestedScrollView scrollView;
 
     private boolean isWaitingForInternetConnection = false;
@@ -238,14 +249,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     private AsyncTask dbInsertTask;
     private AsyncTask dbDeleteTask;
 
-    private Parcelable trailerRvState;
-    private Parcelable reviewRvState;
-
     private LinearLayoutManager trailerLayoutManager;
     private LinearLayoutManager reviewLayoutManager;
 
     private int[] scrollPosition;
-    private boolean[] isExpandedArray;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -253,14 +260,15 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        boolean[] isExpandedArray;
         if (savedInstanceState != null){
             trailers = savedInstanceState.getParcelableArrayList(TRAILERS_LIST_KEY);
             reviews = savedInstanceState.getParcelableArrayList(REVIEWS_LIST_KEY);
 
             scrollPosition = savedInstanceState.getIntArray(SCROLL_VIEW_POSITION);
 
-            trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
-            reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
+            Parcelable trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
+            Parcelable reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
 
             isExpandedArray = savedInstanceState.getBooleanArray(IS_EXPANDED_ARRAY);
         } else {
@@ -429,7 +437,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         private final WeakReference<Context> context;
         private final WeakReference<Button> favoritesBtn;
 
-        public DbInsertTask (Context context, Movie movie, Button favoritesBtn){
+        DbInsertTask(Context context, Movie movie, Button favoritesBtn){
             this.movie = movie;
             this.context = new WeakReference<>(context);
             this.favoritesBtn = new WeakReference<>(favoritesBtn);
@@ -473,7 +481,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         private final WeakReference<Button> favoritesBtn;
         private final String title;
 
-        public DbDeleteTask(Context context, String title, Button favoritesBtn){
+        DbDeleteTask(Context context, String title, Button favoritesBtn){
             this.context = new WeakReference<>(context);
             this.favoritesBtn = new WeakReference<>(favoritesBtn);
             this.title = title;

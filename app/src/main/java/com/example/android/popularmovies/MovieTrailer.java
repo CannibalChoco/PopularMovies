@@ -16,7 +16,7 @@ public class MovieTrailer implements Parcelable{
         this.site = site;
     }
 
-    protected MovieTrailer(Parcel in) {
+    private MovieTrailer(Parcel in) {
         name = in.readString();
         key = in.readString();
         site = in.readString();

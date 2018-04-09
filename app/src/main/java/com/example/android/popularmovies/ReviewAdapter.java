@@ -73,7 +73,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                         if (lines <= MAX_LINES_REVIEW_COLLAPSED){
                             holder.expandableIndicator.setVisibility(View.INVISIBLE);
                             holder.isExpandable = false;
-                        } else if (lines > MAX_LINES_REVIEW_COLLAPSED){
+                        } else {
                             holder.expandableIndicator.setVisibility(View.VISIBLE);
                             holder.isExpandable = true;
                             holder.reviewTv.setMaxLines(MAX_LINES_REVIEW_COLLAPSED);
@@ -107,7 +107,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         @BindView(R.id.tvExpandableIndicator) TextView expandableIndicator;
         boolean isExpandable;
 
-        public ViewHolder(final View itemView) {
+        ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

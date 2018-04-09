@@ -83,7 +83,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         @BindView(R.id.tvTrailerName) TextView trailerNameTv;
         @BindView(R.id.ivPlay) ImageView playIv;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
