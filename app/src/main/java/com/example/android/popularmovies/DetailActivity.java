@@ -13,13 +13,15 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -97,7 +99,14 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.labelTrailersTv) TextView labelTrailers;
     @SuppressWarnings("WeakerAccess")
-    @BindView(R.id.scrollView) NestedScrollView scrollView;
+    @BindView(R.id.scrollView)
+    CoordinatorLayout scrollView;
+    @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+    @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.detail_toolbar)
+    Toolbar toolbar;
 
     private boolean isWaitingForInternetConnection = false;
     private boolean hasLoadedTrailers = false;
@@ -259,6 +268,12 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsedAppBar);
+        collapsingToolbar.setExpandedTitleTextAppearance(R.style.expandedAppBar);
 
         boolean[] isExpandedArray;
         if (savedInstanceState != null){

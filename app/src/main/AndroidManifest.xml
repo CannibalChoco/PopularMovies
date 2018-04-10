@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".DetailActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.ActionBar.Transparent"
+            android:theme="@style/AppTheme.NoActionBar"
             tools:targetApi="jelly_bean">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

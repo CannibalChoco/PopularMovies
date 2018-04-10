@@ -33,4 +33,9 @@
 
     <!-- Favorites button margin -->
     <dimen name="dimenFavoritesButtonMargin">24dp</dimen>
+
+    <!-- Collapsing toolbar dimens -->
+    <dimen name="dimenTextSizeExpanded">32sp</dimen>
+
+    <dimen name="dimenTextSizeCollapsed">18sp</dimen>
 </resources>

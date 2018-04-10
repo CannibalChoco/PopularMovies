@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
@@ -8,194 +9,225 @@
     android:fillViewport="true"
     android:focusable="true">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants">
-
-        <ImageView
-            android:id="@+id/ivBackdrop"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dimenBackdropHeight"
-            android:gravity="center"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/placeholder_backdrop"
-            android:contentDescription="@string/description_backdrop" />
-
-        <TextView
-            android:id="@+id/tvRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenDefaultMargin"
-            android:layout_marginStart="@dimen/dimenDefaultMargin"
-            android:layout_marginTop="@dimen/dimenNormalMargin"
-            android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textSize="@dimen/dimenRatingTextSize"
-            app:layout_constraintStart_toEndOf="@+id/ratingBar"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:text="3.6" />
-
-        <TextView
-            android:id="@+id/tvReleaseDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenDefaultMargin"
-            android:layout_marginStart="@dimen/dimenDefaultMargin"
-            android:layout_marginTop="@dimen/dimenDefaultMargin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/ratingBar"
-            tools:text="2010" />
-
-        <TextView
-            android:id="@+id/tvLanguage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginStart="@dimen/dimenNormalMargin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBottom_toTopOf="@+id/tvRating"
-            app:layout_constraintStart_toEndOf="@+id/tvRating"
-            app:layout_constraintTop_toBottomOf="@+id/tvRating"
-            tools:text="EN" />
-
-        <ImageView
-            android:id="@+id/ivPoster"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimenDefaultMargin"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginRight="@dimen/dimenDefaultMargin"
-            android:layout_marginStart="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenDefaultMargin"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="@+id/ivBackdrop"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop"
-            tools:src="@drawable/placeholder_poster"
-            android:contentDescription="@string/description_poster_item" />
-
-        <TextView
-            android:id="@+id/labelOverviewTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginStart="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenNormalMargin"
-            android:text="@string/label_overview"
-            android:textColor="@color/colorLabelDefault"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivPoster" />
-
-        <TextView
-            android:id="@+id/tvOverview"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dimenNormalMargin"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginRight="@dimen/dimenNormalMargin"
-            android:layout_marginStart="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenDefaultMargin"
+            android:layout_height="@dimen/dimenBackdropHeight"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/labelOverviewTv"
-            tools:text="@string/empty_state_default" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/Widget.AppCompat.RatingBar.Small"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenDefaultMargin"
-            android:layout_marginStart="@dimen/dimenDefaultMargin"
-            android:layout_marginTop="@dimen/dimenRatingBarTopMargin"
-            android:numStars="5"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/ivBackdrop" />
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.35" />
+                <ImageView
+                    android:id="@+id/ivBackdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/description_backdrop"
+                    android:gravity="center"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax"
+                    tools:src="@drawable/placeholder_backdrop" />
 
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/detail_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimenAppBarHeightPortrait"
+                    app:layout_collapseMode="pin" />
 
-        <TextView
-            android:id="@+id/labelTrailersTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginStart="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenNormalMargin"
-            android:text="@string/label_trailers"
-            android:textColor="@color/colorLabelDefault"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvOverview" />
+            </android.support.design.widget.CollapsingToolbarLayout>
 
-        <include
-            android:id="@+id/trailersCl"
-            layout="@layout/activity_detail_trailers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimenDefaultMargin"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelTrailersTv" />
+        </android.support.design.widget.AppBarLayout>
 
-        <TextView
-            android:id="@+id/labelReviewsTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginStart="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenNormalMargin"
-            android:text="@string/label_reviews"
-            android:textColor="@color/colorLabelDefault"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trailersCl" />
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include
-            android:id="@+id/reviewsCl"
-            layout="@layout/activity_detail_reviews"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimenNormalMargin"
-            android:layout_marginLeft="@dimen/dimenNormalMargin"
-            android:layout_marginRight="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenDefaultMargin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelReviewsTv" />
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/noConnectionTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimenNormalMargin"
-            android:layout_marginTop="@dimen/dimenNormalMargin"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvOverview"
-            tools:text="@string/connectivity_empty_state_text" />
+                <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenDefaultMargin"
+                    android:layout_marginStart="@dimen/dimenDefaultMargin"
+                    android:layout_marginTop="@dimen/dimenNormalMargin"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/dimenRatingTextSize"
+                    app:layout_constraintStart_toEndOf="@+id/ratingBar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_goneMarginTop="@dimen/dimenNormalMargin"
+                    tools:text="3.6" />
 
-        <Button
-            android:id="@+id/favoritesBtn"
-            android:layout_width="@dimen/dimenFavoritesButton"
-            android:layout_height="@dimen/dimenFavoritesButton"
-            android:layout_marginEnd="@dimen/dimenFavoritesButtonMargin"
-            android:layout_marginRight="@dimen/dimenFavoritesButtonMargin"
-            android:background="@drawable/button_favorite_custom"
-            app:layout_constraintBottom_toBottomOf="@id/ivPoster"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:id="@+id/tvReleaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenDefaultMargin"
+                    android:layout_marginStart="@dimen/dimenDefaultMargin"
+                    android:layout_marginTop="@dimen/dimenDefaultMargin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+                    tools:text="2010" />
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v4.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/tvLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginStart="@dimen/dimenNormalMargin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintBottom_toTopOf="@+id/tvRating"
+                    app:layout_constraintStart_toEndOf="@+id/tvRating"
+                    app:layout_constraintTop_toBottomOf="@+id/tvRating"
+                    tools:text="EN" />
+
+                <ImageView
+                    android:id="@+id/ivPoster"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimenDefaultMargin"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginRight="@dimen/dimenDefaultMargin"
+                    android:layout_marginStart="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenDefaultMargin"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/description_poster_item"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_goneMarginTop="@dimen/dimenNormalMargin"
+                    tools:src="@drawable/placeholder_poster" />
+
+                <TextView
+                    android:id="@+id/labelOverviewTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginStart="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenNormalMargin"
+                    android:text="@string/label_overview"
+                    android:textColor="@color/colorLabelDefault"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivPoster" />
+
+                <TextView
+                    android:id="@+id/tvOverview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/dimenNormalMargin"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginRight="@dimen/dimenNormalMargin"
+                    android:layout_marginStart="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenDefaultMargin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/labelOverviewTv"
+                    tools:text="@string/empty_state_default" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenDefaultMargin"
+                    android:layout_marginStart="@dimen/dimenDefaultMargin"
+                    android:layout_marginTop="@dimen/dimenRatingBarTopMargin"
+                    android:numStars="5"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_goneMarginTop="@dimen/dimenNormalMargin"/>
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.35" />
+
+                <TextView
+                    android:id="@+id/labelTrailersTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginStart="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenNormalMargin"
+                    android:text="@string/label_trailers"
+                    android:textColor="@color/colorLabelDefault"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvOverview" />
+
+                <include
+                    android:id="@+id/trailersCl"
+                    layout="@layout/activity_detail_trailers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimenDefaultMargin"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelTrailersTv" />
+
+                <TextView
+                    android:id="@+id/labelReviewsTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginStart="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenNormalMargin"
+                    android:text="@string/label_reviews"
+                    android:textColor="@color/colorLabelDefault"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/trailersCl" />
+
+                <include
+                    android:id="@+id/reviewsCl"
+                    layout="@layout/activity_detail_reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimenNormalMargin"
+                    android:layout_marginLeft="@dimen/dimenNormalMargin"
+                    android:layout_marginRight="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenDefaultMargin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelReviewsTv" />
+
+                <TextView
+                    android:id="@+id/noConnectionTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimenNormalMargin"
+                    android:layout_marginTop="@dimen/dimenNormalMargin"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvOverview"
+                    tools:text="@string/connectivity_empty_state_text" />
+
+                <Button
+                    android:id="@+id/favoritesBtn"
+                    android:layout_width="@dimen/dimenFavoritesButton"
+                    android:layout_height="@dimen/dimenFavoritesButton"
+                    android:layout_marginEnd="@dimen/dimenFavoritesButtonMargin"
+                    android:layout_marginRight="@dimen/dimenFavoritesButtonMargin"
+                    android:background="@drawable/button_favorite_custom"
+                    app:layout_constraintBottom_toBottomOf="@id/ivPoster"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

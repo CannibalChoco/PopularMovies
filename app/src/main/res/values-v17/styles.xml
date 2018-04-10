@@ -12,14 +12,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.ActionBar.Transparent" parent="AppTheme">
-        <item name="colorPrimary">@android:color/transparent</item>
-        <item name="android:background">@null</item>
-        <item name="background">@null</item>
+    <style name="expandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/dimenTextSizeExpanded</item>
+    </style>
+
+    <style name="collapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">@dimen/dimenTextSizeCollapsed</item>
     </style>
 
 </resources>
