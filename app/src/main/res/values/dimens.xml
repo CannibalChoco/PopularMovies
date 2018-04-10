@@ -6,7 +6,6 @@
 
     <dimen name="dimenAppBarHeightPortrait">56dp</dimen>
 
-
     <!-- Backdrop height in portrait -->
     <dimen name="dimenBackdropHeight">300dp</dimen>
 
@@ -35,7 +34,11 @@
     <dimen name="dimenFavoritesButtonMargin">24dp</dimen>
 
     <!-- Collapsing toolbar dimens -->
+    <!-- Collapsing toolbar expanded text size -->
     <dimen name="dimenTextSizeExpanded">32sp</dimen>
 
+    <!-- Collapsing toolbar collapsed text size -->
     <dimen name="dimenTextSizeCollapsed">18sp</dimen>
+
+
 </resources>

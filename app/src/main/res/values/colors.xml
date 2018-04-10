@@ -5,6 +5,11 @@
     <color name="colorPrimaryLight">#484848</color>
     <color name="colorAccent">#FFC107</color>
 
+    <!-- Material colors for dark theme -->
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="colorTextSecondary">#b3ffffff</color>
+    <color name="colorTextDisabled">#80ffffff</color>
+
     <!-- DetailActivity label color-->
     <color name="colorLabelDefault">#9e9e9e</color>
 
@@ -12,10 +17,11 @@
     <color name="colorPrimaryLightTransparent">#7f484848</color>
 
     <!-- Selected item text and icon color for bottom navigation items-->
-    <color name="colorBottomNavItemSelected">#ffffff</color>
+    <color name="colorBottomNavItemSelected">@color/colorTextPrimary</color>
 
     <!-- Default item text and icon color for bottom navigation items-->
-    <color name="colorBottomNavItemDefault">#9e9e9e</color>
+    <color name="colorBottomNavItemDefault">@color/colorTextDisabled</color>
 
     <color name="colorFavorite">#d62a66</color>
+
 </resources>
