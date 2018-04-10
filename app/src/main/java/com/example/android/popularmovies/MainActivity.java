@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,11 +20,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.Data.MovieContract;
 import com.example.android.popularmovies.Utils.DbUtils;
@@ -65,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements
     Toolbar toolbar;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.appBar) android.support.design.widget.AppBarLayout appBar;
+    @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     public static final String KEY_MOVIE = "movie";
     private static final String KEY_MOVIE_LIST = "movies";
@@ -302,7 +307,8 @@ public class MainActivity extends AppCompatActivity implements
 
         } else {
             if (!isWaitingForInternetConnection) {
-                Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
+                showSnackbar(getString(R.string.connectivity_lost_message));
+//                Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
                 isWaitingForInternetConnection = true;
             }
 
@@ -490,6 +496,17 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return R.id.action_sort_most_popular;
+    }
+
+    private void showSnackbar(String message){
+        Snackbar snack = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)
+                snack.getView().getLayoutParams();
+        params.setAnchorId(R.id.main_bottom_nav);
+        params.anchorGravity = Gravity.TOP;
+        params.gravity = Gravity.TOP;
+        snack.getView().setLayoutParams(params);
+        snack.show();
     }
 
 }
