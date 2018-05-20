@@ -308,7 +308,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             if (!isWaitingForInternetConnection) {
                 showSnackbar(getString(R.string.connectivity_lost_message));
-//                Toast.makeText(this, getString(R.string.connectivity_lost_message), Toast.LENGTH_LONG).show();
                 isWaitingForInternetConnection = true;
             }
 

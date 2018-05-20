@@ -21,6 +21,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -102,7 +103,10 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     @BindView(R.id.labelTrailersTv) TextView labelTrailers;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.scrollView)
-    CoordinatorLayout scrollView;
+    NestedScrollView scrollView;
+    @SuppressWarnings("WeakerAccess")
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -260,6 +264,11 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private AsyncTask dbInsertTask;
     private AsyncTask dbDeleteTask;
+
+    private Parcelable trailerRvState;
+    private Parcelable reviewRvState;
+
+    private boolean[] isExpandedArray;
 
     private LinearLayoutManager trailerLayoutManager;
     private LinearLayoutManager reviewLayoutManager;
@@ -766,7 +775,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
     }
 
     private void showSnackbar (String message){
-        Snackbar snack = Snackbar.make(scrollView, message, BaseTransientBottomBar.LENGTH_LONG);
+        Snackbar snack = Snackbar.make(coordinatorLayout, message, BaseTransientBottomBar.LENGTH_LONG);
         snack.getView().setBackgroundColor(ContextCompat.getColor(
                 DetailActivity.this, R.color.colorPrimaryDark));
         snack.show();
