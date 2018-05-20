@@ -73,8 +73,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
         Picasso.with(context)
                 .load(posterUrl)
-                .placeholder(R.drawable.placeholder_poster)
-                .error(R.drawable.placeholder_poster)
                 .into(holder.posterImageView);
 
         ViewGroup.LayoutParams lp = new ConstraintLayout.LayoutParams(
