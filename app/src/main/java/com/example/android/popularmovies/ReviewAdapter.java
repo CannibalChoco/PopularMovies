@@ -94,6 +94,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                 toggleExpandableViewState(holder);
             }
         });
+
+        holder.expandableIndicator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleExpandableViewState(holder);
+            }
+        });
     }
 
     @Override
