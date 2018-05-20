@@ -275,9 +275,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private int[] scrollPosition;
 
-    Parcelable trailerRvState;
-    Parcelable reviewRvState;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
