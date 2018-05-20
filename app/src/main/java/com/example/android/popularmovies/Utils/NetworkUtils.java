@@ -2,6 +2,7 @@ package com.example.android.popularmovies.Utils;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.android.popularmovies.BuildConfig;
 import com.example.android.popularmovies.Movie;

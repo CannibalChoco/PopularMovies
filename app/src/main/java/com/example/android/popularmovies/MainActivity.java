@@ -20,6 +20,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -259,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements
                 if (movies != null) {
                     movies.clear();
                     movies.addAll(movieData);
-
                 } else {
                     movies = movieData;
                 }

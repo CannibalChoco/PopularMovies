@@ -192,6 +192,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
                                         trailers.addAll(newTrailers);
                                         trailerAdapter.addAll(trailers);
 
+                                        // TODO: update?
                                         // set scrollViews position
                                         if (scrollPosition != null){
                                             scrollView.post(new Runnable() {
@@ -265,6 +266,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
     private int[] scrollPosition;
 
+    Parcelable trailerRvState;
+    Parcelable reviewRvState;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -284,8 +288,8 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
 
             scrollPosition = savedInstanceState.getIntArray(SCROLL_VIEW_POSITION);
 
-            Parcelable trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
-            Parcelable reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
+            trailerRvState = savedInstanceState.getParcelable(TRAILERS_RV_STATE);
+            reviewRvState = savedInstanceState.getParcelable(REVIEWS_RV_STATE);
 
             isExpandedArray = savedInstanceState.getBooleanArray(IS_EXPANDED_ARRAY);
         } else {
@@ -403,7 +407,9 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             outState.putParcelableArrayList(REVIEWS_LIST_KEY, (ArrayList<MovieReview>) reviews);
         }
 
+        // TODO: refactor to nestedScrollview position
         outState.putIntArray(SCROLL_VIEW_POSITION, new int[]{scrollView.getScrollX(), scrollView.getScrollY()});
+
         outState.putParcelable(TRAILERS_RV_STATE, trailerLayoutManager.onSaveInstanceState());
         outState.putParcelable(REVIEWS_RV_STATE, reviewLayoutManager.onSaveInstanceState());
 
