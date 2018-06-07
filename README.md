@@ -37,3 +37,8 @@ optimizing the experience for various mobile devices.
   - Query Youtube API for trailer thumbnails to display them in CardViews, instead of
     just listing video titles
   - Review items are expanded / collapsed on click
+
+
+<p></br><img src="screenshots/main_popular.png" width="300" hspace="20"/><img src="screenshots/main_highest_rated.png" width="300"/></br><p/>
+<p><img src="screenshots/detail_1.png" width="300" hspace="20"/><img src="screenshots/detail_2.png" width="300"/></br><p/>
+<p><img src="screenshots/detail_add_to_favorites.png" width="300" hspace="20"/></br><p/>
