@@ -11,8 +11,6 @@ import android.net.NetworkInfo;
  *
  * https://www.androidhive.info/2012/07/android-detect-internet-connection-status/
  */
-
-
 public class ConnectivityReceiver
         extends BroadcastReceiver {
 
