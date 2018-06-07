@@ -22,9 +22,7 @@ optimizing the experience for various mobile devices.
 
 
 
-### Additional features
-To move myself out of my comfort zone and learn even more from this project,
-I implemented the following features:
+### Additional features:
 - Performance
   - RecyclerView instead of ListView for better performance for poster grid, trailers view,
     reviews view
