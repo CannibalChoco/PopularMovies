@@ -56,7 +56,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
 
         if (trailerKey != null && !TextUtils.isEmpty(trailerKey)){
             String thumbnailUrl = NetworkUtils.buildUrlForMovieThumbnail(trailerKey);
-            Picasso.with(context).load(thumbnailUrl).into(holder.thumbnailIv, new com.squareup.picasso.Callback() {
+            Picasso.get().load(thumbnailUrl).into(holder.thumbnailIv, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     holder.trailerNameTv.setVisibility(View.VISIBLE);
@@ -64,9 +64,10 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
                 }
 
                 @Override
-                public void onError() {
+                public void onError(Exception e) {
 
                 }
+
             });
         }
 

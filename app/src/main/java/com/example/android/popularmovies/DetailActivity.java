@@ -413,7 +413,6 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             outState.putParcelableArrayList(REVIEWS_LIST_KEY, (ArrayList<MovieReview>) reviews);
         }
 
-        // TODO: refactor to nestedScrollview position
         outState.putIntArray(SCROLL_VIEW_POSITION, new int[]{scrollView.getScrollX(), scrollView.getScrollY()});
 
         outState.putParcelable(TRAILERS_RV_STATE, trailerLayoutManager.onSaveInstanceState());
@@ -566,7 +565,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         String backdropPath = movie.getBackdropPath();
         String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
 
-        Picasso.with(this)
+        Picasso.get()
                 .load(posterUrl)
                 .placeholder(R.drawable.placeholder_poster)
                 .error(R.drawable.placeholder_poster)
@@ -576,7 +575,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
             loadBackdrop(backdropPath);
         } else {
             // load poster into backdrop view
-            Picasso.with(this)
+            Picasso.get()
                     .load(posterUrl)
                     .error(R.drawable.placeholder_backdrop)
                     .into(backdropIv);
@@ -763,7 +762,7 @@ public class DetailActivity extends AppCompatActivity implements TrailerAdapter.
         // get backdrop url
         String backdropUrl = NetworkUtils.buildUrlForMoviePoster(backdropPath);
         // load backdrop in to backdrop view
-        Picasso.with(this)
+        Picasso.get()
                 .load(backdropUrl)
                 .error(R.drawable.placeholder_backdrop)
                 .into(backdropIv);

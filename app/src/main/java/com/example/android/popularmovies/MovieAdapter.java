@@ -39,9 +39,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
-        @BindView(R.id.poster_item_view) ImageView posterImageView;
-        @BindView(R.id.ratingBar) RatingBar ratingBar;
-        @BindView(R.id.gridItemView) ConstraintLayout gridItem;
+        @BindView(R.id.poster_item_view)
+        ImageView posterImageView;
+        @BindView(R.id.ratingBar)
+        RatingBar ratingBar;
+        @BindView(R.id.gridItemView)
+        ConstraintLayout gridItem;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -73,19 +76,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         String posterPath = movie.getPosterPath();
         if (posterPath != null && !TextUtils.isEmpty(posterPath)) {
             String posterUrl = NetworkUtils.buildUrlForMoviePoster(posterPath);
-            Picasso.with(context)
+            Picasso.get()
                     .load(posterUrl)
                     .into(holder.posterImageView, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    holder.ratingBar.setVisibility(View.VISIBLE);
-                }
+                        @Override
+                        public void onSuccess() {
+                            holder.ratingBar.setVisibility(View.VISIBLE);
+                        }
 
-                @Override
-                public void onError() {
+                        @Override
+                        public void onError(Exception e) {
 
-                }
-            });
+                        }
+
+                    });
 
             ViewGroup.LayoutParams lp = new ConstraintLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
